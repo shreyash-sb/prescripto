@@ -1,0 +1,21 @@
+{
+  "name": "doc-appointment",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Enterprise Doctor Appointment & Healthcare Platform - MERN Stack",
+  "scripts": {
+    "dev": "concurrently -n \"BACKEND,FRONTEND,ADMIN\" -c \"blue.bold,green.bold,magenta.bold\" \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run dev:admin\"",
+    "dev:all": "npm run dev",
+    "dev:backend": "npm --prefix Backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:admin": "npm --prefix admin run dev",
+    "install:all": "npm install && npm --prefix Backend install && npm --prefix frontend install && npm --prefix admin install",
+    "seed": "node Backend/utils/seedData.js",
+    "lint": "npm --prefix frontend run lint && npm --prefix admin run lint",
+    "build": "npm --prefix frontend run build && npm --prefix admin run build",
+    "check:backend": "node --check Backend/server.js"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
