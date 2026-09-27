@@ -11,6 +11,7 @@ import Dashboard from './pages/Admin/Dashboard.jsx'
 import AllAppointments from "./pages/Admin/AllAppointments.jsx"
 import AddDoctor from "./pages/Admin/AddDoctor.jsx"
 import DoctorsList from './pages/Admin/DoctorsList.jsx'
+import OperationsKnowledgeBase from './pages/Admin/OperationsKnowledgeBase.jsx'
 import { DoctorContext } from './context/DoctorContext.jsx'
 import DoctorDashboard from './pages/Doctor/DoctorDashboard.jsx'
 import DoctorAppointment from './pages/Doctor/DoctorAppointment.jsx'
@@ -34,6 +35,7 @@ const App = () => {
             <Route path='/all-appointments' element={<AllAppointments />} />
             <Route path='/add-doctor' element={<AddDoctor />} />
             <Route path='/doctor-list' element={<DoctorsList />} />
+            <Route path='/admin-knowledge' element={<OperationsKnowledgeBase />} />
             {/* Doctor Routes */}
             <Route path='/doctor-dashboard' element={<DoctorDashboard />} />
             <Route path='/doctor-appointments' element={<DoctorAppointment />} />

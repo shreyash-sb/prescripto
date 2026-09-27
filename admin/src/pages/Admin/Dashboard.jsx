@@ -4,6 +4,7 @@ import { assets } from '../../assets/assets'
 import { AppContext } from '../../context/AppContext'
 import DoctorIdentity from '../../components/DoctorIdentity'
 import { useNavigate } from 'react-router-dom'
+import OperationsKnowledgeBase from './OperationsKnowledgeBase'
 
 const Dashboard = () => {
   const {
@@ -85,6 +86,7 @@ const Dashboard = () => {
               <option value='doctors'>👨‍⚕️ Doctors Availability & Roster</option>
               <option value='appointments'>📋 Consultation Registry</option>
               <option value='departments'>🏥 Department Distribution</option>
+              <option value='knowledge'>🧠 Operations Q&A Knowledge Base</option>
             </select>
           </div>
 
@@ -106,6 +108,7 @@ const Dashboard = () => {
           { id: 'doctors', label: `👨‍⚕️ Doctors (${availableDocs} Active / ${unavailableDocs} Off)` },
           { id: 'appointments', label: '📋 Consultation Queue' },
           { id: 'departments', label: '🏥 Medical Wings' },
+          { id: 'knowledge', label: '🧠 Operations Q&A' },
         ].map((tab) => (
           <button
             key={tab.id}
@@ -537,6 +540,11 @@ const Dashboard = () => {
           </div>
         </div>
       )}
+
+      {/* ============================================================ */}
+      {/* VIEW 6: OPERATIONS KNOWLEDGE BASE & SYSTEM Q&A               */}
+      {/* ============================================================ */}
+      {selectedView === 'knowledge' && <OperationsKnowledgeBase />}
     </div>
   )
 }

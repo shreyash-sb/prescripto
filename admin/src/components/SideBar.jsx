@@ -137,6 +137,24 @@ const SideBar = () => {
                   </>
                 )}
               </NavLink>
+
+              <NavLink
+                to='/admin-knowledge'
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
+                    isActive
+                      ? 'bg-[#5F6FFF] text-white shadow-md'
+                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                  }`
+                }
+              >
+                {({ isActive }) => (
+                  <>
+                    <span className='text-base leading-none'>🧠</span>
+                    <span className={`block font-bold ${isActive ? 'text-white' : 'text-gray-700'}`}>Operations Q&A</span>
+                  </>
+                )}
+              </NavLink>
             </nav>
           </div>
         )}
