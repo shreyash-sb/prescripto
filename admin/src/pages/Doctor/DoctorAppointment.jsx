@@ -491,7 +491,7 @@ const DoctorAppointment = () => {
             <div className='space-y-4 text-xs sm:text-sm max-h-[65vh] overflow-y-auto pr-1'>
               {/* Patient's Current Problem / Chief Complaint Report */}
               <div className='p-4.5 bg-amber-50/90 border border-amber-200 rounded-2xl'>
-                <span className='text-xs font-black text-amber-900 uppercase tracking-wider block mb-1 flex items-center gap-1.5'>
+                <span className='text-xs font-black text-amber-900 uppercase tracking-wider mb-1 flex items-center gap-1.5'>
                   <span>🩺</span> Patient&apos;s Current Problem & Symptoms Report
                 </span>
                 <p className='text-sm sm:text-base text-gray-900 font-semibold leading-relaxed'>
