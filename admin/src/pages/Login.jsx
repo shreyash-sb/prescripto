@@ -30,50 +30,22 @@ const Login = () => {
   const { setAToken, backendUrl } = useContext(AdminContext)
   const { setDToken } = useContext(DoctorContext)
 
-  // 1-Click Instant Demo Login Helpers
-  const handleInstantAdminDemo = async () => {
-    try {
-      setIsLoading(true)
-      const { data } = await axios.post(`${backendUrl}/api/admin/login`, {
-        email: 'admin@example.com',
-        password: 'admin12345',
-      })
-      if (data.success) {
-        localStorage.setItem('aToken', data.token)
-        setAToken(data.token)
-        toast.success('Logged in as Hospital Administrator!')
-      } else {
-        toast.error(data.message)
-      }
-    } catch (error) {
-      console.log(error)
-      toast.error(error.response?.data?.message || 'Admin demo login failed')
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  // Fill Demo Credentials Helpers
+  const handleFillAdminDemo = () => {
+    setRole('Admin');
+    setIsRegister(false);
+    setEmail('admin@example.com');
+    setPassword('admin12345');
+    toast.info('🛡️ Admin Demo credentials filled! Click Admin Login to continue.');
+  };
 
-  const handleInstantDoctorDemo = async () => {
-    try {
-      setIsLoading(true)
-      const { data } = await axios.post(`${backendUrl}/api/doctor/login`, {
-        email: 'doctor@example.com',
-        password: 'doctor12345',
-      })
-      if (data.success) {
-        localStorage.setItem('dToken', data.token)
-        setDToken(data.token)
-        toast.success(`Logged in as Dr. ${data.name || 'Richard James'}!`)
-      } else {
-        toast.error(data.message)
-      }
-    } catch (error) {
-      console.log(error)
-      toast.error(error.response?.data?.message || 'Doctor demo login failed')
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  const handleFillDoctorDemo = () => {
+    setRole('Doctor');
+    setIsRegister(false);
+    setEmail('doctor@example.com');
+    setPassword('doctor12345');
+    toast.info('👨‍⚕️ Doctor Demo credentials filled! Click Doctor Login to continue.');
+  };
 
   const onSubmitHandler = async (e) => {
     e.preventDefault()
@@ -158,19 +130,17 @@ const Login = () => {
         <span className='font-bold text-gray-600 pl-2'>Demo:</span>
         <button
           type='button'
-          disabled={isLoading}
-          onClick={handleInstantAdminDemo}
-          className='bg-[#5F65FF] hover:bg-indigo-600 text-white font-bold px-3.5 py-1 rounded-full transition-all shadow-sm'
+          onClick={handleFillAdminDemo}
+          className='bg-[#5F65FF] hover:bg-indigo-600 text-white font-bold px-3.5 py-1 rounded-full transition-all shadow-sm active:scale-95'
         >
-          🛡️ Admin Demo
+          🛡️ Fill Admin Demo
         </button>
         <button
           type='button'
-          disabled={isLoading}
-          onClick={handleInstantDoctorDemo}
-          className='bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3.5 py-1 rounded-full transition-all shadow-sm'
+          onClick={handleFillDoctorDemo}
+          className='bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3.5 py-1 rounded-full transition-all shadow-sm active:scale-95'
         >
-          👨‍⚕️ Doctor Demo
+          👨‍⚕️ Fill Doctor Demo
         </button>
       </div>
 

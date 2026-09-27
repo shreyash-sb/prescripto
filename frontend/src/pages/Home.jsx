@@ -64,7 +64,7 @@ const Home = () => {
     <div className='space-y-12 py-2'>
       <Header onOpenTriage={() => setShowTriage(true)} />
 
-      {/* Feature Showcase Grid (Crowd Filter, Rx Sync, Safety Shield, Privacy Trail) */}
+      {/* Primary Key Features Grid (Clean 4 Core Highlights, No clutter) */}
       <section className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-8'>
         {/* Card 1 */}
         <div
@@ -74,12 +74,12 @@ const Home = () => {
           <div className='w-12 h-12 rounded-2xl bg-emerald-500 text-white text-2xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform'>
             👥
           </div>
-          <h3 className='text-lg font-black text-gray-900 mt-4'>Live Crowd Filter</h3>
+          <h3 className='text-lg font-black text-gray-900 mt-4'>{t('liveCrowdFilter')}</h3>
           <p className='text-xs text-gray-600 mt-1 leading-relaxed'>
-            Filter clinics by live crowd (Low / Moderate / Busy) and avoid long OPD waiting times.
+            {t('liveCrowdDesc')}
           </p>
           <span className='inline-block text-xs font-bold text-emerald-700 mt-3 group-hover:underline'>
-            Find Fast-Track Doctors →
+            {t('findFastTrack')}
           </span>
         </div>
 
@@ -91,12 +91,12 @@ const Home = () => {
           <div className='w-12 h-12 rounded-2xl bg-primary text-white text-2xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform'>
             💊
           </div>
-          <h3 className='text-lg font-black text-gray-900 mt-4'>Rx → Medicine Schedule</h3>
+          <h3 className='text-lg font-black text-gray-900 mt-4'>{t('rxSchedule')}</h3>
           <p className='text-xs text-gray-600 mt-1 leading-relaxed'>
-            1-click convert prescriptions into timed daily dose reminders with audio alerts.
+            {t('rxScheduleDesc')}
           </p>
           <span className='inline-block text-xs font-bold text-primary mt-3 group-hover:underline'>
-            Manage Schedule →
+            {t('manageSchedule')}
           </span>
         </div>
 
@@ -108,29 +108,29 @@ const Home = () => {
           <div className='w-12 h-12 rounded-2xl bg-red-500 text-white text-2xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform'>
             🛡️
           </div>
-          <h3 className='text-lg font-black text-gray-900 mt-4'>Allergy Safety Shield</h3>
+          <h3 className='text-lg font-black text-gray-900 mt-4'>{t('allergyShield')}</h3>
           <p className='text-xs text-gray-600 mt-1 leading-relaxed'>
-            Pre-consultation drug sensitivity warnings flag allergies to doctors before prescribing.
+            {t('allergyShieldDesc')}
           </p>
           <span className='inline-block text-xs font-bold text-red-600 mt-3 group-hover:underline'>
-            Configure Shield →
+            {t('configureShield')}
           </span>
         </div>
 
         {/* Card 4 */}
         <div
-          onClick={() => navigate('/audit-logs')}
+          onClick={() => navigate('/privacy-logs')}
           className='p-6 rounded-3xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-200/80 hover:shadow-lg transition-all cursor-pointer group'
         >
           <div className='w-12 h-12 rounded-2xl bg-purple-600 text-white text-2xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform'>
             🔒
           </div>
-          <h3 className='text-lg font-black text-gray-900 mt-4'>Privacy Access Log</h3>
+          <h3 className='text-lg font-black text-gray-900 mt-4'>{t('privacyAuditLog')}</h3>
           <p className='text-xs text-gray-600 mt-1 leading-relaxed'>
-            Complete transparency. Know exactly which doctor or staff accessed your records and when.
+            {t('privacyAuditDesc')}
           </p>
           <span className='inline-block text-xs font-bold text-purple-700 mt-3 group-hover:underline'>
-            Inspect Audit Trail →
+            {t('inspectAudit')}
           </span>
         </div>
       </section>
@@ -142,7 +142,7 @@ const Home = () => {
       <section className='bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-800 text-white rounded-3xl p-8 sm:p-12 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden'>
         <div className='max-w-xl'>
           <span className='px-3 py-1 bg-white/20 text-white rounded-full text-xs font-bold uppercase tracking-wider'>
-            Automated Protection
+            {t('refundStatusTitle')}
           </span>
           <h2 className='text-2xl sm:text-3xl font-black mt-3'>
             100% Instant Refund Guarantee on Cancellation
@@ -157,7 +157,7 @@ const Home = () => {
             onClick={() => navigate('/my-appointments')}
             className='px-8 py-4 bg-white text-emerald-800 hover:bg-emerald-50 rounded-full font-extrabold text-base shadow-lg transition-all hover:scale-105'
           >
-            Track My Appointments
+            {t('myAppointments')}
           </button>
         </div>
       </section>

@@ -1,6 +1,6 @@
 export const translations = {
   en: {
-    // Navigation
+    // Navigation & Global
     home: "Home",
     findDoctors: "Find Doctors",
     about: "About",
@@ -15,14 +15,66 @@ export const translations = {
     portalLink: "Doctor/Admin Portal",
     emergencySOS: "Emergency SOS",
     aiSymptomChecker: "AI Symptom Triage",
+    healthHub: "Patient Health Hub",
 
     // Banner & Hero
     heroTitle: "Book Trusted Appointments with Top Doctors",
-    heroSubtitle: "Experience smart queue tracking, real-time crowd estimates, automated medicine reminders, and 100% transparent healthcare records.",
+    heroSubtitle: "Check live clinic crowd levels, receive automated allergy cross-checks, and auto-sync prescriptions to daily medicine alarms.",
+    bookDoctor: "Book Doctor",
     findDoctorBtn: "Find & Book Doctors",
     checkSymptomsBtn: "Check Symptoms (AI)",
     verifiedSpecialists: "100+ Verified Specialists",
     scheduleEasily: "Live Crowd & Queue Tracking",
+    avgWaitTime: "Avg OPD Wait Time",
+    refundGuarantee: "Refund Guarantee",
+    languagesSupported: "3 Languages Supported",
+    patientSatisfaction: "Patient Satisfaction",
+
+    // Home Features
+    liveCrowdFilter: "Live Crowd Filter",
+    liveCrowdDesc: "Filter clinics by live crowd (Low / Moderate / Busy) and avoid long OPD waiting times.",
+    findFastTrack: "Find Fast-Track Doctors →",
+    rxSchedule: "Rx → Medicine Schedule",
+    rxScheduleDesc: "1-click convert prescriptions into timed daily dose reminders with audio alerts.",
+    manageSchedule: "Manage Schedule →",
+    allergyShield: "Allergy Safety Shield",
+    allergyShieldDesc: "Pre-consultation drug sensitivity warnings flag allergies to doctors before prescribing.",
+    configureShield: "Configure Shield →",
+    privacyAuditLog: "Privacy Access Log",
+    privacyAuditDesc: "Complete transparency. Know exactly which doctor or staff accessed your records and when.",
+    inspectAudit: "Inspect Audit Trail →",
+
+    // Speciality Menu
+    findBySpeciality: "Find by Speciality",
+    specialitySubtitle: "Browse through our extensive list of trusted specialists and schedule your consultation hassle-free.",
+    generalPhysician: "General physician",
+    gynecologist: "Gynecologist",
+    dermatologist: "Dermatologist",
+    pediatricians: "Pediatricians",
+    neurologist: "Neurologist",
+    gastroenterologist: "Gastroenterologist",
+
+    // Top Doctors
+    topDoctorsTitle: "Top Doctors to Book",
+    topDoctorsSubtitle: "Browse through our certified network of medical specialists",
+    available: "Available",
+    unavailable: "Unavailable",
+    viewAllDoctors: "View All Doctors →",
+
+    // Banner Bottom
+    bookHealthcareAppt: "Book Healthcare Appointments",
+    withTrustedDoctors: "With 100+ Trusted Doctors",
+    joinThousands: "Join thousands of patients managing their clinical visits and prescriptions online.",
+    createFreeAccount: "Create Free Account",
+
+    // Footer
+    company: "COMPANY",
+    aboutUs: "About us",
+    allDoctors: "All Doctors",
+    privacyPolicy: "Privacy Policy",
+    getInTouch: "GET IN TOUCH",
+    dedicatedSupport: "24/7 Dedicated Medical Support",
+    allRightsReserved: "Prescripto - All Rights Reserved",
 
     // Doctors Page & Filters
     doctorsHeading: "Find & Book Top Doctors",
@@ -103,10 +155,18 @@ export const translations = {
     viewReceipt: "View Tax Invoice",
     viewPrescription: "View E-Prescription",
     cancelAppointment: "Cancel Consultation (Instant Refund)",
+
+    // Appointment Details & Booking
+    bookingSlots: "Booking Slots",
+    aboutDoctor: "About Doctor",
+    appointmentFee: "Appointment fee:",
+    bookAppointmentBtn: "Book an appointment",
+    relatedDoctors: "Related Doctors",
+    relatedDoctorsSubtitle: "Simply browse through our extensive list of trusted doctors.",
   },
 
   hi: {
-    // Navigation
+    // Navigation & Global
     home: "होम",
     findDoctors: "डॉक्टर खोजें",
     about: "हमारे बारे में",
@@ -121,14 +181,66 @@ export const translations = {
     portalLink: "डॉक्टर/एडमिन पोर्टल",
     emergencySOS: "आपातकालीन SOS",
     aiSymptomChecker: "AI लक्षण विश्लेषक",
+    healthHub: "मरीज स्वास्थ्य हब",
 
     // Banner & Hero
     heroTitle: "शीर्ष डॉक्टरों के साथ परामर्श बुक करें",
     heroSubtitle: "लाइव भीड़ ट्रैकिंग, डिजिटल प्रिस्क्रिप्शन शेड्यूल, दवा रिमाइंडर और 100% पारदर्शी स्वास्थ्य रिकॉर्ड का अनुभव करें।",
+    bookDoctor: "डॉक्टर बुक करें",
     findDoctorBtn: "डॉक्टर खोजें और बुक करें",
     checkSymptomsBtn: "लक्षण जांचें (AI)",
     verifiedSpecialists: "100+ सत्यापित विशेषज्ञ",
     scheduleEasily: "लाइव कतार और प्रतीक्षा समय ट्रैकिंग",
+    avgWaitTime: "औसत प्रतीक्षा समय",
+    refundGuarantee: "100% रिफंड गारंटी",
+    languagesSupported: "3 भाषाएं समर्थित",
+    patientSatisfaction: "रोगी संतुष्टि दर",
+
+    // Home Features
+    liveCrowdFilter: "लाइव भीड़ फ़िल्टर",
+    liveCrowdDesc: "क्लिनिक भीड़ (कम / मध्यम / अधिक) अनुसार फ़िल्टर करें और लंबी कतारों से बचें।",
+    findFastTrack: "फास्ट-ट्रैक डॉक्टर खोजें →",
+    rxSchedule: "प्रिस्क्रिप्शन → दवा शेड्यूल",
+    rxScheduleDesc: "प्रिस्क्रिप्शन को 1-क्लिक में समयबद्ध दैनिक दवा अलार्म में बदलें।",
+    manageSchedule: "शेड्यूल प्रबंधित करें →",
+    allergyShield: "एलर्जी सुरक्षा कवच",
+    allergyShieldDesc: "दवा लिखने से पहले डॉक्टरों को आपकी ज्ञात एलर्जी के बारे में स्वचालित चेतावनी।",
+    configureShield: "सुरक्षा कवच सेट करें →",
+    privacyAuditLog: "गोपनीयता एक्सेस लॉग",
+    privacyAuditDesc: "पूर्ण पारदर्शिता। जानें कि किस डॉक्टर या स्टाफ ने आपका रिकॉर्ड कब देखा।",
+    inspectAudit: "ऑडिट ट्रेल जांचें →",
+
+    // Speciality Menu
+    findBySpeciality: "विशेषता अनुसार खोजें",
+    specialitySubtitle: "हमारे सत्यापित विशेषज्ञों की सूची देखें और आसानी से परामर्श बुक करें।",
+    generalPhysician: "सामान्य चिकित्सक (General Physician)",
+    gynecologist: "स्त्री रोग विशेषज्ञ (Gynecologist)",
+    dermatologist: "त्वचा रोग विशेषज्ञ (Dermatologist)",
+    pediatricians: "शिशु रोग विशेषज्ञ (Pediatricians)",
+    neurologist: "न्यूरोलॉजिस्ट (Neurologist)",
+    gastroenterologist: "गैस्ट्रोएंटेरोलॉजिस्ट (Gastroenterologist)",
+
+    // Top Doctors
+    topDoctorsTitle: "सर्वश्रेष्ठ डॉक्टर बुक करें",
+    topDoctorsSubtitle: "हमारे प्रमाणित चिकित्सा विशेषज्ञों के नेटवर्क से परामर्श लें",
+    available: "उपलब्ध",
+    unavailable: "अनुपलब्ध",
+    viewAllDoctors: "सभी डॉक्टर देखें →",
+
+    // Banner Bottom
+    bookHealthcareAppt: "स्वास्थ्य परामर्श बुक करें",
+    withTrustedDoctors: "100+ विश्वासू डॉक्टरों के साथ",
+    joinThousands: "हजारों मरीज अपनी क्लिनिकल नियुक्तियों और दवाओं का ऑनलाइन प्रबंधन कर रहे हैं।",
+    createFreeAccount: "मुफ्त खाता बनाएं",
+
+    // Footer
+    company: "कंपनी",
+    aboutUs: "हमारे बारे में",
+    allDoctors: "सभी डॉक्टर",
+    privacyPolicy: "गोपनीयता नीति",
+    getInTouch: "संपर्क करें",
+    dedicatedSupport: "24/7 समर्पित चिकित्सा सहायता",
+    allRightsReserved: "प्रिस्क्रिप्टो - सर्वाधिकार सुरक्षित",
 
     // Doctors Page & Filters
     doctorsHeading: "सर्वश्रेष्ठ डॉक्टर खोजें और बुक करें",
@@ -209,10 +321,18 @@ export const translations = {
     viewReceipt: "रसीद देखें",
     viewPrescription: "डिजिटल प्रिस्क्रिप्शन देखें",
     cancelAppointment: "अपॉइंटमेंट रद्द करें (तत्काल रिफंड)",
+
+    // Appointment Details & Booking
+    bookingSlots: "बुकिंग स्लॉट",
+    aboutDoctor: "डॉक्टर के बारे में",
+    appointmentFee: "परामर्श शुल्क:",
+    bookAppointmentBtn: "अपॉइंटमेंट बुक करें",
+    relatedDoctors: "संबंधित डॉक्टर",
+    relatedDoctorsSubtitle: "अन्य उपलब्ध विशेषज्ञों की सूची देखें।",
   },
 
   mr: {
-    // Navigation
+    // Navigation & Global
     home: "मुख्यपृष्ठ",
     findDoctors: "डॉक्टर शोधा",
     about: "आमच्याबद्दल",
@@ -227,14 +347,66 @@ export const translations = {
     portalLink: "डॉक्टर/ॲडमिन पोर्टल",
     emergencySOS: "आपत्कालीन SOS",
     aiSymptomChecker: "AI लक्षण तपासक",
+    healthHub: "रुग्ण आरोग्य केंद्र",
 
     // Banner & Hero
     heroTitle: "विश्वासू तज्ज्ञ डॉक्टरांशी सल्लामसलत बुक करा",
     heroSubtitle: "थेट क्लिनिक गर्दी ट्रॅकिंग, औषधांचे वेळापत्रक, त्वरित रिफंड आणि 100% पारदर्शक आरोग्य नोंदींचा लाभ घ्या.",
+    bookDoctor: "डॉक्टर बुक करा",
     findDoctorBtn: "डॉक्टर शोधा आणि बुक करा",
     checkSymptomsBtn: "लक्षणे तपासा (AI)",
     verifiedSpecialists: "100+ प्रमाणित विशेषज्ञ",
     scheduleEasily: "थेट रांग आणि प्रतीक्षा वेळ ट्रॅकिंग",
+    avgWaitTime: "सरासरी प्रतीक्षा वेळ",
+    refundGuarantee: "100% परतावा हमी",
+    languagesSupported: "3 भाषा उपलब्ध",
+    patientSatisfaction: "रुग्ण समाधान दर",
+
+    // Home Features
+    liveCrowdFilter: "थेट गर्दीनुसार निवडा",
+    liveCrowdDesc: "दवाखान्यातील गर्दी (कमी / मध्यम / जास्त) पाहून निवडा आणि लांब रांगा टाळा.",
+    findFastTrack: "फास्ट-ट्रॅक डॉक्टर शोधा →",
+    rxSchedule: "प्रिस्क्रिप्शन → औषध वेळापत्रक",
+    rxScheduleDesc: "डॉक्टरांचे प्रिस्क्रिप्शन एका क्लिकवर दैनंदिन औषध अलार्ममध्ये बदला.",
+    manageSchedule: "वेळापत्रक पहा →",
+    allergyShield: "ॲलर्जी सुरक्षा कवच",
+    allergyShieldDesc: "औषध देण्यापूर्वी डॉक्टरांना तुमच्या ॲलर्जीबद्दल पूर्वसूचना.",
+    configureShield: "कवच सेट करा →",
+    privacyAuditLog: "गोपनीयता ॲक्सेस लॉग",
+    privacyAuditDesc: "संपूर्ण पारदर्शकता. कोणी कधी तुमची वैद्यकीय माहिती पाहिली हे तपासा.",
+    inspectAudit: "नोंदी तपासा →",
+
+    // Speciality Menu
+    findBySpeciality: "विशेष विभागानुसार शोधा",
+    specialitySubtitle: "आमच्या प्रमाणित तज्ज्ञ डॉक्टरांची यादी पहा आणि सोयीनुसार वेळ बुक करा.",
+    generalPhysician: "जनरल फिजिशियन (General Physician)",
+    gynecologist: "स्त्रीरोग तज्ज्ञ (Gynecologist)",
+    dermatologist: "त्वचारोग तज्ज्ञ (Dermatologist)",
+    pediatricians: "बालरोग तज्ज्ञ (Pediatricians)",
+    neurologist: "मेंदूरोग तज्ज्ञ (Neurologist)",
+    gastroenterologist: "पोटविकार तज्ज्ञ (Gastroenterologist)",
+
+    // Top Doctors
+    topDoctorsTitle: "उत्कृष्ट डॉक्टर बुक करा",
+    topDoctorsSubtitle: "आमच्या प्रमाणित तज्ज्ञ डॉक्टरांच्या नेटवर्कमधून सल्लामसलत बुक करा",
+    available: "उपलब्ध",
+    unavailable: "अनुपलब्ध",
+    viewAllDoctors: "सर्व डॉक्टर पहा →",
+
+    // Banner Bottom
+    bookHealthcareAppt: "आरोग्य सल्लामसलत बुक करा",
+    withTrustedDoctors: "100+ विश्वासू डॉक्टरांसोबत",
+    joinThousands: "हजारो रुग्ण त्यांच्या दवाखाना भेटी आणि औषधांचे ऑनलाइन व्यवस्थापन करत आहेत.",
+    createFreeAccount: "मोफत खाते तयार करा",
+
+    // Footer
+    company: "कंपनी",
+    aboutUs: "आमच्याबद्दल",
+    allDoctors: "सर्व डॉक्टर",
+    privacyPolicy: "गोपनीयता धोरण",
+    getInTouch: "संपर्क साधा",
+    dedicatedSupport: "24/7 वैद्यकीय मदत कक्ष",
+    allRightsReserved: "प्रिस्क्रिप्टो - सर्व हक्क राखीव",
 
     // Doctors Page & Filters
     doctorsHeading: "उत्कृष्ट डॉक्टर शोधा आणि वेळ बुक करा",
@@ -315,5 +487,13 @@ export const translations = {
     viewReceipt: "पावती पहा",
     viewPrescription: "डिजिटल प्रिस्क्रिप्शन पहा",
     cancelAppointment: "भेट रद्द करा (100% परतावा मिळवा)",
+
+    // Appointment Details & Booking
+    bookingSlots: "भेटीची वेळ (Slots)",
+    aboutDoctor: "डॉक्टरांविषयी माहिती",
+    appointmentFee: "सल्लामसलत शुल्क:",
+    bookAppointmentBtn: "वेळ निश्चित करा (Book Slot)",
+    relatedDoctors: "संबंधित तज्ज्ञ डॉक्टर",
+    relatedDoctorsSubtitle: "इतर उपलब्ध डॉक्टरांची माहिती पहा.",
   },
 };

@@ -20,24 +20,26 @@ const App = () => {
   const { dToken } = useContext(DoctorContext)
 
   return aToken || dToken ? (
-    <div className='bg-[#F8F9FD] min-h-screen'>
+    <div className='bg-[#F8F9FD] min-h-screen flex flex-col'>
       <ToastContainer position="top-right" autoClose={3000} />
       <Navbar />
-      <div className='flex items-start'>
+      <div className='flex flex-1 items-start'>
         <SideBar />
-        <Routes>
-          {/* Admin Routes */}
-          <Route path='/' element={<Navigate to={aToken ? '/admin-dashboard' : '/doctor-dashboard'} replace />} />
-          <Route path='/admin-dashboard' element={<Dashboard />} />
-          <Route path='/all-appointments' element={<AllAppointments />} />
-          <Route path='/add-doctor' element={<AddDoctor />} />
-          <Route path='/doctor-list' element={<DoctorsList />} />
-          {/* Doctor Routes */}
-          <Route path='/doctor-dashboard' element={<DoctorDashboard />} />
-          <Route path='/doctor-appointments' element={<DoctorAppointment />} />
-          <Route path='/doctor-profile' element={<DoctorProfile />} />
-          <Route path='*' element={<Navigate to={aToken ? '/admin-dashboard' : '/doctor-dashboard'} replace />} />
-        </Routes>
+        <main className='flex-1 min-w-0 p-4 sm:p-6 overflow-x-hidden'>
+          <Routes>
+            {/* Admin Routes */}
+            <Route path='/' element={<Navigate to={aToken ? '/admin-dashboard' : '/doctor-dashboard'} replace />} />
+            <Route path='/admin-dashboard' element={<Dashboard />} />
+            <Route path='/all-appointments' element={<AllAppointments />} />
+            <Route path='/add-doctor' element={<AddDoctor />} />
+            <Route path='/doctor-list' element={<DoctorsList />} />
+            {/* Doctor Routes */}
+            <Route path='/doctor-dashboard' element={<DoctorDashboard />} />
+            <Route path='/doctor-appointments' element={<DoctorAppointment />} />
+            <Route path='/doctor-profile' element={<DoctorProfile />} />
+            <Route path='*' element={<Navigate to={aToken ? '/admin-dashboard' : '/doctor-dashboard'} replace />} />
+          </Routes>
+        </main>
       </div>
     </div>
   ) : (

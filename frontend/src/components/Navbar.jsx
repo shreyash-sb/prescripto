@@ -3,7 +3,6 @@ import { assets } from '../assets/assets.js'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { AppContext } from '../context/AppContext.jsx'
 import UserIdentity from './UserIdentity.jsx'
-import LanguageSelector from './LanguageSelector.jsx'
 import EmergencySOSModal from './EmergencySOSModal.jsx'
 import SymptomTriageModal from './SymptomTriageModal.jsx'
 
@@ -105,9 +104,6 @@ const Navbar = () => {
             >
               <span>🚨</span> <span className='hidden sm:inline'>{t('emergencySOS')}</span>
             </button>
-
-            {/* Language Selector */}
-            <LanguageSelector />
 
             {/* Patient Account Button or Login Button */}
             {token ? (
@@ -395,17 +391,16 @@ const Navbar = () => {
               </button>
             </div>
 
-            {/* Language & SOS */}
-            <div className='p-4 border-b flex items-center justify-between gap-2 bg-gray-50/70'>
-              <LanguageSelector />
+            {/* SOS Emergency Link */}
+            <div className='p-4 border-b flex items-center justify-end bg-gray-50/70'>
               <button
                 onClick={() => {
                   setShowMobileMenu(false)
                   setShowSOSModal(true)
                 }}
-                className='px-3 py-1 bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold rounded-full'
+                className='px-3 py-1.5 bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold rounded-full flex items-center gap-1'
               >
-                🚨 SOS
+                <span>🚨</span> Emergency SOS
               </button>
             </div>
 

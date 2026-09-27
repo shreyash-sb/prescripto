@@ -3,16 +3,23 @@ import { AdminContext } from '../../context/AdminContext'
 import { assets } from '../../assets/assets'
 import { AppContext } from '../../context/AppContext'
 import DoctorIdentity from '../../components/DoctorIdentity'
+import { useNavigate } from 'react-router-dom'
 
 const Dashboard = () => {
-  const { aToken, getDashData, cancelAppointment, dashData } = useContext(AdminContext)
+  const { aToken, getDashData, cancelAppointment, dashData, doctors, getAllDoctors } = useContext(AdminContext)
   const { slotDateFormat, currency } = useContext(AppContext)
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (aToken) {
       getDashData()
+      getAllDoctors()
     }
   }, [aToken])
+
+  const totalDocs = doctors.length || dashData?.doctors || 0
+  const availableDocs = doctors.filter((d) => d.available).length
+  const unavailableDocs = totalDocs - availableDocs
 
   const weeklyTrends = dashData?.weeklyTrends || [
     { day: 'Mon', date: 'Day 1', income: 120, count: 2 },
@@ -28,13 +35,78 @@ const Dashboard = () => {
 
   return (
     dashData && (
-      <div className='w-full max-w-6xl m-5 space-y-6'>
+      <div className='w-full max-w-6xl space-y-6'>
         {/* Page Header */}
-        <div>
-          <h1 className='text-2xl font-bold text-gray-800'>Hospital Operations & Revenue Analytics</h1>
-          <p className='text-xs text-gray-500 mt-0.5'>
-            Comprehensive financial summaries: day-wise, week-wise, month-wise income and patient consultations
-          </p>
+        <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-3'>
+          <div>
+            <h1 className='text-2xl font-bold text-gray-900'>Hospital Operations & Revenue Analytics</h1>
+            <p className='text-xs text-gray-500 mt-0.5'>
+              Real-time financial analytics, consultation metrics, and doctor availability tracking
+            </p>
+          </div>
+          <button
+            onClick={() => navigate('/add-doctor')}
+            className='bg-primary text-white text-xs sm:text-sm font-bold px-4 py-2 rounded-xl hover:bg-opacity-95 shadow-sm transition-all self-start sm:self-auto'
+          >
+            + Onboard Doctor
+          </button>
+        </div>
+
+        {/* Doctor Availability & OPD Status Panel */}
+        <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
+          {/* Available Doctors */}
+          <div className='bg-white p-5 rounded-2xl border border-emerald-200/80 bg-emerald-50/20 shadow-sm flex items-center justify-between'>
+            <div className='flex items-center gap-3.5'>
+              <div className='w-11 h-11 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-xl font-bold shadow-sm'>
+                🟢
+              </div>
+              <div>
+                <p className='text-2xl font-black text-emerald-800'>{availableDocs}</p>
+                <p className='text-xs font-bold text-emerald-700'>Available Doctors (OPD Active)</p>
+              </div>
+            </div>
+            <span
+              onClick={() => navigate('/doctor-list')}
+              className='text-[11px] font-bold text-emerald-800 bg-emerald-100 hover:bg-emerald-200 px-2.5 py-1 rounded-lg cursor-pointer transition-colors'
+            >
+              View →
+            </span>
+          </div>
+
+          {/* Unavailable Doctors */}
+          <div className='bg-white p-5 rounded-2xl border border-rose-200/80 bg-rose-50/20 shadow-sm flex items-center justify-between'>
+            <div className='flex items-center gap-3.5'>
+              <div className='w-11 h-11 rounded-xl bg-rose-500 text-white flex items-center justify-center text-xl font-bold shadow-sm'>
+                🔴
+              </div>
+              <div>
+                <p className='text-2xl font-black text-rose-800'>{unavailableDocs}</p>
+                <p className='text-xs font-bold text-rose-700'>Unavailable / Off-Duty</p>
+              </div>
+            </div>
+            <span
+              onClick={() => navigate('/doctor-list')}
+              className='text-[11px] font-bold text-rose-800 bg-rose-100 hover:bg-rose-200 px-2.5 py-1 rounded-lg cursor-pointer transition-colors'
+            >
+              Manage →
+            </span>
+          </div>
+
+          {/* Total Registered Doctors */}
+          <div className='bg-white p-5 rounded-2xl border border-indigo-200/80 bg-indigo-50/20 shadow-sm flex items-center justify-between'>
+            <div className='flex items-center gap-3.5'>
+              <div className='w-11 h-11 rounded-xl bg-primary text-white flex items-center justify-center text-xl font-bold shadow-sm'>
+                👨‍⚕️
+              </div>
+              <div>
+                <p className='text-2xl font-black text-indigo-900'>{totalDocs}</p>
+                <p className='text-xs font-bold text-indigo-700'>Total Clinical Specialists</p>
+              </div>
+            </div>
+            <span className='text-[11px] font-bold text-indigo-700 bg-indigo-100 px-2.5 py-1 rounded-lg'>
+              100% Verified
+            </span>
+          </div>
         </div>
 
         {/* Financial & Operational Metric Cards */}
@@ -49,7 +121,7 @@ const Dashboard = () => {
                 <p className='text-2xl font-extrabold text-gray-900'>
                   {currency}{dashData.todayIncome || 0}
                 </p>
-                <p className='text-xs font-semibold text-gray-500'>Today's Income (Day-Wise)</p>
+                <p className='text-xs font-semibold text-gray-500'>Today's Income</p>
               </div>
             </div>
             <span className='text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200'>
@@ -116,7 +188,7 @@ const Dashboard = () => {
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
           <div className='bg-white p-4 rounded-2xl border border-gray-200/70 shadow-sm flex items-center justify-between'>
             <div>
-              <p className='text-xs text-gray-500 font-semibold'>💵 Cash on Visit Collections</p>
+              <p className='text-xs text-gray-500 font-semibold'>💵 Cash on Visit</p>
               <p className='text-xl font-bold text-emerald-700 mt-1'>{currency}{dashData.cashIncome || 0}</p>
             </div>
             <span className='text-xs bg-emerald-50 text-emerald-700 font-bold px-2 py-1 rounded-lg'>Counter</span>
@@ -124,7 +196,7 @@ const Dashboard = () => {
 
           <div className='bg-white p-4 rounded-2xl border border-gray-200/70 shadow-sm flex items-center justify-between'>
             <div>
-              <p className='text-xs text-gray-500 font-semibold'>💳 Online & Card Payments</p>
+              <p className='text-xs text-gray-500 font-semibold'>💳 Online Payments</p>
               <p className='text-xl font-bold text-indigo-700 mt-1'>{currency}{dashData.onlineIncome || 0}</p>
             </div>
             <span className='text-xs bg-indigo-50 text-indigo-700 font-bold px-2 py-1 rounded-lg'>Digital</span>
@@ -132,15 +204,15 @@ const Dashboard = () => {
 
           <div className='bg-white p-4 rounded-2xl border border-gray-200/70 shadow-sm flex items-center justify-between'>
             <div>
-              <p className='text-xs text-gray-500 font-semibold'>👨‍⚕️ Active Specialists</p>
-              <p className='text-xl font-bold text-gray-800 mt-1'>{dashData.doctors} Doctors</p>
+              <p className='text-xs text-gray-500 font-semibold'>👥 Total Consultations</p>
+              <p className='text-xl font-bold text-gray-800 mt-1'>{dashData.appointments} Bookings</p>
             </div>
-            <span className='text-xs bg-gray-100 text-gray-600 font-bold px-2 py-1 rounded-lg'>Staff</span>
+            <span className='text-xs bg-gray-100 text-gray-600 font-bold px-2 py-1 rounded-lg'>Queue</span>
           </div>
 
           <div className='bg-white p-4 rounded-2xl border border-gray-200/70 shadow-sm flex items-center justify-between'>
             <div>
-              <p className='text-xs text-gray-500 font-semibold'>👥 Total Patients Registered</p>
+              <p className='text-xs text-gray-500 font-semibold'>👥 Registered Patients</p>
               <p className='text-xl font-bold text-gray-800 mt-1'>{dashData.patients} Patients</p>
             </div>
             <span className='text-xs bg-gray-100 text-gray-600 font-bold px-2 py-1 rounded-lg'>Records</span>
@@ -161,7 +233,7 @@ const Dashboard = () => {
               </span>
             </div>
 
-            {/* Pure CSS / SVG Bar Chart */}
+            {/* Bar Chart */}
             <div className='h-48 flex items-end justify-between gap-3 pt-6 px-2 border-b border-gray-100'>
               {weeklyTrends.map((col, idx) => {
                 const heightPercent = Math.max(15, Math.round(((col.income || 20) / maxIncome) * 100))
@@ -198,107 +270,106 @@ const Dashboard = () => {
                     <span className='font-bold text-primary'>38%</span>
                   </div>
                   <div className='w-full bg-gray-100 h-2 rounded-full overflow-hidden'>
-                    <div className='bg-[#5F65FF] h-full rounded-full' style={{ width: '38%' }} />
+                    <div className='bg-primary h-full rounded-full' style={{ width: '38%' }}></div>
                   </div>
                 </div>
-
                 <div>
                   <div className='flex justify-between font-semibold text-gray-700 mb-1'>
-                    <span>Gynecology & Pediatrics</span>
-                    <span className='font-bold text-emerald-600'>32%</span>
+                    <span>Dermatology</span>
+                    <span className='font-bold text-emerald-600'>24%</span>
                   </div>
                   <div className='w-full bg-gray-100 h-2 rounded-full overflow-hidden'>
-                    <div className='bg-emerald-500 h-full rounded-full' style={{ width: '32%' }} />
+                    <div className='bg-emerald-500 h-full rounded-full' style={{ width: '24%' }}></div>
                   </div>
                 </div>
-
                 <div>
                   <div className='flex justify-between font-semibold text-gray-700 mb-1'>
-                    <span>Dermatology & Neurology</span>
-                    <span className='font-bold text-amber-600'>30%</span>
+                    <span>Gynecology</span>
+                    <span className='font-bold text-indigo-600'>18%</span>
                   </div>
                   <div className='w-full bg-gray-100 h-2 rounded-full overflow-hidden'>
-                    <div className='bg-amber-500 h-full rounded-full' style={{ width: '30%' }} />
+                    <div className='bg-indigo-500 h-full rounded-full' style={{ width: '18%' }}></div>
+                  </div>
+                </div>
+                <div>
+                  <div className='flex justify-between font-semibold text-gray-700 mb-1'>
+                    <span>Pediatrics & Neurology</span>
+                    <span className='font-bold text-amber-600'>20%</span>
+                  </div>
+                  <div className='w-full bg-gray-100 h-2 rounded-full overflow-hidden'>
+                    <div className='bg-amber-500 h-full rounded-full' style={{ width: '20%' }}></div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className='p-3 bg-emerald-50/80 border border-emerald-100 rounded-xl text-xs text-emerald-950 mt-4'>
-              <strong>Financial Audit:</strong> All patient consultation transactions & wallet settlements are verified.
+            <div className='mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500'>
+              <span>Auto-balanced OPD</span>
+              <span className='font-bold text-emerald-700'>100% Operational</span>
             </div>
           </div>
         </div>
 
         {/* Latest Bookings Table */}
-        <div className='bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden'>
-          <div className='flex items-center justify-between px-6 py-4 border-b bg-gray-50/70'>
+        <div className='bg-white border border-gray-200/80 rounded-2xl overflow-hidden shadow-sm'>
+          <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-gray-50/50'>
             <div className='flex items-center gap-2.5'>
-              <img src={assets.list_icon} alt='' />
+              <img src={assets.list_icon} alt='' className='w-5 h-5' />
               <p className='font-bold text-sm text-gray-800'>Recent Consultation Bookings</p>
             </div>
-            <span className='text-xs text-gray-400 font-medium'>Live Feed</span>
+            <button
+              onClick={() => navigate('/all-appointments')}
+              className='text-xs font-bold text-primary hover:underline'
+            >
+              View All Appointments →
+            </button>
           </div>
 
           <div className='divide-y divide-gray-100'>
-            {(dashData.latest_appointments || []).map((item, index) => (
-              <div
-                key={index}
-                className='flex items-center justify-between px-6 py-3.5 gap-4 hover:bg-gray-50/80 transition-colors'
-              >
-                <div className='flex items-center gap-3'>
-                  <DoctorIdentity
-                    name={item.docData.name}
-                    speciality={item.docData.speciality}
-                    docId={item.docData._id}
-                    mode='avatar'
-                  />
-                  <div className='text-xs'>
-                    <p className='text-gray-900 font-bold text-sm'>{item.docData.name}</p>
-                    <p className='text-gray-500'>
-                      {item.userData?.name} • {slotDateFormat(item.slotDate)} ({item.slotTime})
+            {dashData.latestAppointments && dashData.latestAppointments.length > 0 ? (
+              dashData.latestAppointments.slice(0, 6).map((item, index) => (
+                <div key={index} className='flex items-center px-6 py-3.5 gap-4 hover:bg-gray-50 transition-colors'>
+                  <div className='w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border'>
+                    <DoctorIdentity
+                      name={item.docData?.name || 'Doctor'}
+                      speciality={item.docData?.speciality || 'Specialist'}
+                      docId={item.docData?._id}
+                      className='h-full w-full object-cover'
+                    />
+                  </div>
+
+                  <div className='flex-1 min-w-0'>
+                    <p className='text-sm font-bold text-gray-900 truncate'>{item.docData?.name}</p>
+                    <p className='text-xs text-gray-500'>
+                      Patient: <strong className='text-gray-700'>{item.userData?.name || 'Patient'}</strong> •{' '}
+                      {slotDateFormat(item.slotDate)} at {item.slotTime}
                     </p>
                   </div>
-                </div>
 
-                <div className='flex items-center gap-3'>
-                  <div className='text-right'>
-                    <p className='text-xs font-bold text-gray-800'>{currency}{item.amount}</p>
-                    {item.payment ? (
-                      <span className='text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 block mt-0.5'>
-                        ✓ Paid ({item.paymentMethod || 'Online'})
-                      </span>
-                    ) : item.cancelled ? (
-                      <span className='text-[10px] text-gray-400 block mt-0.5'>Cancelled</span>
-                    ) : (
-                      <span className='text-[10px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200 block mt-0.5'>
-                        Pending
-                      </span>
-                    )}
-                  </div>
-
-                  <div>
+                  <div className='flex items-center gap-2'>
                     {item.cancelled ? (
-                      <span className='text-xs font-semibold px-3 py-1 bg-rose-50 text-rose-600 rounded-full border border-rose-200'>
+                      <span className='text-xs font-bold text-rose-600 bg-rose-50 border border-rose-200 px-2.5 py-0.5 rounded-full'>
                         Cancelled
                       </span>
                     ) : item.isCompleted ? (
-                      <span className='text-xs font-semibold px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full border border-emerald-200'>
-                        ✓ Completed
+                      <span className='text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full'>
+                        Completed
                       </span>
                     ) : (
                       <button
                         onClick={() => cancelAppointment(item._id)}
-                        className='p-1.5 hover:bg-rose-50 rounded-lg text-rose-500 transition-colors'
+                        className='text-xs font-bold text-rose-600 hover:bg-rose-50 px-2 py-1 rounded-lg border border-transparent hover:border-rose-200 transition-all'
                         title='Cancel Appointment'
                       >
-                        <img className='w-6 h-6' src={assets.cancel_icon} alt='Cancel' />
+                        Cancel
                       </button>
                     )}
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className='p-6 text-center text-xs text-gray-400'>No recent appointments available.</p>
+            )}
           </div>
         </div>
       </div>

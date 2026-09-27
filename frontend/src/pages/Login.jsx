@@ -15,28 +15,12 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleInstantDemoLogin = async () => {
-    try {
-      setIsLoading(true)
-      const { data } = await axios.post(`${backendUrl}/api/user/login`, {
-        email: 'patient@example.com',
-        password: 'patient12345',
-      })
-      if (data.success) {
-        localStorage.setItem('token', data.token)
-        setToken(data.token)
-        toast.success('Logged in as Demo Patient (Alex)!')
-        navigate('/')
-      } else {
-        toast.error(data.message)
-      }
-    } catch (error) {
-      console.log(error)
-      toast.error(error.response?.data?.message || 'Demo login failed')
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  const handleFillDemo = () => {
+    setState('Login');
+    setEmail('patient@example.com');
+    setPassword('patient12345');
+    toast.info('Demo Patient credentials filled! Click Log In to continue.');
+  };
 
   const onSubmitHandler = async (e) => {
     e.preventDefault()
@@ -91,11 +75,10 @@ const Login = () => {
         <span className='font-bold text-gray-600'>Demo:</span>
         <button
           type='button'
-          disabled={isLoading}
-          onClick={handleInstantDemoLogin}
+          onClick={handleFillDemo}
           className='bg-primary hover:bg-opacity-95 text-white font-bold px-4 py-1.5 rounded-full transition-all shadow-sm active:scale-95 text-xs'
         >
-          {isLoading ? 'Logging in...' : '👤 Patient Demo'}
+          👤 Fill Patient Demo
         </button>
       </div>
 

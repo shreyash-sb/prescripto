@@ -1,8 +1,11 @@
+import { useContext } from 'react'
 import { assets } from '../assets/assets'
 import { useNavigate } from 'react-router-dom'
+import { AppContext } from '../context/AppContext'
 
 const Header = ({ onOpenTriage }) => {
   const navigate = useNavigate()
+  const { t } = useContext(AppContext)
 
   return (
     <div className='flex flex-col gap-6'>
@@ -17,18 +20,22 @@ const Header = ({ onOpenTriage }) => {
           {/* Trust Badge */}
           <div className='inline-flex items-center gap-2 bg-white/20 backdrop-blur-md border border-white/30 text-white text-xs sm:text-sm font-semibold px-4 py-2 rounded-full shadow-sm'>
             <span className='w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping' />
-            <span>● 24/7 Smart Queue • Live Crowd Tracking</span>
+            <span>● 24/7 Smart Queue • {t('scheduleEasily')}</span>
           </div>
 
           <h1 className='text-3xl sm:text-5xl lg:text-6xl text-white font-extrabold leading-tight tracking-tight'>
-            Book Appointments <br />
-            <span className='text-emerald-300'>With Trusted Doctors</span>
+            {t('heroTitle').split('with')[0] || t('heroTitle')} <br />
+            <span className='text-emerald-300'>
+              {t('heroTitle').includes('with')
+                ? 'with ' + t('heroTitle').split('with')[1]
+                : t('verifiedSpecialists')}
+            </span>
           </h1>
 
           <div className='flex flex-col sm:flex-row items-start sm:items-center gap-3 text-white/95 text-sm sm:text-base font-normal'>
             <img className='w-28 sm:w-32 drop-shadow-sm' src={assets.group_profiles} alt='Patient Avatars' />
             <p className='leading-relaxed'>
-              Check live clinic crowd levels, receive automated allergy cross-checks, and auto-sync prescriptions to daily medicine alarms.
+              {t('heroSubtitle')}
             </p>
           </div>
 
@@ -37,7 +44,7 @@ const Header = ({ onOpenTriage }) => {
               href='#speciality'
               className='flex items-center gap-2 bg-white text-primary px-7 sm:px-9 py-3.5 rounded-full font-bold text-sm sm:text-base hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-300'
             >
-              <span>Book Doctor</span>
+              <span>{t('bookDoctor')}</span>
               <img src={assets.arrow_icon} className='w-3.5' alt='' />
             </a>
 
@@ -45,14 +52,14 @@ const Header = ({ onOpenTriage }) => {
               onClick={() => onOpenTriage && onOpenTriage()}
               className='flex items-center gap-2 px-6 py-3.5 rounded-full bg-emerald-400/20 hover:bg-emerald-400/30 text-emerald-200 border border-emerald-300/40 text-sm sm:text-base font-bold transition-all'
             >
-              <span>🎯 AI Symptom Triage</span>
+              <span>🎯 {t('checkSymptomsBtn')}</span>
             </button>
 
             <button
               onClick={() => navigate('/doctors')}
               className='px-6 py-3.5 rounded-full border border-white/40 text-white hover:bg-white/15 text-sm sm:text-base font-bold transition-all'
             >
-              Filter Crowd 👥
+              {t('findDoctorBtn')} 👥
             </button>
           </div>
         </div>
@@ -71,19 +78,19 @@ const Header = ({ onOpenTriage }) => {
       <div className='grid grid-cols-2 sm:grid-cols-4 gap-4 bg-white p-6 rounded-3xl border border-gray-100 shadow-sm'>
         <div className='text-center p-3 border-r last:border-r-0 border-gray-100'>
           <p className='text-2xl sm:text-3xl font-extrabold text-primary'>⚡ &lt; 15 min</p>
-          <p className='text-xs sm:text-sm text-gray-600 font-semibold mt-1'>Avg OPD Wait Time</p>
+          <p className='text-xs sm:text-sm text-gray-600 font-semibold mt-1'>{t('avgWaitTime')}</p>
         </div>
         <div className='text-center p-3 sm:border-r border-gray-100'>
           <p className='text-2xl sm:text-3xl font-extrabold text-emerald-600'>100%</p>
-          <p className='text-xs sm:text-sm text-gray-600 font-semibold mt-1'>Refund Guarantee</p>
+          <p className='text-xs sm:text-sm text-gray-600 font-semibold mt-1'>{t('refundGuarantee')}</p>
         </div>
         <div className='text-center p-3 border-r last:border-r-0 border-gray-100'>
-          <p className='text-2xl sm:text-3xl font-extrabold text-indigo-600'>3 Languages</p>
-          <p className='text-xs sm:text-sm text-gray-600 font-semibold mt-1'>EN • हिंदी • मराठी</p>
+          <p className='text-2xl sm:text-3xl font-extrabold text-indigo-600'>3</p>
+          <p className='text-xs sm:text-sm text-gray-600 font-semibold mt-1'>{t('languagesSupported')}</p>
         </div>
         <div className='text-center p-3'>
           <p className='text-2xl sm:text-3xl font-extrabold text-amber-500'>⭐ 4.9 / 5</p>
-          <p className='text-xs sm:text-sm text-gray-600 font-semibold mt-1'>Patient Satisfaction</p>
+          <p className='text-xs sm:text-sm text-gray-600 font-semibold mt-1'>{t('patientSatisfaction')}</p>
         </div>
       </div>
     </div>

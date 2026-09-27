@@ -6,102 +6,174 @@ import { DoctorContext } from '../context/DoctorContext'
 
 const SideBar = () => {
   const { aToken } = useContext(AdminContext)
-  const { dToken } = useContext(DoctorContext)
+  const { dToken, profileData } = useContext(DoctorContext)
 
   return (
-    <div className='min-h-screen bg-white border-r'>
-      {aToken && (
-        <ul className='text-[#515151] mt-5'>
-          <NavLink
-            to='/admin-dashboard'
-            className={({ isActive }) =>
-              `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-72 cursor-pointer ${
-                isActive ? 'bg-[#F2F3FF] border-r-4 border-[#5F65FF]' : ''
-              }`
-            }
-          >
-            <img src={assets.home_icon} alt='' />
-            <p>Dashboard</p>
-          </NavLink>
+    <aside className='w-60 md:w-68 bg-white border-r border-gray-200/80 flex-shrink-0 min-h-screen p-4 flex flex-col justify-between select-none shadow-sm'>
+      {/* Navigation Sections */}
+      <div className='space-y-5'>
+        {/* Role Identity Badge */}
+        {aToken && (
+          <div className='bg-indigo-50/80 border border-indigo-100 rounded-2xl p-3 flex items-center gap-3'>
+            <div className='w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center text-base font-bold shadow-sm'>
+              🛡️
+            </div>
+            <div className='min-w-0 flex-1'>
+              <div className='flex items-center gap-1.5'>
+                <span className='w-2 h-2 rounded-full bg-emerald-500 animate-pulse'></span>
+                <p className='text-xs font-bold text-gray-900 truncate'>Hospital Admin</p>
+              </div>
+              <p className='text-[11px] text-gray-500 truncate'>Management Console</p>
+            </div>
+          </div>
+        )}
 
-          <NavLink
-            to='/all-appointments'
-            className={({ isActive }) =>
-              `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-72 cursor-pointer ${
-                isActive ? 'bg-[#F2F3FF] border-r-4 border-[#5F65FF]' : ''
-              }`
-            }
-          >
-            <img src={assets.appointment_icon} alt='' />
-            <p>Appointments</p>
-          </NavLink>
+        {dToken && (
+          <div className='bg-emerald-50/80 border border-emerald-100 rounded-2xl p-3 flex items-center gap-3'>
+            <div className='w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-base font-bold shadow-sm'>
+              👨‍⚕️
+            </div>
+            <div className='min-w-0 flex-1'>
+              <div className='flex items-center gap-1.5'>
+                <span className='w-2 h-2 rounded-full bg-emerald-500 animate-pulse'></span>
+                <p className='text-xs font-bold text-gray-900 truncate'>{profileData?.name || 'Doctor Portal'}</p>
+              </div>
+              <p className='text-[11px] text-emerald-700 font-semibold truncate'>{profileData?.speciality || 'OPD Doctor'}</p>
+            </div>
+          </div>
+        )}
 
-          <NavLink
-            to='/add-doctor'
-            className={({ isActive }) =>
-              `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-72 cursor-pointer ${
-                isActive ? 'bg-[#F2F3FF] border-r-4 border-[#5F65FF]' : ''
-              }`
-            }
-          >
-            <img src={assets.add_icon} alt='' />
-            <p>Add Doctor</p>
-          </NavLink>
+        {/* Admin Navigation Menu */}
+        {aToken && (
+          <div className='space-y-1.5'>
+            <p className='text-[10px] font-extrabold uppercase tracking-wider text-gray-400 px-3 pb-1'>
+              Menu
+            </p>
+            <nav className='space-y-1'>
+              <NavLink
+                to='/admin-dashboard'
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all ${
+                    isActive
+                      ? 'bg-primary text-white shadow-md'
+                      : 'text-gray-700 hover:bg-gray-100/80'
+                  }`
+                }
+              >
+                <img src={assets.home_icon} alt='' className='w-4.5 h-4.5' />
+                <span>Dashboard</span>
+              </NavLink>
 
-          <NavLink
-            to='/doctor-list'
-            className={({ isActive }) =>
-              `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-72 cursor-pointer ${
-                isActive ? 'bg-[#F2F3FF] border-r-4 border-[#5F65FF]' : ''
-              }`
-            }
-          >
-            <img src={assets.people_icon} alt='' />
-            <p>Doctor List</p>
-          </NavLink>
-        </ul>
-      )}
+              <NavLink
+                to='/all-appointments'
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all ${
+                    isActive
+                      ? 'bg-primary text-white shadow-md'
+                      : 'text-gray-700 hover:bg-gray-100/80'
+                  }`
+                }
+              >
+                <img src={assets.appointment_icon} alt='' className='w-4.5 h-4.5' />
+                <span>Appointments</span>
+              </NavLink>
 
-      {dToken && (
-        <ul className='text-[#515151] mt-5'>
-          <NavLink
-            to='/doctor-dashboard'
-            className={({ isActive }) =>
-              `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-72 cursor-pointer ${
-                isActive ? 'bg-[#F2F3FF] border-r-4 border-[#5F65FF]' : ''
-              }`
-            }
-          >
-            <img src={assets.home_icon} alt='' />
-            <p className='hidden md:block'>Dashboard</p>
-          </NavLink>
+              <NavLink
+                to='/add-doctor'
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all ${
+                    isActive
+                      ? 'bg-primary text-white shadow-md'
+                      : 'text-gray-700 hover:bg-gray-100/80'
+                  }`
+                }
+              >
+                <img src={assets.add_icon} alt='' className='w-4.5 h-4.5' />
+                <span>Add Doctor</span>
+              </NavLink>
 
-          <NavLink
-            to='/doctor-appointments'
-            className={({ isActive }) =>
-              `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-72 cursor-pointer ${
-                isActive ? 'bg-[#F2F3FF] border-r-4 border-[#5F65FF]' : ''
-              }`
-            }
-          >
-            <img src={assets.appointment_icon} alt='' />
-            <p className='hidden md:block'>Appointments</p>
-          </NavLink>
+              <NavLink
+                to='/doctor-list'
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all ${
+                    isActive
+                      ? 'bg-primary text-white shadow-md'
+                      : 'text-gray-700 hover:bg-gray-100/80'
+                  }`
+                }
+              >
+                <img src={assets.people_icon} alt='' className='w-4.5 h-4.5' />
+                <span>Doctors List</span>
+              </NavLink>
+            </nav>
+          </div>
+        )}
 
-          <NavLink
-            to='/doctor-profile'
-            className={({ isActive }) =>
-              `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-72 cursor-pointer ${
-                isActive ? 'bg-[#F2F3FF] border-r-4 border-[#5F65FF]' : ''
-              }`
-            }
-          >
-            <img src={assets.people_icon} alt='' />
-            <p className='hidden md:block'>Profile</p>
-          </NavLink>
-        </ul>
-      )}
-    </div>
+        {/* Doctor Navigation Menu */}
+        {dToken && (
+          <div className='space-y-1.5'>
+            <p className='text-[10px] font-extrabold uppercase tracking-wider text-gray-400 px-3 pb-1'>
+              Menu
+            </p>
+            <nav className='space-y-1'>
+              <NavLink
+                to='/doctor-dashboard'
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all ${
+                    isActive
+                      ? 'bg-primary text-white shadow-md'
+                      : 'text-gray-700 hover:bg-gray-100/80'
+                  }`
+                }
+              >
+                <img src={assets.home_icon} alt='' className='w-4.5 h-4.5' />
+                <span>Dashboard</span>
+              </NavLink>
+
+              <NavLink
+                to='/doctor-appointments'
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all ${
+                    isActive
+                      ? 'bg-primary text-white shadow-md'
+                      : 'text-gray-700 hover:bg-gray-100/80'
+                  }`
+                }
+              >
+                <img src={assets.appointment_icon} alt='' className='w-4.5 h-4.5' />
+                <span>Appointments</span>
+              </NavLink>
+
+              <NavLink
+                to='/doctor-profile'
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all ${
+                    isActive
+                      ? 'bg-primary text-white shadow-md'
+                      : 'text-gray-700 hover:bg-gray-100/80'
+                  }`
+                }
+              >
+                <img src={assets.people_icon} alt='' className='w-4.5 h-4.5' />
+                <span>Profile</span>
+              </NavLink>
+            </nav>
+          </div>
+        )}
+      </div>
+
+      {/* Clean Bottom Switcher */}
+      <div className='pt-4 border-t border-gray-100'>
+        <a
+          href='http://localhost:5173'
+          target='_blank'
+          rel='noopener noreferrer'
+          className='w-full py-2.5 px-3 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm'
+        >
+          <span>🌐 Patient Portal ↗</span>
+        </a>
+      </div>
+    </aside>
   )
 }
 

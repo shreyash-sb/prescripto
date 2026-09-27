@@ -16,19 +16,9 @@ const AppContextProvider = ({ children }) => {
   const [doctors, setDoctors] = useState([]);
   const [userData, setUserData] = useState(false);
 
-  // Multi-lingual Language State: 'en' | 'hi' | 'mr'
-  const [language, setLanguageState] = useState(
-    localStorage.getItem("prescripto_lang") || "en"
-  );
-
-  const setLanguage = (lang) => {
-    setLanguageState(lang);
-    localStorage.setItem("prescripto_lang", lang);
-  };
-
+  // Clean English translations helper
   const t = (key) => {
-    const dict = translations[language] || translations.en;
-    return dict[key] || translations.en[key] || key;
+    return translations.en[key] || key;
   };
 
   // Medicine Routines State
@@ -55,9 +45,6 @@ const AppContextProvider = ({ children }) => {
       });
       if (data.success) {
         setUserData(data.userData);
-        if (data.userData.preferredLanguage && !localStorage.getItem("prescripto_lang")) {
-          setLanguageState(data.userData.preferredLanguage);
-        }
       } else {
         toast.error(data.message);
       }
@@ -124,8 +111,6 @@ const AppContextProvider = ({ children }) => {
     userData,
     setUserData,
     loadUserProfileData,
-    language,
-    setLanguage,
     t,
     medicineRoutines,
     setMedicineRoutines,
