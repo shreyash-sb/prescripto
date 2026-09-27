@@ -6,6 +6,8 @@ import {
   appointmentsDoctor,
   appointmentCancel,
   appointmentComplete,
+  acceptAppointment,
+  rejectAppointment,
   updateLiveQueue,
   collectPayment,
   doctorDashboard,
@@ -24,6 +26,8 @@ doctorRouter.post("/login", loginDoctor);
 
 // Protected Doctor Portal Routes
 doctorRouter.get("/appointments", authDoctor, appointmentsDoctor);
+doctorRouter.post("/accept-appointment", authDoctor, acceptAppointment);
+doctorRouter.post("/reject-appointment", authDoctor, rejectAppointment);
 doctorRouter.post("/complete-appointment", authDoctor, appointmentComplete);
 doctorRouter.post("/cancel-appointment", authDoctor, appointmentCancel);
 doctorRouter.post("/update-live-queue", authDoctor, updateLiveQueue);

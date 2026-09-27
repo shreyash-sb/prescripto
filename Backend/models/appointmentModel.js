@@ -17,13 +17,32 @@ const appointmentSchema = new Schema(
     paymentMethod: { type: String, default: "Pending" }, // "Card (Demo)", "UPI (Demo)", "Cash on Visit"
     paymentId: { type: String, default: "" },
     isCompleted: { type: Boolean, default: false, index: true },
+    
+    // Patient Case & Medical History
+    patientProblem: { type: String, default: "General Health Consultation & Checkup" },
+    medicalHistory: {
+      allergies: { type: [String], default: [] },
+      chronicConditions: { type: [String], default: [] },
+      bloodGroup: { type: String, default: "O+" },
+      vitals: { type: Object, default: {} },
+    },
+
+    // Doctor Acceptance & Case Review Workflow
+    appointmentStatus: {
+      type: String,
+      enum: ["Pending", "Accepted", "Rejected", "Completed", "Cancelled"],
+      default: "Pending",
+      index: true,
+    },
+    rejectionReason: { type: String, default: "" },
+
     prescription: { type: String, default: "" },
     diagnosisNotes: { type: String, default: "" },
     rating: { type: Number, default: 0 },
     review: { type: String, default: "" },
     tokenNumber: { type: Number, default: 1 },
-    crowdLevel: { type: String, default: "Low" }, // "Low" | "Moderate" | "Busy"
-    estimatedWaitTime: { type: Number, default: 10 }, // in minutes
+    crowdLevel: { type: String, default: "Low" },
+    estimatedWaitTime: { type: Number, default: 10 },
     allergyWarnings: { type: [String], default: [] },
     refundStatus: { type: String, default: "None" }, // "None" | "Initiated" | "Processing" | "Refunded"
     refundAmount: { type: Number, default: 0 },
@@ -36,7 +55,7 @@ const appointmentSchema = new Schema(
         isRequired: false,
         recommendedDays: 7,
         dueDate: "",
-        status: "None", // "None" | "Pending" | "Completed"
+        status: "None",
         patientFeedback: null,
       },
     },
@@ -44,7 +63,7 @@ const appointmentSchema = new Schema(
       type: [Object],
       default: [],
     },
-    queueStatus: { type: String, default: "Waiting" }, // "Waiting" | "In-Consultation" | "Completed" | "Cancelled"
+    queueStatus: { type: String, default: "Waiting" },
   },
   { timestamps: true }
 );

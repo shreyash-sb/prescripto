@@ -427,6 +427,146 @@ export const appointmentCancel = async (req, res, next) => {
 };
 
 /**
+ * Doctor Accepts Consultation Appointment
+ * POST /api/doctor/accept-appointment
+ */
+export const acceptAppointment = async (req, res, next) => {
+  try {
+    const docId = req.doctor._id;
+    const { appointmentId } = req.body;
+
+    if (!appointmentId) {
+      return next(new AppError("Appointment ID is required", 400));
+    }
+
+    const appointment = await appointmentModel.findById(appointmentId);
+    if (!appointment) {
+      return next(new AppError("Appointment not found", 404));
+    }
+
+    if (appointment.docId.toString() !== docId.toString()) {
+      return next(new AppError("Unauthorized action", 403));
+    }
+
+    if (appointment.cancelled || appointment.isCompleted) {
+      return next(new AppError("Cannot accept a completed or cancelled appointment", 400));
+    }
+
+    appointment.appointmentStatus = "Accepted";
+    appointment.queueStatus = "Waiting";
+    await appointment.save();
+
+    // Audit log
+    if (appointment.userId) {
+      await accessLogModel.create({
+        userId: appointment.userId.toString(),
+        accessorName: `Dr. ${appointment.docData.name}`,
+        accessorRole: "doctor",
+        accessorId: docId.toString(),
+        resource: "Appointment Review",
+        action: "ACCEPTED",
+        details: `Dr. ${appointment.docData.name} reviewed case and accepted consultation (Token #${appointment.tokenNumber}).`,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: `Appointment #${appointment.tokenNumber} for ${appointment.userData?.name || "patient"} accepted successfully!`,
+      appointment,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Doctor Rejects Consultation Appointment (with 100% automated refund)
+ * POST /api/doctor/reject-appointment
+ */
+export const rejectAppointment = async (req, res, next) => {
+  try {
+    const docId = req.doctor._id;
+    const { appointmentId, rejectionReason } = req.body;
+
+    if (!appointmentId) {
+      return next(new AppError("Appointment ID is required", 400));
+    }
+
+    const appointmentData = await appointmentModel.findById(appointmentId);
+    if (!appointmentData) {
+      return next(new AppError("Appointment not found", 404));
+    }
+
+    if (appointmentData.docId.toString() !== docId.toString()) {
+      return next(new AppError("Unauthorized action", 403));
+    }
+
+    if (appointmentData.cancelled || appointmentData.isCompleted) {
+      return next(new AppError("This appointment is already finalized", 400));
+    }
+
+    const updatePayload = {
+      cancelled: true,
+      appointmentStatus: "Rejected",
+      queueStatus: "Cancelled",
+      rejectionReason: rejectionReason || "Doctor unavailable for requested slot",
+    };
+
+    let refundProcessed = false;
+    let refundId = "";
+
+    if (appointmentData.payment) {
+      refundId = "REF_REJ_" + Date.now() + "_" + Math.floor(1000 + Math.random() * 9000);
+      updatePayload.refundStatus = "Refunded";
+      updatePayload.refundAmount = appointmentData.amount;
+      updatePayload.refundId = refundId;
+      updatePayload.refundDate = Date.now();
+      updatePayload.refundReason =
+        rejectionReason || "Doctor rejected consultation request - 100% full refund processed";
+
+      await userModel.findByIdAndUpdate(appointmentData.userId, {
+        $inc: { walletBalance: appointmentData.amount },
+      });
+      refundProcessed = true;
+    }
+
+    await appointmentModel.findByIdAndUpdate(appointmentId, updatePayload);
+
+    // Release doctor slot
+    await doctorModel.findByIdAndUpdate(docId, {
+      $pull: {
+        [`slots_booked.${appointmentData.slotDate}`]: appointmentData.slotTime,
+      },
+    });
+
+    if (appointmentData.userId) {
+      await accessLogModel.create({
+        userId: appointmentData.userId.toString(),
+        accessorName: `Dr. ${appointmentData.docData.name}`,
+        accessorRole: "doctor",
+        accessorId: docId.toString(),
+        resource: "Appointment Rejection & Refund",
+        action: "REJECTED",
+        details: refundProcessed
+          ? `Appointment rejected by doctor. Reason: ${updatePayload.rejectionReason}. 100% Refund ($${appointmentData.amount}) credited to wallet.`
+          : `Appointment rejected by doctor. Reason: ${updatePayload.rejectionReason}.`,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: refundProcessed
+        ? `Appointment rejected. 100% refund ($${appointmentData.amount}) credited to patient wallet.`
+        : "Appointment rejected and time slot released.",
+      refundProcessed,
+      refundId,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * Update Doctor Live Queue & Clinic Crowd Status
  * POST /api/doctor/update-live-queue
  */

@@ -164,6 +164,52 @@ const DoctorContextProvider = ({ children }) => {
     }
   };
 
+  const acceptAppointment = async (appointmentId) => {
+    try {
+      const { data } = await axios.post(
+        backendUrl + "/api/doctor/accept-appointment",
+        { appointmentId },
+        { headers: { dToken } }
+      );
+      if (data.success) {
+        toast.success(data.message || "Appointment accepted!");
+        getAppointments();
+        getDashData();
+        return true;
+      } else {
+        toast.error(data.message);
+        return false;
+      }
+    } catch (error) {
+      console.log("Doctor accept appointment error:", error);
+      toast.error(error.response?.data?.message || error.message);
+      return false;
+    }
+  };
+
+  const rejectAppointment = async (appointmentId, rejectionReason = "Doctor unavailable for requested slot") => {
+    try {
+      const { data } = await axios.post(
+        backendUrl + "/api/doctor/reject-appointment",
+        { appointmentId, rejectionReason },
+        { headers: { dToken } }
+      );
+      if (data.success) {
+        toast.success(data.message || "Appointment rejected");
+        getAppointments();
+        getDashData();
+        return true;
+      } else {
+        toast.error(data.message);
+        return false;
+      }
+    } catch (error) {
+      console.log("Doctor reject appointment error:", error);
+      toast.error(error.response?.data?.message || error.message);
+      return false;
+    }
+  };
+
   const value = {
     dToken,
     setDToken,
@@ -171,6 +217,8 @@ const DoctorContextProvider = ({ children }) => {
     appointments,
     setAppointments,
     getAppointments,
+    acceptAppointment,
+    rejectAppointment,
     completeAppointment,
     cancelAppointment,
     collectPayment,

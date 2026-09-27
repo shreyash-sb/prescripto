@@ -260,157 +260,204 @@ const MyAppointments = () => {
             </button>
           </div>
         ) : (
-          filteredAppointments.map((item, index) => (
-            <div
-              key={index}
-              className='bg-white border border-gray-200/90 rounded-3xl p-6 sm:p-7 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm hover:shadow-md transition-all'
-            >
-              {/* Doctor Details */}
-              <div className='flex items-start gap-5'>
-                <div className='w-22 h-22 sm:w-26 sm:h-26 rounded-2xl overflow-hidden flex-shrink-0 border shadow-sm'>
-                  <DoctorIdentity
-                    name={item.docData.name}
-                    speciality={item.docData.speciality}
-                    docId={item.docData._id}
-                    degree={item.docData.degree}
-                    className='h-full'
-                  />
-                </div>
-                <div className='text-base text-zinc-600'>
-                  <div className='flex flex-wrap items-center gap-2.5'>
-                    <p className='text-neutral-900 font-extrabold text-lg sm:text-xl'>{item.docData.name}</p>
-                    {item.tokenNumber && (
-                      <span className='text-xs bg-indigo-50 text-primary border border-indigo-200 px-3 py-0.5 rounded-full font-black'>
-                        Token #{item.tokenNumber}
-                      </span>
-                    )}
-                    {item.payment ? (
-                      <span className='text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-0.5 rounded-full font-bold'>
-                        ✓ Paid ({item.paymentMethod || 'Online'})
-                      </span>
-                    ) : !item.cancelled && (
-                      <span className='text-xs bg-amber-50 text-amber-800 border border-amber-200 px-3 py-0.5 rounded-full font-bold flex items-center gap-1.5'>
-                        <span className='w-2 h-2 rounded-full bg-amber-500 animate-ping'></span> Payment Due ({currencySymbol}{item.amount})
-                      </span>
-                    )}
-                    {item.isCompleted && (
-                      <span className='text-xs bg-blue-50 text-blue-700 border border-blue-200 px-3 py-0.5 rounded-full font-bold'>
-                        ✓ Consultation Completed
-                      </span>
-                    )}
+          filteredAppointments.map((item, index) => {
+            const isPendingReview = !item.cancelled && !item.isCompleted && item.appointmentStatus !== 'Accepted'
+            const isAccepted = !item.cancelled && !item.isCompleted && item.appointmentStatus === 'Accepted'
+            const isRejected = item.appointmentStatus === 'Rejected' || (item.cancelled && item.rejectionReason)
+
+            return (
+              <div
+                key={index}
+                className='bg-white border border-gray-200/90 rounded-3xl p-6 sm:p-7 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm hover:shadow-md transition-all'
+              >
+                {/* Doctor Details & Case Snapshot */}
+                <div className='flex items-start gap-5 flex-1'>
+                  <div className='w-22 h-22 sm:w-26 sm:h-26 rounded-2xl overflow-hidden flex-shrink-0 border shadow-sm'>
+                    <DoctorIdentity
+                      name={item.docData.name}
+                      speciality={item.docData.speciality}
+                      docId={item.docData._id}
+                      degree={item.docData.degree}
+                      className='h-full'
+                    />
                   </div>
-
-                  <p className='text-primary font-bold text-sm mt-1'>{item.docData.speciality}</p>
-
-                  <div className='mt-2 text-xs sm:text-sm text-gray-600'>
-                    <p>
-                      <strong>Clinic:</strong> {item.docData.address?.line1}, {item.docData.address?.line2}
-                    </p>
-                  </div>
-
-                  <div className='mt-3 flex flex-wrap items-center gap-2.5 text-xs sm:text-sm font-bold text-neutral-800'>
-                    <span className='bg-indigo-50 border border-indigo-100 text-primary px-3 py-1.5 rounded-xl'>
-                      📅 {slotDateFormat(item.slotDate)}
-                    </span>
-                    <span className='bg-gray-100 px-3 py-1.5 rounded-xl'>⏰ {item.slotTime}</span>
-                    <span className='text-primary font-black text-sm sm:text-base'>
-                      Fee: {currencySymbol}
-                      {item.amount}
-                    </span>
-                  </div>
-
-                  {/* AUTOMATED REFUND CARD FOR CANCELLED APPOINTMENTS */}
-                  {item.cancelled && (item.refundStatus === 'Refunded' || item.payment) && (
-                    <div className='mt-3.5 p-4 bg-emerald-50/90 border border-emerald-200 rounded-2xl text-xs sm:text-sm text-emerald-950 space-y-1.5'>
-                      <div className='flex items-center justify-between'>
-                        <span className='font-black text-emerald-900 flex items-center gap-1.5'>
-                          <span>💰</span> 100% Automated Refund Completed
+                  <div className='text-base text-zinc-600 flex-1'>
+                    <div className='flex flex-wrap items-center gap-2.5'>
+                      <p className='text-neutral-900 font-extrabold text-lg sm:text-xl'>{item.docData.name}</p>
+                      {item.tokenNumber && (
+                        <span className='text-xs bg-indigo-50 text-primary border border-indigo-200 px-3 py-0.5 rounded-full font-black'>
+                          Token #{item.tokenNumber}
                         </span>
-                        <span className='font-mono font-bold text-xs bg-emerald-200 text-emerald-900 px-2 py-0.5 rounded'>
-                          {item.refundId || 'REF_AUTO_CREDITED'}
+                      )}
+
+                      {/* Doctor Review Acceptance Status Badges */}
+                      {isPendingReview && (
+                        <span className='text-xs bg-amber-50 text-amber-800 border border-amber-300 px-3 py-0.5 rounded-full font-bold flex items-center gap-1.5 animate-pulse'>
+                          <span className='w-2 h-2 rounded-full bg-amber-500'></span>
+                          🕒 Pending Doctor Review
                         </span>
-                      </div>
-                      <p className='text-xs text-emerald-800'>
-                        {currencySymbol}{item.amount} was returned 100% to your Healthcare Wallet & payment source without deduction.
+                      )}
+                      {isAccepted && (
+                        <span className='text-xs bg-emerald-50 text-emerald-800 border border-emerald-300 px-3 py-0.5 rounded-full font-extrabold flex items-center gap-1'>
+                          <span>✓</span> Accepted by Doctor
+                        </span>
+                      )}
+                      {isRejected && (
+                        <span className='text-xs bg-rose-50 text-rose-700 border border-rose-200 px-3 py-0.5 rounded-full font-bold'>
+                          ✕ Rejected by Doctor
+                        </span>
+                      )}
+
+                      {item.payment ? (
+                        <span className='text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-0.5 rounded-full font-bold'>
+                          ✓ Paid ({item.paymentMethod || 'Online'})
+                        </span>
+                      ) : !item.cancelled && (
+                        <span className='text-xs bg-amber-50 text-amber-800 border border-amber-200 px-3 py-0.5 rounded-full font-bold flex items-center gap-1.5'>
+                          Payment Due ({currencySymbol}{item.amount})
+                        </span>
+                      )}
+                      {item.isCompleted && (
+                        <span className='text-xs bg-blue-50 text-blue-700 border border-blue-200 px-3 py-0.5 rounded-full font-bold'>
+                          ✓ Consultation Completed
+                        </span>
+                      )}
+                    </div>
+
+                    <p className='text-primary font-bold text-sm mt-1'>{item.docData.speciality}</p>
+
+                    {/* Submitted Medical Problem / Case Details */}
+                    <div className='mt-2 p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs sm:text-sm text-gray-800'>
+                      <span className='font-bold text-gray-500 uppercase tracking-wider text-[10px] block'>
+                        🩺 Your Submitted Symptoms / Case:
+                      </span>
+                      <p className='font-medium text-gray-900 mt-0.5'>
+                        {item.patientProblem || 'General Health Consultation & Routine Checkup'}
                       </p>
+                    </div>
+
+                    <div className='mt-2.5 text-xs text-gray-600 flex items-center gap-2 flex-wrap'>
+                      <span>
+                        <strong>Clinic:</strong> {item.docData.address?.line1}, {item.docData.address?.line2}
+                      </span>
+                      {item.docData.roomNumber && (
+                        <span className='bg-gray-100 px-2 py-0.5 rounded text-gray-700 font-semibold'>
+                          Room: {item.docData.roomNumber}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className='mt-3 flex flex-wrap items-center gap-2.5 text-xs sm:text-sm font-bold text-neutral-800'>
+                      <span className='bg-indigo-50 border border-indigo-100 text-primary px-3 py-1.5 rounded-xl'>
+                        📅 {slotDateFormat(item.slotDate)}
+                      </span>
+                      <span className='bg-gray-100 px-3 py-1.5 rounded-xl'>⏰ {item.slotTime}</span>
+                      <span className='text-primary font-black text-sm sm:text-base'>
+                        Fee: {currencySymbol}
+                        {item.amount}
+                      </span>
+                    </div>
+
+                    {/* Rejection Notice */}
+                    {isRejected && item.rejectionReason && (
+                      <div className='mt-3 p-3 bg-rose-50 border border-rose-200 rounded-2xl text-xs text-rose-900'>
+                        <strong>Doctor's Reason:</strong> {item.rejectionReason}
+                      </div>
+                    )}
+
+                    {/* AUTOMATED REFUND CARD FOR CANCELLED/REJECTED APPOINTMENTS */}
+                    {item.cancelled && (item.refundStatus === 'Refunded' || item.payment) && (
+                      <div className='mt-3.5 p-4 bg-emerald-50/90 border border-emerald-200 rounded-2xl text-xs sm:text-sm text-emerald-950 space-y-1.5'>
+                        <div className='flex items-center justify-between'>
+                          <span className='font-black text-emerald-900 flex items-center gap-1.5'>
+                            <span>💰</span> 100% Automated Refund Completed
+                          </span>
+                          <span className='font-mono font-bold text-xs bg-emerald-200 text-emerald-900 px-2 py-0.5 rounded'>
+                            {item.refundId || 'REF_AUTO_CREDITED'}
+                          </span>
+                        </div>
+                        <p className='text-xs text-emerald-800'>
+                          {currencySymbol}{item.amount} was returned 100% to your Healthcare Wallet & payment source without deduction.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className='flex flex-col sm:flex-row md:flex-col gap-2.5 justify-center min-w-[220px] border-t md:border-t-0 pt-4 md:pt-0'>
+                  {/* Outstanding Payment */}
+                  {!item.cancelled && !item.payment && (
+                    <button
+                      onClick={() => setSelectedPayAppointment(item)}
+                      className='text-sm font-bold py-3 px-5 rounded-2xl bg-gradient-to-r from-primary to-indigo-600 text-white hover:opacity-95 shadow-md transition-all active:scale-95 text-center flex items-center justify-center gap-2'
+                    >
+                      💳 {item.isCompleted ? 'Pay Consultation Fee' : 'Pay Online'} ({currencySymbol}
+                      {item.amount})
+                    </button>
+                  )}
+
+                  {/* Paid Receipt View */}
+                  {item.payment && (
+                    <button
+                      onClick={() => setReceiptModalAppt(item)}
+                      className='text-xs sm:text-sm font-bold py-2.5 px-4 border-2 border-emerald-500 rounded-2xl text-emerald-700 bg-emerald-50/50 hover:bg-emerald-100 transition-all text-center flex items-center justify-center gap-1.5'
+                    >
+                      📄 Tax Invoice ({item.paymentMethod || 'Paid'})
+                    </button>
+                  )}
+
+                  {/* Completed State Actions */}
+                  {item.isCompleted && (
+                    <>
+                      <button
+                        onClick={() => setPrescriptionModalAppt(item)}
+                        className='text-xs sm:text-sm font-extrabold py-2.5 px-4 border border-indigo-300 bg-indigo-50 text-primary hover:bg-indigo-100 rounded-2xl transition-all text-center shadow-sm flex items-center justify-center gap-1.5'
+                      >
+                        💊 View E-Prescription
+                      </button>
+
+                      {/* 1-Click Convert Rx to Medicine Routine */}
+                      <button
+                        onClick={() => handleConvertRxToSchedule(item)}
+                        className='text-xs font-black py-2.5 px-4 bg-gradient-to-r from-teal-600 to-emerald-600 text-white hover:opacity-95 rounded-2xl shadow-sm transition-all text-center flex items-center justify-center gap-1.5'
+                      >
+                        <span>🔄</span> Sync Rx to Daily Routine
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          setRatingModalAppt(item)
+                          setUserRating(item.rating || 5)
+                          setUserReview(item.review || '')
+                        }}
+                        className='text-xs sm:text-sm font-bold py-2 px-4 border border-gray-300 rounded-2xl text-gray-700 hover:bg-gray-50 text-center'
+                      >
+                        ⭐ {item.rating ? `Rating: ${item.rating}/5` : 'Rate Doctor'}
+                      </button>
+                    </>
+                  )}
+
+                  {/* Cancel Appointment (100% Refundable) */}
+                  {!item.cancelled && !item.isCompleted && (
+                    <button
+                      onClick={() => handleCancelAppointment(item._id)}
+                      className='text-xs sm:text-sm font-semibold py-2.5 px-4 border border-gray-200 rounded-2xl text-gray-600 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 transition-all text-center'
+                    >
+                      Cancel Appointment
+                    </button>
+                  )}
+
+                  {/* Status Badges */}
+                  {item.cancelled && (
+                    <div className='py-2 px-4 border border-rose-200 rounded-2xl text-rose-600 bg-rose-50 text-xs sm:text-sm font-bold text-center'>
+                      {isRejected ? 'Consultation Rejected' : 'Appointment Cancelled'}
                     </div>
                   )}
                 </div>
               </div>
-
-              {/* Action Buttons */}
-              <div className='flex flex-col sm:flex-row md:flex-col gap-2.5 justify-center min-w-[220px] border-t md:border-t-0 pt-4 md:pt-0'>
-                {/* Outstanding Payment */}
-                {!item.cancelled && !item.payment && (
-                  <button
-                    onClick={() => setSelectedPayAppointment(item)}
-                    className='text-sm font-bold py-3 px-5 rounded-2xl bg-gradient-to-r from-primary to-indigo-600 text-white hover:opacity-95 shadow-md transition-all active:scale-95 text-center flex items-center justify-center gap-2'
-                  >
-                    💳 {item.isCompleted ? 'Pay Consultation Fee' : 'Pay Online'} ({currencySymbol}
-                    {item.amount})
-                  </button>
-                )}
-
-                {/* Paid Receipt View */}
-                {item.payment && (
-                  <button
-                    onClick={() => setReceiptModalAppt(item)}
-                    className='text-xs sm:text-sm font-bold py-2.5 px-4 border-2 border-emerald-500 rounded-2xl text-emerald-700 bg-emerald-50/50 hover:bg-emerald-100 transition-all text-center flex items-center justify-center gap-1.5'
-                  >
-                    📄 Tax Invoice ({item.paymentMethod || 'Paid'})
-                  </button>
-                )}
-
-                {/* Completed State Actions */}
-                {item.isCompleted && (
-                  <>
-                    <button
-                      onClick={() => setPrescriptionModalAppt(item)}
-                      className='text-xs sm:text-sm font-extrabold py-2.5 px-4 border border-indigo-300 bg-indigo-50 text-primary hover:bg-indigo-100 rounded-2xl transition-all text-center shadow-sm flex items-center justify-center gap-1.5'
-                    >
-                      💊 View E-Prescription
-                    </button>
-
-                    {/* 1-Click Convert Rx to Medicine Routine */}
-                    <button
-                      onClick={() => handleConvertRxToSchedule(item)}
-                      className='text-xs font-black py-2.5 px-4 bg-gradient-to-r from-teal-600 to-emerald-600 text-white hover:opacity-95 rounded-2xl shadow-sm transition-all text-center flex items-center justify-center gap-1.5'
-                    >
-                      <span>🔄</span> Sync Rx to Daily Routine
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        setRatingModalAppt(item)
-                        setUserRating(item.rating || 5)
-                        setUserReview(item.review || '')
-                      }}
-                      className='text-xs sm:text-sm font-bold py-2 px-4 border border-gray-300 rounded-2xl text-gray-700 hover:bg-gray-50 text-center'
-                    >
-                      ⭐ {item.rating ? `Rating: ${item.rating}/5` : 'Rate Doctor'}
-                    </button>
-                  </>
-                )}
-
-                {/* Cancel Appointment (100% Refundable) */}
-                {!item.cancelled && !item.isCompleted && (
-                  <button
-                    onClick={() => handleCancelAppointment(item._id)}
-                    className='text-xs sm:text-sm font-semibold py-2.5 px-4 border border-gray-200 rounded-2xl text-gray-600 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 transition-all text-center'
-                  >
-                    Cancel Appointment
-                  </button>
-                )}
-
-                {/* Status Badges */}
-                {item.cancelled && (
-                  <div className='py-2 px-4 border border-rose-200 rounded-2xl text-rose-600 bg-rose-50 text-xs sm:text-sm font-bold text-center'>
-                    Appointment Cancelled
-                  </div>
-                )}
-              </div>
-            </div>
-          ))
+            )
+          })
         )}
       </div>
 

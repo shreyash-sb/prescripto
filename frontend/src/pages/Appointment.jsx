@@ -112,6 +112,8 @@ const Appointment = () => {
     setDocSlots(allDaySlots)
   }
 
+  const [patientProblem, setPatientProblem] = useState('')
+
   const handleBookingClick = () => {
     if (!token) {
       toast.warn('Please sign in or register to book your consultation')
@@ -139,13 +141,19 @@ const Appointment = () => {
 
       const { data } = await axios.post(
         `${backendUrl}/api/user/book-appointment`,
-        { docId, slotDate, slotTime },
+        {
+          docId,
+          slotDate,
+          slotTime,
+          patientProblem: patientProblem.trim() || 'General Medical Consultation & Routine Checkup',
+        },
         { headers: { token } }
       )
 
       if (data.success) {
         toast.success(data.message || 'Appointment booked successfully!')
         setShowConfirmModal(false)
+        setPatientProblem('')
         await getDoctorData()
         navigate('/my-appointments')
       } else {
@@ -500,65 +508,122 @@ const Appointment = () => {
           </div>
         </div>
 
-        {/* Confirmation Modal */}
+        {/* Confirmation & Medical Case Submission Modal */}
         {showConfirmModal && (
-          <div className='fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in'>
-            <div className='bg-white rounded-3xl w-full max-w-lg p-7 sm:p-8 shadow-2xl border'>
+          <div className='fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in overflow-y-auto'>
+            <div className='bg-white rounded-3xl w-full max-w-xl p-6 sm:p-8 shadow-2xl border my-6'>
               <div className='flex justify-between items-center pb-4 border-b border-gray-100'>
-                <h3 className='font-bold text-lg text-gray-900'>Confirm Appointment</h3>
+                <div>
+                  <h3 className='font-extrabold text-xl text-gray-900'>Book & Submit Medical Case</h3>
+                  <p className='text-xs text-gray-500 mt-0.5'>Consultation with Dr. {docInfo.name}</p>
+                </div>
                 <button
                   onClick={() => setShowConfirmModal(false)}
-                  className='text-gray-400 hover:text-gray-600 font-bold text-lg'
+                  className='w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 font-bold flex items-center justify-center'
                 >
                   ✕
                 </button>
               </div>
 
               <div className='my-5 space-y-4 text-sm'>
-                <div className='bg-indigo-50/70 p-5 rounded-2xl border border-indigo-100/80 space-y-2.5'>
-                  <div className='flex justify-between text-base'>
-                    <span className='text-gray-600 font-medium'>Doctor:</span>
+                {/* Appointment Summary Box */}
+                <div className='bg-indigo-50/70 p-4 sm:p-5 rounded-2xl border border-indigo-100/80 grid grid-cols-2 gap-3 text-xs sm:text-sm'>
+                  <div>
+                    <span className='text-gray-500 font-medium block text-[11px] uppercase tracking-wider'>Specialist Doctor</span>
                     <span className='font-bold text-gray-900'>{docInfo.name}</span>
+                    <span className='text-primary font-bold block text-xs'>{docInfo.speciality}</span>
                   </div>
-                  <div className='flex justify-between text-base'>
-                    <span className='text-gray-600 font-medium'>Speciality:</span>
-                    <span className='text-primary font-bold'>{docInfo.speciality}</span>
-                  </div>
-                  <div className='flex justify-between text-base'>
-                    <span className='text-gray-600 font-medium'>Time Slot:</span>
+                  <div>
+                    <span className='text-gray-500 font-medium block text-[11px] uppercase tracking-wider'>Scheduled Slot</span>
                     <span className='font-bold text-gray-900'>{slotTime}</span>
+                    <span className='text-xs text-gray-600 block'>Room: {docInfo.roomNumber || 'OPD-102'}</span>
                   </div>
-                  <div className='flex justify-between border-t border-indigo-200/80 pt-2.5 font-bold text-lg text-gray-900'>
+                  <div className='col-span-2 flex justify-between border-t border-indigo-200/80 pt-2.5 font-bold text-sm text-gray-900'>
                     <span>Consultation Fee:</span>
-                    <span className='text-primary font-extrabold text-xl'>
-                      {currencySymbol}
-                      {docInfo.fees}
+                    <span className='text-primary font-black text-base sm:text-lg'>
+                      {currencySymbol}{docInfo.fees}
                     </span>
                   </div>
                 </div>
 
-                {userData?.allergies?.length > 0 && (
-                  <div className='p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900'>
-                    ✓ Allergies Attached: {userData.allergies.join(', ')}
+                {/* Patient Current Problem / Symptoms Input */}
+                <div>
+                  <label className='block font-bold text-gray-900 mb-1.5 text-xs sm:text-sm'>
+                    🩺 Describe Your Current Problem / Symptoms <span className='text-rose-500'>*</span>
+                  </label>
+                  <p className='text-xs text-gray-500 mb-2'>
+                    The doctor will review this case before accepting your consultation.
+                  </p>
+                  <textarea
+                    rows='3'
+                    required
+                    value={patientProblem}
+                    onChange={(e) => setPatientProblem(e.target.value)}
+                    placeholder='e.g., Severe throat pain, dry cough, and fever since yesterday. Experiencing mild fatigue...'
+                    className='w-full border border-gray-300 rounded-2xl p-3.5 text-xs sm:text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 bg-gray-50/50 hover:bg-white transition-all font-sans'
+                  />
+                </div>
+
+                {/* Profile Medical History Attached Preview Card */}
+                <div className='p-4 bg-slate-50 border border-slate-200/90 rounded-2xl space-y-2'>
+                  <div className='flex items-center justify-between'>
+                    <span className='text-xs font-bold text-gray-800 flex items-center gap-1.5'>
+                      <span>📋</span> Profile Medical History Attached
+                    </span>
+                    <span className='text-[10px] font-black bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full'>
+                      Auto-Transmitted ✓
+                    </span>
                   </div>
-                )}
+                  <p className='text-[11px] text-gray-500'>
+                    Your recorded medical profile will be securely shared with Dr. {docInfo.name} for diagnostic safety:
+                  </p>
+
+                  <div className='grid grid-cols-2 gap-2 text-xs pt-1'>
+                    <div className='bg-white p-2.5 rounded-xl border border-gray-100'>
+                      <span className='text-[10px] text-gray-400 font-bold block uppercase'>Blood Group</span>
+                      <span className='font-extrabold text-rose-600'>{userData?.bloodGroup || 'O+'}</span>
+                    </div>
+                    <div className='bg-white p-2.5 rounded-xl border border-gray-100'>
+                      <span className='text-[10px] text-gray-400 font-bold block uppercase'>Drug Allergies</span>
+                      <span className={`font-bold ${userData?.allergies?.length > 0 ? 'text-amber-700' : 'text-emerald-700'}`}>
+                        {userData?.allergies?.length > 0 ? userData.allergies.join(', ') : 'None documented'}
+                      </span>
+                    </div>
+                    <div className='bg-white p-2.5 rounded-xl border border-gray-100 col-span-2'>
+                      <span className='text-[10px] text-gray-400 font-bold block uppercase'>Chronic Health Conditions</span>
+                      <span className='font-medium text-gray-800'>
+                        {userData?.chronicConditions?.length > 0 ? userData.chronicConditions.join(', ') : 'None recorded'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className='flex gap-3 pt-3 border-t border-gray-100'>
                 <button
                   type='button'
                   onClick={() => setShowConfirmModal(false)}
-                  className='w-1/2 py-3 rounded-2xl border border-gray-300 text-sm font-bold text-gray-600 hover:bg-gray-50'
+                  className='w-1/3 py-3 rounded-2xl border border-gray-300 text-xs sm:text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors'
                 >
-                  Cancel
+                  Back
                 </button>
                 <button
                   type='button'
                   disabled={isBooking}
                   onClick={confirmAndBookAppointment}
-                  className='w-1/2 py-3 rounded-2xl bg-primary text-white text-sm font-bold shadow-md hover:bg-opacity-95'
+                  className='w-2/3 py-3 rounded-2xl bg-primary text-white text-xs sm:text-sm font-extrabold shadow-lg hover:bg-opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2'
                 >
-                  {isBooking ? 'Booking...' : 'Confirm Booking'}
+                  {isBooking ? (
+                    <>
+                      <span className='inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin'></span>
+                      <span>Submitting Case...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Submit Case & Book</span>
+                      <span>→</span>
+                    </>
+                  )}
                 </button>
               </div>
             </div>

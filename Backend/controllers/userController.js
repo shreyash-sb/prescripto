@@ -307,7 +307,7 @@ export const updateProfile = async (req, res, next) => {
 export const bookAppointment = async (req, res, next) => {
   try {
     const userId = req.user._id;
-    const { docId, slotDate, slotTime } = req.body;
+    const { docId, slotDate, slotTime, patientProblem } = req.body;
 
     if (!docId || !slotTime || !/^\d{1,2}_\d{1,2}_\d{4}$/.test(slotDate || "")) {
       return next(new AppError("Invalid doctor or appointment slot parameters", 400));
@@ -388,6 +388,16 @@ export const bookAppointment = async (req, res, next) => {
     const appointmentData = {
       userId,
       docId,
+      patientProblem:
+        (patientProblem && patientProblem.trim()) ||
+        "General Medical Consultation & Routine Checkup",
+      medicalHistory: {
+        allergies: userData.allergies || [],
+        chronicConditions: userData.chronicConditions || [],
+        bloodGroup: userData.bloodGroup || "O+",
+        vitals: userData.vitals || {},
+      },
+      appointmentStatus: "Pending",
       userData: {
         _id: userData._id,
         name: userData.name,
