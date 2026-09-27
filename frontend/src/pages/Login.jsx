@@ -13,19 +13,37 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
-  const fillDemoPatient = () => {
-    setState('Login')
-    setEmail('patient@example.com')
-    setPassword('patient12345')
-    toast.info('Filled Demo Patient credentials!')
+  const handleInstantDemoLogin = async () => {
+    try {
+      setIsLoading(true)
+      const { data } = await axios.post(`${backendUrl}/api/user/login`, {
+        email: 'patient@example.com',
+        password: 'patient12345',
+      })
+      if (data.success) {
+        localStorage.setItem('token', data.token)
+        setToken(data.token)
+        toast.success('Logged in as Demo Patient (Alex)!')
+        navigate('/')
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error(error.response?.data?.message || 'Demo login failed')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const onSubmitHandler = async (e) => {
     e.preventDefault()
     try {
+      setIsLoading(true)
       if (state === 'Sign Up') {
-        const { data } = await axios.post(backendUrl + '/api/user/register', {
+        const { data } = await axios.post(`${backendUrl}/api/user/register`, {
           name,
           password,
           email,
@@ -34,11 +52,12 @@ const Login = () => {
           localStorage.setItem('token', data.token)
           setToken(data.token)
           toast.success('Account created successfully!')
+          navigate('/')
         } else {
           toast.error(data.message)
         }
       } else {
-        const { data } = await axios.post(backendUrl + '/api/user/login', {
+        const { data } = await axios.post(`${backendUrl}/api/user/login`, {
           password,
           email,
         })
@@ -46,13 +65,16 @@ const Login = () => {
           localStorage.setItem('token', data.token)
           setToken(data.token)
           toast.success('Welcome back!')
+          navigate('/')
         } else {
           toast.error(data.message)
         }
       }
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error.response?.data?.message || error.message)
       console.log(error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -64,15 +86,16 @@ const Login = () => {
 
   return (
     <div className='min-h-[80vh] flex flex-col justify-center items-center py-10 px-4'>
-      {/* Demo Patient Fast Fill */}
-      <div className='flex items-center gap-2 mb-5 bg-white px-5 py-2.5 rounded-full border shadow-sm text-sm'>
-        <span className='font-bold text-gray-600'>🚀 Instant Demo:</span>
+      {/* Patient Demo Quick Login */}
+      <div className='flex items-center gap-2 mb-6 bg-white px-5 py-2 rounded-full border border-indigo-100 shadow-sm text-xs sm:text-sm'>
+        <span className='font-bold text-gray-600'>Demo:</span>
         <button
           type='button'
-          onClick={fillDemoPatient}
-          className='bg-primary/10 hover:bg-primary/20 text-primary font-bold px-4 py-1.5 rounded-full transition-all'
+          disabled={isLoading}
+          onClick={handleInstantDemoLogin}
+          className='bg-primary hover:bg-opacity-95 text-white font-bold px-4 py-1.5 rounded-full transition-all shadow-sm active:scale-95 text-xs'
         >
-          👤 Fill Demo Patient
+          {isLoading ? 'Logging in...' : '👤 Patient Demo'}
         </button>
       </div>
 
@@ -136,9 +159,10 @@ const Login = () => {
 
         <button
           type='submit'
+          disabled={isLoading}
           className='bg-primary text-white w-full py-3.5 rounded-2xl text-base font-bold hover:bg-opacity-95 shadow-md mt-2 transition-all active:scale-95'
         >
-          {state === 'Sign Up' ? 'Create Account' : 'Log in'}
+          {isLoading ? 'Please wait...' : state === 'Sign Up' ? 'Create Account' : 'Log in'}
         </button>
 
         <div className='text-sm text-center pt-3 border-t mt-2 text-gray-600'>

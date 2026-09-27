@@ -1,28 +1,38 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import Header from '../components/Header'
 import SpecialityMenu from '../components/SpecialityMenu'
 import TopDoctors from '../components/TopDoctors'
 import Banner from '../components/Banner'
+import SymptomTriageModal from '../components/SymptomTriageModal'
+import { AppContext } from '../context/AppContext'
+import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
   const [openFaq, setOpenFaq] = useState(null)
+  const [showTriage, setShowTriage] = useState(false)
+  const { t } = useContext(AppContext)
+  const navigate = useNavigate()
 
   const faqs = [
     {
-      q: 'How do I book an appointment with a doctor?',
-      a: 'Select your preferred doctor from our directory, pick an available date and 30-minute time slot, and click Confirm Booking. You can track all your bookings in the My Appointments tab.',
+      q: 'How do I filter doctors based on live clinic crowd?',
+      a: 'In the All Doctors tab, use the Crowd Level filter (Low Crowd, Moderate, Busy) or sort by Lowest Wait Time to book doctors with fast-track queues.',
     },
     {
-      q: 'Can I get a digital prescription after consultation?',
-      a: 'Yes! Once your doctor completes the consultation, they provide digital diagnosis notes and Rx prescription medication details which you can view, save, and print anytime.',
+      q: 'How does the automated 100% refund policy work?',
+      a: 'If you or the attending doctor cancels a paid consultation, our Automated Refund Engine immediately issues a 100% full refund to your healthcare wallet and logs the audit reference.',
     },
     {
-      q: 'What payment methods are supported?',
-      a: 'We support instant simulated Card checkout, UPI QR payment simulator, and Cash payment directly on clinic arrival.',
+      q: 'How do I convert my doctor prescription into a medicine schedule?',
+      a: 'Go to My Appointments and click "Sync Rx to Routine", or navigate to Medicine Schedule and click "AI Prescription Photo Parser". It automatically detects medicine names, times (Morning/Night), and sets daily reminders.',
     },
     {
-      q: 'How can doctors and administrators manage appointments?',
-      a: 'Healthcare specialists and hospital administrators have dedicated login portals with live consultation queues, earnings metrics, e-prescription generation tools, and staff directory management.',
+      q: 'Can I see who has accessed my medical records and when?',
+      a: 'Yes! Prescripto includes a dedicated Privacy Access Audit Log. You can view timestamped trails of every doctor or administrator who opened your profile, vitals, or medical history.',
+    },
+    {
+      q: 'What languages are supported?',
+      a: 'Prescripto offers full multi-lingual support across English, Hindi (हिंदी), and Marathi (मराठी). You can change language instantly in the top navbar.',
     },
   ]
 
@@ -32,36 +42,132 @@ const Home = () => {
       role: 'Verified Patient',
       rating: 5,
       comment:
-        'Booking Dr. Richard James was seamless. Got instant confirmation and downloaded my prescription right after the consultation!',
+        'The live queue tracker and crowd filter saved me hours! I chose a doctor with Low Crowd and got attended in under 10 minutes.',
     },
     {
-      name: 'David Miller',
-      role: 'Cardiology Patient',
+      name: 'Amit Deshmukh',
+      role: 'Cardiology Patient (Pune)',
       rating: 5,
       comment:
-        'The 7-day slot availability feature saved me hours of clinic waiting. Outstanding platform design and ease of use.',
+        'मराठी भाषेतील इंटरफेस अतिशय सोपा आहे. प्रिस्क्रिप्शन थेट दैनंदिन औषध वेळापत्रकात सिंक झाले, अलार्म पण वाजतो!',
     },
     {
       name: 'Elena Rostova',
       role: 'Dermatology Patient',
       rating: 5,
       comment:
-        'Cleanest healthcare app I have ever used. Love the instant UPI simulator and tax invoice generation!',
+        'When I had to cancel my slot, the 100% refund was credited immediately into my healthcare wallet. True transparency and peace of mind.',
     },
   ]
 
   return (
     <div className='space-y-12 py-2'>
-      <Header />
+      <Header onOpenTriage={() => setShowTriage(true)} />
+
+      {/* Feature Showcase Grid (Crowd Filter, Rx Sync, Safety Shield, Privacy Trail) */}
+      <section className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-8'>
+        {/* Card 1 */}
+        <div
+          onClick={() => navigate('/doctors')}
+          className='p-6 rounded-3xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-200/80 hover:shadow-lg transition-all cursor-pointer group'
+        >
+          <div className='w-12 h-12 rounded-2xl bg-emerald-500 text-white text-2xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform'>
+            👥
+          </div>
+          <h3 className='text-lg font-black text-gray-900 mt-4'>Live Crowd Filter</h3>
+          <p className='text-xs text-gray-600 mt-1 leading-relaxed'>
+            Filter clinics by live crowd (Low / Moderate / Busy) and avoid long OPD waiting times.
+          </p>
+          <span className='inline-block text-xs font-bold text-emerald-700 mt-3 group-hover:underline'>
+            Find Fast-Track Doctors →
+          </span>
+        </div>
+
+        {/* Card 2 */}
+        <div
+          onClick={() => navigate('/medicine-schedule')}
+          className='p-6 rounded-3xl bg-gradient-to-br from-blue-500/10 to-indigo-500/10 border border-blue-200/80 hover:shadow-lg transition-all cursor-pointer group'
+        >
+          <div className='w-12 h-12 rounded-2xl bg-primary text-white text-2xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform'>
+            💊
+          </div>
+          <h3 className='text-lg font-black text-gray-900 mt-4'>Rx → Medicine Schedule</h3>
+          <p className='text-xs text-gray-600 mt-1 leading-relaxed'>
+            1-click convert prescriptions into timed daily dose reminders with audio alerts.
+          </p>
+          <span className='inline-block text-xs font-bold text-primary mt-3 group-hover:underline'>
+            Manage Schedule →
+          </span>
+        </div>
+
+        {/* Card 3 */}
+        <div
+          onClick={() => navigate('/my-profile')}
+          className='p-6 rounded-3xl bg-gradient-to-br from-red-500/10 to-rose-500/10 border border-red-200/80 hover:shadow-lg transition-all cursor-pointer group'
+        >
+          <div className='w-12 h-12 rounded-2xl bg-red-500 text-white text-2xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform'>
+            🛡️
+          </div>
+          <h3 className='text-lg font-black text-gray-900 mt-4'>Allergy Safety Shield</h3>
+          <p className='text-xs text-gray-600 mt-1 leading-relaxed'>
+            Pre-consultation drug sensitivity warnings flag allergies to doctors before prescribing.
+          </p>
+          <span className='inline-block text-xs font-bold text-red-600 mt-3 group-hover:underline'>
+            Configure Shield →
+          </span>
+        </div>
+
+        {/* Card 4 */}
+        <div
+          onClick={() => navigate('/audit-logs')}
+          className='p-6 rounded-3xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-200/80 hover:shadow-lg transition-all cursor-pointer group'
+        >
+          <div className='w-12 h-12 rounded-2xl bg-purple-600 text-white text-2xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform'>
+            🔒
+          </div>
+          <h3 className='text-lg font-black text-gray-900 mt-4'>Privacy Access Log</h3>
+          <p className='text-xs text-gray-600 mt-1 leading-relaxed'>
+            Complete transparency. Know exactly which doctor or staff accessed your records and when.
+          </p>
+          <span className='inline-block text-xs font-bold text-purple-700 mt-3 group-hover:underline'>
+            Inspect Audit Trail →
+          </span>
+        </div>
+      </section>
+
       <SpecialityMenu />
       <TopDoctors />
+
+      {/* 100% Refund & Patient Rights Banner */}
+      <section className='bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-800 text-white rounded-3xl p-8 sm:p-12 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden'>
+        <div className='max-w-xl'>
+          <span className='px-3 py-1 bg-white/20 text-white rounded-full text-xs font-bold uppercase tracking-wider'>
+            Automated Protection
+          </span>
+          <h2 className='text-2xl sm:text-3xl font-black mt-3'>
+            100% Instant Refund Guarantee on Cancellation
+          </h2>
+          <p className='text-emerald-100 text-sm sm:text-base mt-2 leading-relaxed'>
+            Plans change. If you or the attending doctor cancels an appointment, your entire consultation fee is
+            refunded instantly with zero deductions.
+          </p>
+        </div>
+        <div className='shrink-0 flex items-center gap-3'>
+          <button
+            onClick={() => navigate('/my-appointments')}
+            className='px-8 py-4 bg-white text-emerald-800 hover:bg-emerald-50 rounded-full font-extrabold text-base shadow-lg transition-all hover:scale-105'
+          >
+            Track My Appointments
+          </button>
+        </div>
+      </section>
 
       {/* Verified Patient Reviews / Testimonials */}
       <section className='my-16'>
         <div className='text-center max-w-xl mx-auto mb-10'>
           <h2 className='text-3xl sm:text-4xl font-bold text-gray-900'>What Patients Say</h2>
           <p className='text-base sm:text-lg text-gray-500 mt-2'>
-            Over 15,000+ consultations delivered with top clinical excellence
+            Over 15,000+ consultations delivered with clinical safety and transparent care
           </p>
         </div>
 
@@ -96,7 +202,7 @@ const Home = () => {
         <div className='text-center max-w-xl mx-auto mb-10'>
           <h2 className='text-3xl sm:text-4xl font-bold text-gray-900'>Frequently Asked Questions</h2>
           <p className='text-base sm:text-lg text-gray-500 mt-2'>
-            Everything you need to know about booking, prescriptions, and healthcare consultations
+            Everything you need to know about clinic crowd tracking, refunds, and medicines
           </p>
         </div>
 
@@ -130,6 +236,9 @@ const Home = () => {
       </section>
 
       <Banner />
+
+      {/* Symptom Triage Modal */}
+      {showTriage && <SymptomTriageModal onClose={() => setShowTriage(false)} />}
     </div>
   )
 }

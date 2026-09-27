@@ -33,12 +33,14 @@ const DoctorContextProvider = ({ children }) => {
   const completeAppointment = async (
     appointmentId,
     prescription = "",
-    diagnosisNotes = ""
+    diagnosisNotes = "",
+    structuredMedicines = [],
+    followUpDays = 0
   ) => {
     try {
       const { data } = await axios.post(
         backendUrl + "/api/doctor/complete-appointment",
-        { appointmentId, prescription, diagnosisNotes },
+        { appointmentId, prescription, diagnosisNotes, structuredMedicines, followUpDays },
         { headers: { dToken } }
       );
       if (data.success) {
@@ -103,6 +105,28 @@ const DoctorContextProvider = ({ children }) => {
     }
   };
 
+  const updateLiveQueue = async (queueData) => {
+    try {
+      const { data } = await axios.post(
+        backendUrl + "/api/doctor/update-live-queue",
+        queueData,
+        { headers: { dToken } }
+      );
+      if (data.success) {
+        toast.success(data.message || "Live OPD Queue updated!");
+        getProfileData();
+        return true;
+      } else {
+        toast.error(data.message);
+        return false;
+      }
+    } catch (error) {
+      console.log("Update live queue error:", error);
+      toast.error(error.response?.data?.message || error.message);
+      return false;
+    }
+  };
+
   const getDashData = async () => {
     try {
       const { data } = await axios.get(backendUrl + "/api/doctor/dashboard", {
@@ -145,6 +169,7 @@ const DoctorContextProvider = ({ children }) => {
     completeAppointment,
     cancelAppointment,
     collectPayment,
+    updateLiveQueue,
     dashData,
     setDashData,
     getDashData,

@@ -19,69 +19,79 @@ const AllAppointments = () => {
   }, [aToken])
 
   return (
-    <div className='w-full max-w-6xl m-5'>
-      <div className='flex justify-between items-center mb-4'>
+    <div className='w-full max-w-7xl m-4 sm:m-6 space-y-6'>
+      <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4'>
         <div>
-          <h1 className='text-xl font-bold text-gray-800'>Hospital Consultation Registry</h1>
-          <p className='text-xs text-gray-500'>
-            Overview of all patient bookings, clinical consultations, and payment settlements
+          <h1 className='text-2xl font-black text-gray-900'>Hospital Consultation Registry</h1>
+          <p className='text-xs sm:text-sm text-gray-500'>
+            Overview of all patient bookings, clinic tokens, automated refunds, and payment settlements
           </p>
         </div>
-        <span className='text-xs bg-indigo-50 text-[#5F65FF] px-3 py-1.5 rounded-full border border-indigo-200 font-bold'>
+        <span className='px-4 py-2 bg-indigo-50 text-[#5F65FF] rounded-2xl border border-indigo-200 font-black text-xs self-start sm:self-auto'>
           {appointments.length} Total Records
         </span>
       </div>
 
-      <div className='bg-white border rounded-2xl text-sm max-h-[80vh] min-h-[60vh] overflow-y-scroll shadow-sm'>
-        <div className='hidden sm:grid grid-cols-[0.4fr_2.2fr_1.8fr_0.8fr_2fr_2.2fr_1fr_1.4fr] grid-flow-col py-3.5 px-6 border-b font-semibold text-xs text-gray-700 bg-gray-50 uppercase tracking-wider'>
-          <p>#</p>
+      <div className='bg-white border rounded-3xl text-sm max-h-[80vh] min-h-[60vh] overflow-y-scroll shadow-sm'>
+        <div className='hidden lg:grid grid-cols-[0.5fr_2fr_1.8fr_0.8fr_1.8fr_2fr_1fr_1.4fr] py-4 px-6 border-b font-bold text-xs text-gray-700 bg-gray-50 uppercase tracking-wider'>
+          <p># Token</p>
           <p>Patient</p>
-          <p>Payment Status</p>
+          <p>Payment / Refund</p>
           <p>Age</p>
           <p>Date & Time</p>
           <p>Doctor Name</p>
           <p>Fee</p>
-          <p className='text-center'>Action / Status</p>
+          <p className='text-center'>Status / Action</p>
         </div>
         {appointments.length === 0 ? (
-          <div className='p-16 text-center text-gray-400'>
-            <p className='text-3xl mb-2'>📋</p>
-            <p className='font-bold text-gray-700'>No appointments booked</p>
+          <div className='p-20 text-center text-gray-400'>
+            <p className='text-4xl mb-3'>📋</p>
+            <p className='font-bold text-gray-700 text-base'>No appointments booked</p>
             <p className='text-xs mt-1'>Patient bookings will appear in this administrative list.</p>
           </div>
         ) : (
           [...appointments].reverse().map((item, index) => (
             <div
-              className='flex flex-wrap justify-between max-sm:gap-2 sm:grid grid-cols-[0.4fr_2.2fr_1.8fr_0.8fr_2fr_2.2fr_1fr_1.4fr] items-center text-gray-500 py-3.5 px-6 border-b hover:bg-gray-50/80 transition-colors'
+              className='flex flex-col lg:grid lg:grid-cols-[0.5fr_2fr_1.8fr_0.8fr_1.8fr_2fr_1fr_1.4fr] items-start lg:items-center text-gray-500 py-4 px-6 border-b hover:bg-gray-50/80 transition-colors gap-3 lg:gap-0'
               key={index}
             >
-              <p className='max-sm:hidden font-mono text-xs text-gray-400'>{index + 1}</p>
+              {/* Token */}
+              <div className='flex items-center gap-2'>
+                <span className='w-8 h-8 rounded-xl bg-indigo-50 border border-indigo-200 text-primary font-black text-xs flex items-center justify-center font-mono'>
+                  #{item.tokenNumber || index + 1}
+                </span>
+              </div>
 
               {/* Patient */}
-              <div className='flex items-center gap-2'>
-                <UserIdentity name={item.userData?.name || 'Patient'} />
+              <div className='flex items-center gap-2.5'>
+                <UserIdentity name={item.userData?.name || 'Patient'} className='w-9 h-9' />
                 <div>
                   <p className='font-bold text-gray-900'>{item.userData?.name || 'Patient'}</p>
-                  <p className='text-[10px] text-gray-400 max-sm:block hidden'>
+                  <p className='text-[10px] text-gray-400 lg:hidden'>
                     {slotDateFormat(item.slotDate)} | {item.slotTime}
                   </p>
                 </div>
               </div>
 
-              {/* Payment Status & Action */}
+              {/* Payment Status & Refund */}
               <div>
-                {item.payment ? (
-                  <span className='text-xs px-2.5 py-0.5 rounded-full font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 inline-block'>
+                {item.refundStatus === 'Refunded' ? (
+                  <span className='text-[11px] px-2.5 py-1 rounded-full font-black bg-purple-50 text-purple-700 border border-purple-200 inline-flex items-center gap-1'>
+                    <span>🛡️ 100% Refunded</span>
+                    <span className='font-mono'>({currency}{item.refundAmount || item.amount})</span>
+                  </span>
+                ) : item.payment ? (
+                  <span className='text-xs px-2.5 py-1 rounded-full font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 inline-block'>
                     ✓ Paid ({item.paymentMethod || 'Online'})
                   </span>
                 ) : item.cancelled ? (
-                  <span className='text-xs px-2 py-0.5 rounded-full text-gray-400 bg-gray-50 border'>
-                    Cancelled
+                  <span className='text-xs px-2.5 py-1 rounded-full text-gray-400 bg-gray-50 border'>
+                    Cancelled (Unpaid)
                   </span>
                 ) : (
-                  <div className='flex items-center gap-1.5'>
-                    <span className='text-xs px-2 py-0.5 rounded-full font-semibold bg-amber-50 text-amber-800 border border-amber-200'>
-                      ⚠ Pending
+                  <div className='flex items-center gap-1.5 flex-wrap'>
+                    <span className='text-xs px-2 py-0.5 rounded-full font-bold bg-amber-50 text-amber-800 border border-amber-200'>
+                      Pending
                     </span>
                     <button
                       onClick={() => {
@@ -103,11 +113,11 @@ const AllAppointments = () => {
               </div>
 
               {/* Age */}
-              <p className='max-sm:hidden text-xs text-gray-600'>{calculateAge(item.userData?.dob)}</p>
+              <p className='text-xs text-gray-600 font-semibold'>{calculateAge(item.userData?.dob)} yrs</p>
 
               {/* Date & Time */}
               <p className='text-xs text-gray-700 font-medium'>
-                {slotDateFormat(item.slotDate)}, {item.slotTime}
+                {slotDateFormat(item.slotDate)}, <span className='font-bold text-indigo-600'>{item.slotTime}</span>
               </p>
 
               {/* Doctor */}
@@ -120,32 +130,32 @@ const AllAppointments = () => {
                   className='w-7 h-7 text-[10px]'
                 />
                 <div>
-                  <p className='font-semibold text-gray-900 text-xs'>{item.docData?.name || 'Doctor'}</p>
+                  <p className='font-bold text-gray-900 text-xs'>{item.docData?.name || 'Doctor'}</p>
                   <p className='text-[10px] text-gray-400'>{item.docData?.speciality}</p>
                 </div>
               </div>
 
               {/* Fee */}
-              <p className='text-emerald-700 font-bold text-xs'>
+              <p className='text-gray-900 font-black text-xs'>
                 {currency}
                 {item.amount}
               </p>
 
               {/* Action / Completion */}
-              <div className='text-center flex items-center justify-center gap-1.5'>
+              <div className='text-center flex items-center justify-start lg:justify-center gap-2'>
                 {item.cancelled ? (
-                  <span className='text-rose-500 bg-rose-50 border border-rose-200 text-xs font-semibold px-2.5 py-0.5 rounded-full'>
+                  <span className='text-rose-500 bg-rose-50 border border-rose-200 text-xs font-bold px-3 py-1 rounded-xl'>
                     Cancelled
                   </span>
                 ) : item.isCompleted ? (
-                  <div className='flex items-center gap-1'>
-                    <span className='text-emerald-700 bg-emerald-50 border border-emerald-200 text-xs font-bold px-2.5 py-0.5 rounded-full'>
+                  <div className='flex items-center gap-1.5'>
+                    <span className='text-emerald-700 bg-emerald-50 border border-emerald-200 text-xs font-bold px-3 py-1 rounded-xl'>
                       ✓ Completed
                     </span>
                     {(item.prescription || item.diagnosisNotes) && (
                       <button
                         onClick={() => setSelectedDetailsAppt(item)}
-                        className='text-[11px] text-[#5F65FF] hover:underline font-semibold'
+                        className='text-[11px] text-[#5F65FF] hover:underline font-bold'
                         title='View Clinical Notes'
                       >
                         Notes
@@ -155,10 +165,10 @@ const AllAppointments = () => {
                 ) : (
                   <button
                     onClick={() => cancelAppointment(item._id)}
-                    title='Cancel Appointment'
-                    className='p-1 rounded-lg hover:bg-rose-50 text-rose-500 transition-colors border border-rose-100'
+                    title='Cancel Appointment & Process Auto Refund'
+                    className='p-1.5 rounded-xl hover:bg-rose-50 text-rose-500 transition-colors border border-rose-200'
                   >
-                    <img className='w-5 h-5 inline' src={assets.cancel_icon} alt='Cancel' />
+                    <img className='w-4 h-4 inline' src={assets.cancel_icon} alt='Cancel' />
                   </button>
                 )}
               </div>
@@ -173,7 +183,7 @@ const AllAppointments = () => {
           <div className='bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl border'>
             <div className='flex justify-between items-center border-b pb-3 mb-3'>
               <div>
-                <h3 className='font-bold text-gray-900'>Consultation Clinical Record</h3>
+                <h3 className='font-black text-gray-900'>Consultation Clinical Record</h3>
                 <p className='text-xs text-gray-400'>
                   Dr. {selectedDetailsAppt.docData?.name} → {selectedDetailsAppt.userData?.name}
                 </p>
@@ -188,7 +198,7 @@ const AllAppointments = () => {
             <div className='text-xs text-gray-700 space-y-3'>
               {selectedDetailsAppt.diagnosisNotes && (
                 <div>
-                  <span className='text-gray-400 font-semibold block mb-0.5 uppercase text-[10px]'>
+                  <span className='text-gray-400 font-bold block mb-0.5 uppercase text-[10px]'>
                     Clinical Diagnosis & Notes:
                   </span>
                   <p className='bg-gray-50 p-3 rounded-2xl border text-gray-800 leading-relaxed font-medium'>
@@ -198,7 +208,7 @@ const AllAppointments = () => {
               )}
               {selectedDetailsAppt.prescription && (
                 <div>
-                  <span className='text-gray-400 font-semibold block mb-0.5 uppercase text-[10px]'>
+                  <span className='text-gray-400 font-bold block mb-0.5 uppercase text-[10px]'>
                     ℞ Prescription Medication:
                   </span>
                   <pre className='bg-indigo-50/40 p-3.5 rounded-2xl border border-indigo-100 text-gray-800 font-sans whitespace-pre-wrap leading-relaxed'>

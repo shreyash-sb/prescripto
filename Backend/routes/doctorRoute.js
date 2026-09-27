@@ -6,6 +6,7 @@ import {
   appointmentsDoctor,
   appointmentCancel,
   appointmentComplete,
+  updateLiveQueue,
   collectPayment,
   doctorDashboard,
   doctorProfile,
@@ -25,6 +26,7 @@ doctorRouter.post("/login", loginDoctor);
 doctorRouter.get("/appointments", authDoctor, appointmentsDoctor);
 doctorRouter.post("/complete-appointment", authDoctor, appointmentComplete);
 doctorRouter.post("/cancel-appointment", authDoctor, appointmentCancel);
+doctorRouter.post("/update-live-queue", authDoctor, updateLiveQueue);
 doctorRouter.post("/collect-payment", authDoctor, collectPayment);
 doctorRouter.get("/dashboard", authDoctor, doctorDashboard);
 doctorRouter.get("/profile", authDoctor, doctorProfile);

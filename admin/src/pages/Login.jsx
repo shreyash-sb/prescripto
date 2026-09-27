@@ -7,6 +7,7 @@ import { DoctorContext } from '../context/DoctorContext.jsx'
 const Login = () => {
   const [role, setRole] = useState('Admin') // 'Admin' | 'Doctor'
   const [isRegister, setIsRegister] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   // Common Fields
   const [name, setName] = useState('')
@@ -29,29 +30,57 @@ const Login = () => {
   const { setAToken, backendUrl } = useContext(AdminContext)
   const { setDToken } = useContext(DoctorContext)
 
-  // Demo Credentials Helpers
-  const fillDemoAdmin = () => {
-    setRole('Admin')
-    setIsRegister(false)
-    setEmail('admin@example.com')
-    setPassword('admin12345')
-    toast.info('Filled Demo Admin credentials!')
+  // 1-Click Instant Demo Login Helpers
+  const handleInstantAdminDemo = async () => {
+    try {
+      setIsLoading(true)
+      const { data } = await axios.post(`${backendUrl}/api/admin/login`, {
+        email: 'admin@example.com',
+        password: 'admin12345',
+      })
+      if (data.success) {
+        localStorage.setItem('aToken', data.token)
+        setAToken(data.token)
+        toast.success('Logged in as Hospital Administrator!')
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error(error.response?.data?.message || 'Admin demo login failed')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  const fillDemoDoctor = () => {
-    setRole('Doctor')
-    setIsRegister(false)
-    setEmail('doctor@example.com')
-    setPassword('doctor12345')
-    toast.info('Filled Demo Doctor credentials!')
+  const handleInstantDoctorDemo = async () => {
+    try {
+      setIsLoading(true)
+      const { data } = await axios.post(`${backendUrl}/api/doctor/login`, {
+        email: 'doctor@example.com',
+        password: 'doctor12345',
+      })
+      if (data.success) {
+        localStorage.setItem('dToken', data.token)
+        setDToken(data.token)
+        toast.success(`Logged in as Dr. ${data.name || 'Richard James'}!`)
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error(error.response?.data?.message || 'Doctor demo login failed')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const onSubmitHandler = async (e) => {
     e.preventDefault()
     try {
+      setIsLoading(true)
       if (role === 'Admin') {
         if (isRegister) {
-          // Admin Registration
           const { data } = await axios.post(`${backendUrl}/api/admin/register`, {
             name,
             email,
@@ -59,14 +88,13 @@ const Login = () => {
             secretCode,
           })
           if (data.success) {
-            toast.success(data.message || 'Admin account created successfully!')
+            toast.success(data.message || 'Admin account created!')
             localStorage.setItem('aToken', data.token)
             setAToken(data.token)
           } else {
             toast.error(data.message)
           }
         } else {
-          // Admin Login
           const { data } = await axios.post(`${backendUrl}/api/admin/login`, {
             email,
             password,
@@ -80,9 +108,7 @@ const Login = () => {
           }
         }
       } else {
-        // Doctor Portal
         if (isRegister) {
-          // Doctor Registration
           const doctorPayload = {
             name,
             email,
@@ -104,7 +130,6 @@ const Login = () => {
             toast.error(data.message)
           }
         } else {
-          // Doctor Login
           const { data } = await axios.post(`${backendUrl}/api/doctor/login`, {
             email,
             password,
@@ -121,25 +146,29 @@ const Login = () => {
     } catch (error) {
       console.log(error)
       toast.error(error.response?.data?.message || error.message || 'Authentication error')
+    } finally {
+      setIsLoading(false)
     }
   }
 
   return (
     <div className='min-h-[85vh] flex flex-col justify-center items-center py-10 px-4'>
       {/* Demo Credentials Quick-Select Pill */}
-      <div className='flex flex-wrap items-center justify-center gap-2 mb-6 bg-white p-2.5 rounded-full border shadow-sm text-xs'>
-        <span className='font-semibold text-gray-500 pl-2'>🚀 Demo Accounts:</span>
+      <div className='flex flex-wrap items-center justify-center gap-2 mb-6 bg-white p-2 rounded-full border shadow-sm text-xs'>
+        <span className='font-bold text-gray-600 pl-2'>Demo:</span>
         <button
           type='button'
-          onClick={fillDemoAdmin}
-          className='bg-indigo-50 hover:bg-indigo-100 text-[#5F65FF] font-medium px-3 py-1.5 rounded-full transition-all border border-indigo-200'
+          disabled={isLoading}
+          onClick={handleInstantAdminDemo}
+          className='bg-[#5F65FF] hover:bg-indigo-600 text-white font-bold px-3.5 py-1 rounded-full transition-all shadow-sm'
         >
           🛡️ Admin Demo
         </button>
         <button
           type='button'
-          onClick={fillDemoDoctor}
-          className='bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-medium px-3 py-1.5 rounded-full transition-all border border-emerald-200'
+          disabled={isLoading}
+          onClick={handleInstantDoctorDemo}
+          className='bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3.5 py-1 rounded-full transition-all shadow-sm'
         >
           👨‍⚕️ Doctor Demo
         </button>
@@ -156,7 +185,7 @@ const Login = () => {
             <button
               type='button'
               onClick={() => setRole('Admin')}
-              className={`px-4 py-1.5 rounded-lg text-xs font-medium transition-all ${
+              className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 role === 'Admin' ? 'bg-white text-[#5F65FF] shadow-sm' : 'text-gray-600 hover:text-gray-900'
               }`}
             >
@@ -165,14 +194,14 @@ const Login = () => {
             <button
               type='button'
               onClick={() => setRole('Doctor')}
-              className={`px-4 py-1.5 rounded-lg text-xs font-medium transition-all ${
+              className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 role === 'Doctor' ? 'bg-white text-[#5F65FF] shadow-sm' : 'text-gray-600 hover:text-gray-900'
               }`}
             >
               👨‍⚕️ Doctor
             </button>
           </div>
-          <p className='text-2xl font-bold text-gray-800'>
+          <p className='text-2xl font-black text-gray-800'>
             <span className='text-[#5F65FF]'>{role} </span> {isRegister ? 'Registration' : 'Login'}
           </p>
           <p className='text-xs text-gray-400 mt-1'>
@@ -185,7 +214,7 @@ const Login = () => {
         {/* Registration-only fields */}
         {isRegister && (
           <div className='w-full'>
-            <p className='font-medium text-xs mb-1'>Full Name</p>
+            <p className='font-bold text-xs mb-1'>Full Name</p>
             <input
               type='text'
               required
@@ -199,7 +228,7 @@ const Login = () => {
 
         {/* Common Email Field */}
         <div className='w-full'>
-          <p className='font-medium text-xs mb-1'>Email Address</p>
+          <p className='font-bold text-xs mb-1'>Email Address</p>
           <input
             type='email'
             required
@@ -212,7 +241,7 @@ const Login = () => {
 
         {/* Common Password Field */}
         <div className='w-full relative'>
-          <p className='font-medium text-xs mb-1'>Password</p>
+          <p className='font-bold text-xs mb-1'>Password</p>
           <div className='relative'>
             <input
               type={showPassword ? 'text' : 'password'}
@@ -225,7 +254,7 @@ const Login = () => {
             <button
               type='button'
               onClick={() => setShowPassword((prev) => !prev)}
-              className='absolute right-3 top-3 text-gray-400 hover:text-gray-600 text-xs'
+              className='absolute right-3 top-3 text-gray-400 hover:text-gray-600 text-xs font-bold'
             >
               {showPassword ? 'Hide' : 'Show'}
             </button>
@@ -236,8 +265,8 @@ const Login = () => {
         {isRegister && role === 'Admin' && (
           <div className='w-full'>
             <div className='flex justify-between items-center mb-1'>
-              <p className='font-medium text-xs'>Admin Passkey</p>
-              <span className='text-[10px] text-indigo-500 font-medium'>Default: ADMIN123</span>
+              <p className='font-bold text-xs'>Admin Passkey</p>
+              <span className='text-[10px] text-indigo-500 font-bold'>Default: ADMIN123</span>
             </div>
             <input
               type='text'
@@ -255,11 +284,11 @@ const Login = () => {
           <>
             <div className='grid grid-cols-2 gap-3 w-full'>
               <div>
-                <p className='font-medium text-xs mb-1'>Speciality</p>
+                <p className='font-bold text-xs mb-1'>Speciality</p>
                 <select
                   value={speciality}
                   onChange={(e) => setSpeciality(e.target.value)}
-                  className='border border-gray-300 rounded-lg w-full p-2 text-xs focus:border-[#5F65FF] outline-none'
+                  className='border border-gray-300 rounded-lg w-full p-2 text-xs focus:border-[#5F65FF] outline-none font-semibold'
                 >
                   <option value='General physician'>General physician</option>
                   <option value='Gynecologist'>Gynecologist</option>
@@ -271,11 +300,11 @@ const Login = () => {
               </div>
 
               <div>
-                <p className='font-medium text-xs mb-1'>Experience</p>
+                <p className='font-bold text-xs mb-1'>Experience</p>
                 <select
                   value={experience}
                   onChange={(e) => setExperience(e.target.value)}
-                  className='border border-gray-300 rounded-lg w-full p-2 text-xs focus:border-[#5F65FF] outline-none'
+                  className='border border-gray-300 rounded-lg w-full p-2 text-xs focus:border-[#5F65FF] outline-none font-semibold'
                 >
                   <option value='1 Year'>1 Year</option>
                   <option value='2 Years'>2 Years</option>
@@ -289,7 +318,7 @@ const Login = () => {
 
             <div className='grid grid-cols-2 gap-3 w-full'>
               <div>
-                <p className='font-medium text-xs mb-1'>Degree / Qualification</p>
+                <p className='font-bold text-xs mb-1'>Degree / Qualification</p>
                 <input
                   type='text'
                   required
@@ -301,7 +330,7 @@ const Login = () => {
               </div>
 
               <div>
-                <p className='font-medium text-xs mb-1'>Consultation Fee ($)</p>
+                <p className='font-bold text-xs mb-1'>Consultation Fee ($)</p>
                 <input
                   type='number'
                   required
@@ -314,7 +343,7 @@ const Login = () => {
             </div>
 
             <div className='w-full'>
-              <p className='font-medium text-xs mb-1'>Clinic Address</p>
+              <p className='font-bold text-xs mb-1'>Clinic Address</p>
               <input
                 type='text'
                 placeholder='Street / Clinic name'
@@ -332,7 +361,7 @@ const Login = () => {
             </div>
 
             <div className='w-full'>
-              <p className='font-medium text-xs mb-1'>About You</p>
+              <p className='font-bold text-xs mb-1'>About You</p>
               <textarea
                 placeholder='Brief background, patient philosophy, or clinic hours'
                 rows='2'
@@ -347,9 +376,10 @@ const Login = () => {
         {/* Submit Button */}
         <button
           type='submit'
-          className='bg-[#5F65FF] hover:bg-indigo-600 active:scale-[0.99] text-white w-full py-2.5 rounded-xl font-medium text-sm transition-all shadow-md mt-1'
+          disabled={isLoading}
+          className='bg-[#5F65FF] hover:bg-indigo-600 active:scale-[0.99] text-white w-full py-3 rounded-xl font-bold text-sm transition-all shadow-md mt-1'
         >
-          {isRegister ? `Create ${role} Account` : `${role} Login`}
+          {isLoading ? 'Please wait...' : isRegister ? `Create ${role} Account` : `${role} Login`}
         </button>
 
         {/* Toggle Login / Register */}
@@ -360,7 +390,7 @@ const Login = () => {
               <button
                 type='button'
                 onClick={() => setIsRegister(false)}
-                className='text-[#5F65FF] font-semibold underline'
+                className='text-[#5F65FF] font-bold underline'
               >
                 Sign In
               </button>
@@ -371,7 +401,7 @@ const Login = () => {
               <button
                 type='button'
                 onClick={() => setIsRegister(true)}
-                className='text-[#5F65FF] font-semibold underline'
+                className='text-[#5F65FF] font-bold underline'
               >
                 Register here
               </button>
@@ -386,7 +416,7 @@ const Login = () => {
                 setRole(role === 'Admin' ? 'Doctor' : 'Admin')
                 setIsRegister(false)
               }}
-              className='text-indigo-500 underline font-medium'
+              className='text-indigo-600 underline font-bold'
             >
               {role === 'Admin' ? 'Doctor Portal' : 'Admin Portal'}
             </button>

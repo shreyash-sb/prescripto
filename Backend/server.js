@@ -8,6 +8,7 @@ import connectCloudinary from "./config/cloudinary.js";
 import adminRouter from "./routes/adminRoute.js";
 import doctorRouter from "./routes/doctorRoute.js";
 import userRouter from "./routes/userRoute.js";
+import aiRouter from "./routes/aiRoute.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import { seedDatabase } from "./utils/seedData.js";
@@ -31,29 +32,24 @@ app.use(
   })
 );
 
-// Dynamic CORS configuration
-const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(",").map((origin) => origin.trim())
-  : [
-      "http://localhost:5173",
-      "http://localhost:5174",
-      "http://127.0.0.1:5173",
-      "http://127.0.0.1:5174",
-    ];
-
+// Resilient CORS configuration
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin
-      // (mobile apps, server-to-server requests, curl, etc.)
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
+      // Allow requests with no origin or any localhost / 127.0.0.1 port in dev
+      if (
+        !origin ||
+        origin.startsWith("http://localhost:") ||
+        origin.startsWith("http://127.0.0.1:") ||
+        origin.includes("vercel.app") ||
+        origin.includes("onrender.com")
+      ) {
+        return callback(null, true);
       }
+      return callback(null, true);
     },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: [
       "Content-Type",
       "token",
@@ -71,13 +67,13 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 // Rate Limiter for Authentication Endpoints
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 50,
+  max: 500, // Developer & demonstration friendly
   standardHeaders: true,
   legacyHeaders: false,
   message: {
     success: false,
     message:
-      "Too many authentication attempts from this IP, please try again after 15 minutes",
+      "Too many authentication attempts from this IP, please try again after a few minutes",
   },
 });
 
@@ -107,6 +103,7 @@ connectCloudinary();
 app.use("/api/admin", adminRouter);
 app.use("/api/doctor", doctorRouter);
 app.use("/api/user", userRouter);
+app.use("/api/ai", aiRouter);
 
 // Health check endpoint for deployment monitoring
 app.get("/api/health", (req, res) => {

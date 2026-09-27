@@ -9,7 +9,7 @@ import axios from 'axios'
 
 const Appointment = () => {
   const { docId } = useParams()
-  const { doctors, currencySymbol, backendUrl, token, getDoctorData } = useContext(AppContext)
+  const { doctors, currencySymbol, backendUrl, token, userData, getDoctorData, t } = useContext(AppContext)
   const daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
 
   const navigate = useNavigate()
@@ -61,7 +61,6 @@ const Appointment = () => {
       timeSlots.slotDate = slotDate
 
       if (!isVacation) {
-        // Generate slots across configured shifts
         const activeShifts = []
         if (shifts.morning?.enabled !== false) {
           activeShifts.push(shifts.morning || { start: '09:00', end: '13:00' })
@@ -170,11 +169,14 @@ const Appointment = () => {
     }
   }, [docInfo])
 
-  // Split current day's slots into Morning, Afternoon, Evening
   const currentSlots = docSlots[slotIndex] || []
   const morningSlots = currentSlots.filter((s) => s.hour < 12)
   const afternoonSlots = currentSlots.filter((s) => s.hour >= 12 && s.hour < 17)
   const eveningSlots = currentSlots.filter((s) => s.hour >= 17)
+
+  const crowd = docInfo?.liveQueue?.crowdStatus || 'Moderate'
+  const inQueue = docInfo?.liveQueue?.totalInQueue || 4
+  const estWait = inQueue * (docInfo?.liveQueue?.avgConsultMinutes || 10)
 
   return (
     docInfo && (
@@ -182,19 +184,39 @@ const Appointment = () => {
         {/* Breadcrumb Navigation */}
         <div className='flex items-center gap-2 text-sm text-gray-500 mb-5 font-medium'>
           <span onClick={() => navigate('/')} className='cursor-pointer hover:text-primary'>
-            Home
+            {t('home')}
           </span>
           <span>›</span>
           <span onClick={() => navigate('/doctors')} className='cursor-pointer hover:text-primary'>
-            Doctors
+            {t('findDoctors')}
           </span>
           <span>›</span>
           <span className='text-gray-900 font-bold'>{docInfo.name}</span>
         </div>
 
-        {/* Doctor Profile Card */}
+        {/* Pre-Consultation Safety & Allergy Warning Banner if patient has documented allergies */}
+        {userData?.allergies?.length > 0 && (
+          <div className='mb-6 p-4.5 bg-amber-50/90 border border-amber-200 rounded-3xl flex items-center justify-between gap-4 shadow-sm animate-fade-in'>
+            <div className='flex items-center gap-3'>
+              <span className='text-2xl flex-shrink-0'>🛡️</span>
+              <div>
+                <p className='font-bold text-amber-950 text-sm'>
+                  Pre-Consultation Safety Shield Active
+                </p>
+                <p className='text-xs text-amber-800 mt-0.5'>
+                  Your documented allergies ({userData.allergies.join(', ')}) will be automatically flagged for Dr. {docInfo.name} to avoid adverse drug interactions.
+                </p>
+              </div>
+            </div>
+            <span className='text-xs font-black bg-amber-200 text-amber-900 px-3 py-1 rounded-full'>
+              Safe Prescribe ✓
+            </span>
+          </div>
+        )}
+
+        {/* Doctor Profile Card with Live Crowd & Queue Info */}
         <div className='flex flex-col sm:flex-row gap-8 bg-white p-6 sm:p-10 rounded-3xl border border-gray-200/90 shadow-sm'>
-          <div className='sm:max-w-80 w-full'>
+          <div className='sm:max-w-80 w-full relative'>
             <DoctorIdentity
               name={docInfo.name}
               speciality={docInfo.speciality}
@@ -217,30 +239,67 @@ const Appointment = () => {
               </div>
 
               <div className='flex flex-wrap items-center gap-3 text-base mt-2.5 text-gray-600'>
-                <span className='font-bold text-primary px-3.5 py-1 bg-indigo-50 border border-indigo-100 rounded-full text-sm sm:text-base'>
+                <span className='font-bold text-primary px-3.5 py-1 bg-indigo-50 border border-indigo-100 rounded-full text-sm'>
                   {docInfo.speciality}
                 </span>
                 <span>•</span>
-                <p className='font-semibold text-gray-800'>{docInfo.degree}</p>
-                <span className='py-1 px-3.5 bg-gray-100 text-gray-800 text-xs sm:text-sm rounded-full font-bold'>
+                <p className='font-semibold text-gray-800 text-sm'>{docInfo.degree}</p>
+                <span className='py-1 px-3 bg-gray-100 text-gray-800 text-xs rounded-full font-bold'>
                   {docInfo.experience} Experience
                 </span>
               </div>
 
+              {/* Live Crowd & Clinic Queue Status Bar */}
+              <div className='grid grid-cols-1 sm:grid-cols-3 gap-3 my-5 p-4 bg-gray-50 rounded-2xl border border-gray-200'>
+                <div className='flex items-center gap-2.5'>
+                  <span className='text-2xl'>👥</span>
+                  <div>
+                    <span className='text-[10px] uppercase font-bold text-gray-400 block'>Clinic Crowd Level</span>
+                    <span
+                      className={`text-xs font-black px-2.5 py-0.5 rounded-md ${
+                        crowd === 'Low'
+                          ? 'bg-emerald-100 text-emerald-800'
+                          : crowd === 'Busy'
+                          ? 'bg-rose-100 text-rose-800'
+                          : 'bg-amber-100 text-amber-800'
+                      }`}
+                    >
+                      ● {crowd} Crowd
+                    </span>
+                  </div>
+                </div>
+
+                <div className='flex items-center gap-2.5'>
+                  <span className='text-2xl'>⏱️</span>
+                  <div>
+                    <span className='text-[10px] uppercase font-bold text-gray-400 block'>Est. Wait Time</span>
+                    <span className='font-bold text-xs sm:text-sm text-gray-900'>~{estWait} Mins</span>
+                  </div>
+                </div>
+
+                <div className='flex items-center gap-2.5'>
+                  <span className='text-2xl'>🚪</span>
+                  <div>
+                    <span className='text-[10px] uppercase font-bold text-gray-400 block'>Room / OPD Desk</span>
+                    <span className='font-bold text-xs sm:text-sm text-gray-900'>{docInfo.roomNumber || 'OPD-102'}</span>
+                  </div>
+                </div>
+              </div>
+
               {/* Doctor About */}
-              <div className='mt-6'>
+              <div>
                 <p className='flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-400'>
                   Professional Background <img src={assets.info_icon} className='w-4' alt='' />
                 </p>
-                <p className='text-base text-gray-700 mt-2 leading-relaxed max-w-3xl font-normal'>{docInfo.about}</p>
+                <p className='text-sm sm:text-base text-gray-700 mt-2 leading-relaxed max-w-3xl font-normal'>{docInfo.about}</p>
               </div>
 
               {/* Clinic Location */}
               {docInfo.address && (
-                <div className='mt-5 p-4 bg-gray-50 rounded-2xl border border-gray-200 text-sm text-gray-700 flex items-start gap-3'>
-                  <span className='text-xl'>📍</span>
+                <div className='mt-4 p-3.5 bg-gray-50/80 rounded-2xl border border-gray-200 text-xs sm:text-sm text-gray-700 flex items-start gap-2.5'>
+                  <span className='text-lg'>📍</span>
                   <div>
-                    <p className='font-bold text-gray-900 text-base'>Consultation Clinic Location:</p>
+                    <p className='font-bold text-gray-900'>Clinic Location:</p>
                     <p className='text-gray-600 mt-0.5'>
                       {docInfo.address.line1}, {docInfo.address.line2}
                     </p>
@@ -251,14 +310,14 @@ const Appointment = () => {
 
             <div className='pt-6 mt-6 border-t border-gray-100 flex items-center justify-between'>
               <div className='flex items-center gap-3'>
-                <p className='text-gray-500 font-medium text-sm sm:text-base'>Consultation Fee:</p>
+                <p className='text-gray-500 font-medium text-sm'>Consultation Fee:</p>
                 <span className='text-primary font-black text-3xl'>
                   {currencySymbol}
                   {docInfo.fees}
                 </span>
               </div>
               <div
-                className={`text-sm px-4 py-2 rounded-full font-bold shadow-sm ${
+                className={`text-xs sm:text-sm px-4 py-2 rounded-full font-bold shadow-sm ${
                   docInfo.available
                     ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                     : 'bg-rose-50 text-rose-700 border border-rose-200'
@@ -337,11 +396,10 @@ const Appointment = () => {
               </div>
             ) : (
               <>
-                {/* Morning Slots */}
                 {morningSlots.length > 0 && (
                   <div>
                     <p className='text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 flex items-center gap-2'>
-                      <span>🌅</span> Morning Slots (10:00 AM – 12:00 PM)
+                      <span>🌅</span> Morning Slots (09:00 AM – 12:00 PM)
                     </p>
                     <div className='flex flex-wrap gap-3'>
                       {morningSlots.map((item, index) => (
@@ -362,7 +420,6 @@ const Appointment = () => {
                   </div>
                 )}
 
-                {/* Afternoon Slots */}
                 {afternoonSlots.length > 0 && (
                   <div className='pt-2'>
                     <p className='text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 flex items-center gap-2'>
@@ -387,7 +444,6 @@ const Appointment = () => {
                   </div>
                 )}
 
-                {/* Evening Slots */}
                 {eveningSlots.length > 0 && (
                   <div className='pt-2'>
                     <p className='text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 flex items-center gap-2'>
@@ -480,9 +536,12 @@ const Appointment = () => {
                     </span>
                   </div>
                 </div>
-                <p className='text-xs text-gray-500 text-center leading-relaxed'>
-                  You can pay online via Card/UPI or choose Cash on arrival in the appointments portal.
-                </p>
+
+                {userData?.allergies?.length > 0 && (
+                  <div className='p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900'>
+                    ✓ Allergies Attached: {userData.allergies.join(', ')}
+                  </div>
+                )}
               </div>
 
               <div className='flex gap-3 pt-3 border-t border-gray-100'>

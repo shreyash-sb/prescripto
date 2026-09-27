@@ -12,6 +12,7 @@
   },
   "private": true,
   "dependencies": {
+    "@google/genai": "^2.24.0",
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.5.1",
     "cors": "^2.8.5",

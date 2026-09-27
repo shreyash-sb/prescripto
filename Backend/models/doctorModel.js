@@ -32,6 +32,17 @@ const doctorSchema = new Schema(
       },
     },
     vacationDates: { type: [String], default: [] }, // Array of blocked date strings e.g. ["25_9_2026", "2026-09-25"]
+    roomNumber: { type: String, default: "OPD-102" },
+    department: { type: String, default: "Main Clinic Wing" },
+    liveQueue: {
+      type: Object,
+      default: {
+        currentToken: 4,
+        totalInQueue: 8,
+        avgConsultMinutes: 12,
+        crowdStatus: "Moderate", // "Low" | "Moderate" | "Busy"
+      },
+    },
   },
   { minimize: false, timestamps: true }
 );
