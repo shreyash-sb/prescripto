@@ -51,6 +51,7 @@ const DoctorContextProvider = ({ children }) => {
       if (data.success) {
         toast.success(data.message);
         getAppointments();
+        getDashData();
         return true;
       } else {
         toast.error(data.message);
@@ -73,6 +74,7 @@ const DoctorContextProvider = ({ children }) => {
       if (data.success) {
         toast.success(data.message);
         getAppointments();
+        getDashData();
         return true;
       } else {
         toast.error(data.message);
@@ -98,6 +100,7 @@ const DoctorContextProvider = ({ children }) => {
       if (data.success) {
         toast.success(data.message);
         getAppointments();
+        getDashData();
         return true;
       } else {
         toast.error(data.message);

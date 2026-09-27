@@ -160,17 +160,16 @@ const DoctorAppointment = () => {
     }
   }
 
-  const filteredAppointments = appointments.filter((item) => {
-    const isPending = !item.cancelled && !item.isCompleted && item.appointmentStatus !== 'Accepted'
-    const isAccepted = !item.cancelled && !item.isCompleted && item.appointmentStatus === 'Accepted'
+  const completedCount = appointments.filter((a) => a.isCompleted).length
+  const remainingCount = appointments.filter((a) => !a.isCompleted && !a.cancelled).length
+  const cancelledCount = appointments.filter((a) => a.cancelled).length
 
+  const filteredAppointments = appointments.filter((item) => {
     const matchesTab =
       activeTab === 'all'
         ? true
-        : activeTab === 'pending'
-        ? isPending
-        : activeTab === 'accepted'
-        ? isAccepted
+        : activeTab === 'remaining'
+        ? !item.isCompleted && !item.cancelled
         : activeTab === 'completed'
         ? item.isCompleted
         : activeTab === 'cancelled'
@@ -191,9 +190,9 @@ const DoctorAppointment = () => {
       {/* Header & Stats */}
       <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4'>
         <div>
-          <h1 className='text-2xl font-black text-gray-900'>Doctor Consultation Schedule & 3-Option Triage</h1>
+          <h1 className='text-2xl font-black text-gray-900'>Doctor Consultation Schedule & Case Triage</h1>
           <p className='text-xs sm:text-sm text-gray-500'>
-            Review patient case & medical history, accept or reject with 100% auto-refund, and issue structured e-prescriptions.
+            Review patient case & medical history reports, manage remaining queues, and issue structured e-prescriptions.
           </p>
         </div>
         <div className='flex items-center gap-2'>
@@ -203,48 +202,55 @@ const DoctorAppointment = () => {
         </div>
       </div>
 
-      {/* Filter Tabs & Search Bar */}
+      {/* 4 Standard Queue Filter Tabs (All, Remaining, Completed, Cancelled) & Search Bar */}
       <div className='bg-white p-3 rounded-2xl border border-gray-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3'>
         <div className='flex items-center gap-1.5 overflow-x-auto text-xs'>
           <button
             onClick={() => setActiveTab('all')}
-            className={`px-3 py-1.5 rounded-xl font-bold transition-all ${
+            className={`px-3.5 py-1.5 rounded-xl font-bold transition-all flex items-center gap-1.5 ${
               activeTab === 'all' ? 'bg-primary text-white shadow-xs' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
-            All ({appointments.length})
+            <span>All</span>
+            <span className={`text-[11px] px-1.5 py-0.2 rounded-full ${activeTab === 'all' ? 'bg-white/20' : 'bg-gray-200'}`}>
+              {appointments.length}
+            </span>
           </button>
+
           <button
-            onClick={() => setActiveTab('pending')}
-            className={`px-3 py-1.5 rounded-xl font-bold transition-all ${
-              activeTab === 'pending' ? 'bg-amber-500 text-white shadow-xs' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            onClick={() => setActiveTab('remaining')}
+            className={`px-3.5 py-1.5 rounded-xl font-bold transition-all flex items-center gap-1.5 ${
+              activeTab === 'remaining' ? 'bg-amber-500 text-white shadow-xs' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
-            Pending Review ({appointments.filter((a) => !a.cancelled && !a.isCompleted && a.appointmentStatus !== 'Accepted').length})
+            <span>Remaining</span>
+            <span className={`text-[11px] px-1.5 py-0.2 rounded-full ${activeTab === 'remaining' ? 'bg-white/20' : 'bg-amber-100 text-amber-800'}`}>
+              {remainingCount}
+            </span>
           </button>
-          <button
-            onClick={() => setActiveTab('accepted')}
-            className={`px-3 py-1.5 rounded-xl font-bold transition-all ${
-              activeTab === 'accepted' ? 'bg-emerald-600 text-white shadow-xs' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            Accepted Active ({appointments.filter((a) => !a.cancelled && !a.isCompleted && a.appointmentStatus === 'Accepted').length})
-          </button>
+
           <button
             onClick={() => setActiveTab('completed')}
-            className={`px-3 py-1.5 rounded-xl font-bold transition-all ${
-              activeTab === 'completed' ? 'bg-indigo-600 text-white shadow-xs' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            className={`px-3.5 py-1.5 rounded-xl font-bold transition-all flex items-center gap-1.5 ${
+              activeTab === 'completed' ? 'bg-emerald-600 text-white shadow-xs' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
-            Completed ({appointments.filter((a) => a.isCompleted).length})
+            <span>Completed</span>
+            <span className={`text-[11px] px-1.5 py-0.2 rounded-full ${activeTab === 'completed' ? 'bg-white/20' : 'bg-emerald-100 text-emerald-800'}`}>
+              {completedCount}
+            </span>
           </button>
+
           <button
             onClick={() => setActiveTab('cancelled')}
-            className={`px-3 py-1.5 rounded-xl font-bold transition-all ${
+            className={`px-3.5 py-1.5 rounded-xl font-bold transition-all flex items-center gap-1.5 ${
               activeTab === 'cancelled' ? 'bg-rose-600 text-white shadow-xs' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
-            Rejected/Cancelled ({appointments.filter((a) => a.cancelled).length})
+            <span>Cancelled</span>
+            <span className={`text-[11px] px-1.5 py-0.2 rounded-full ${activeTab === 'cancelled' ? 'bg-white/20' : 'bg-rose-100 text-rose-800'}`}>
+              {cancelledCount}
+            </span>
           </button>
         </div>
 
@@ -272,7 +278,7 @@ const DoctorAppointment = () => {
         {filteredAppointments.length === 0 ? (
           <div className='p-16 text-center text-gray-400'>
             <p className='text-4xl mb-2'>📋</p>
-            <p className='font-bold text-gray-700 text-sm'>No consultations matching criteria</p>
+            <p className='font-bold text-gray-700 text-sm'>No consultations in this category</p>
             <p className='text-xs mt-1'>Upcoming bookings submitted by patients will appear in this clinical schedule.</p>
           </div>
         ) : (
@@ -436,7 +442,7 @@ const DoctorAppointment = () => {
                       </button>
                     </>
                   ) : (
-                    /* If Already Accepted by doctor */
+                    /* If Already Accepted by doctor -> Start Consultation / Issue Rx */
                     <div className='flex items-center gap-1.5'>
                       <button
                         onClick={() => setRejectingAppt(item)}
@@ -447,11 +453,11 @@ const DoctorAppointment = () => {
                       </button>
                       <button
                         onClick={() => openCompleteModal(item)}
-                        title='Mark Complete & Write Prescription'
-                        className='px-3 py-1.5 rounded-xl bg-primary hover:bg-indigo-700 text-white text-xs font-bold shadow-xs flex items-center gap-1.5 transition-all'
+                        title='Start Consultation, Review Case Reports & Issue Rx'
+                        className='px-3.5 py-1.5 rounded-xl bg-primary hover:bg-indigo-700 text-white text-xs font-black shadow-sm flex items-center gap-1.5 transition-all'
                       >
                         <img className='w-3.5 h-3.5 invert' src={assets.tick_icon} alt='Complete' />
-                        <span>Issue Rx</span>
+                        <span>Start Consultation & Rx</span>
                       </button>
                     </div>
                   )}
@@ -462,7 +468,7 @@ const DoctorAppointment = () => {
         )}
       </div>
 
-      {/* Patient Clinical Case & Medical History Modal */}
+      {/* Patient Clinical Case & Medical History Standalone Modal */}
       {selectedCaseAppt && (
         <div className='fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in overflow-y-auto'>
           <div className='bg-white rounded-3xl w-full max-w-2xl p-6 sm:p-8 shadow-2xl border my-8'>
@@ -490,10 +496,10 @@ const DoctorAppointment = () => {
             </div>
 
             <div className='space-y-4 text-xs sm:text-sm max-h-[65vh] overflow-y-auto pr-1'>
-              {/* Patient's Current Problem / Chief Complaint */}
+              {/* Patient's Current Problem / Chief Complaint Report */}
               <div className='p-4.5 bg-amber-50/90 border border-amber-200 rounded-2xl'>
                 <span className='text-xs font-black text-amber-900 uppercase tracking-wider block mb-1 flex items-center gap-1.5'>
-                  <span>🩺</span> Patient's Current Problem & Symptoms
+                  <span>🩺</span> Patient's Current Problem & Symptoms Report
                 </span>
                 <p className='text-sm sm:text-base text-gray-900 font-semibold leading-relaxed'>
                   {selectedCaseAppt.patientProblem || 'General health checkup and consultation request.'}
@@ -631,7 +637,7 @@ const DoctorAppointment = () => {
         </div>
       )}
 
-      {/* Reject Appointment Prompt Modal (with 100% automated refund guarantee) */}
+      {/* Reject Appointment Prompt Modal */}
       {rejectingAppt && (
         <div className='fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in'>
           <div className='bg-white rounded-3xl w-full max-w-md p-6 sm:p-7 shadow-2xl border'>
@@ -693,55 +699,122 @@ const DoctorAppointment = () => {
         </div>
       )}
 
-      {/* Complete Consultation & Structured E-Prescription Modal */}
+      {/* Active Consultation & E-Prescription Modal with Both Reports (History + Current Problem) */}
       {showPrescriptionModal && selectedAppointment && (
         <div className='fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in overflow-y-auto'>
-          <div className='bg-white rounded-3xl w-full max-w-2xl p-6 sm:p-8 shadow-2xl border my-8'>
+          <div className='bg-white rounded-3xl w-full max-w-3xl p-6 sm:p-8 shadow-2xl border my-6'>
             <div className='flex justify-between items-center border-b pb-4 mb-4'>
-              <div>
-                <h3 className='text-xl font-black text-gray-900'>Complete Consultation & Issue E-Prescription</h3>
-                <p className='text-xs text-gray-500 mt-0.5'>
-                  Patient: <strong className='text-gray-900'>{selectedAppointment.userData.name}</strong> • Token #{selectedAppointment.tokenNumber || 1}
-                </p>
+              <div className='flex items-center gap-3'>
+                <UserIdentity name={selectedAppointment.userData?.name || 'Patient'} className='w-11 h-11 text-xs' />
+                <div>
+                  <div className='flex items-center gap-2'>
+                    <h3 className='text-lg sm:text-xl font-black text-gray-900'>
+                      Active Consultation & E-Prescription
+                    </h3>
+                    <span className='text-xs font-mono font-bold bg-indigo-50 text-primary border border-indigo-200 px-2 py-0.5 rounded'>
+                      Token #{selectedAppointment.tokenNumber || 1}
+                    </span>
+                  </div>
+                  <p className='text-xs text-gray-500 mt-0.5'>
+                    Patient: <strong className='text-gray-900'>{selectedAppointment.userData?.name}</strong> • {selectedAppointment.userData?.dob ? `${calculateAge(selectedAppointment.userData.dob)} yrs` : 'Adult'} • Blood: <span className='text-rose-600 font-bold'>{selectedAppointment.userData?.bloodGroup || 'O+'}</span>
+                  </p>
+                </div>
               </div>
               <button
                 onClick={() => setShowPrescriptionModal(false)}
-                className='text-gray-400 hover:text-gray-600 text-xl font-bold'
+                className='w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 font-bold flex items-center justify-center'
               >
                 ✕
               </button>
             </div>
 
-            {/* Patient Allergy Warning Shield */}
-            {selectedAppointment.userData?.allergies && selectedAppointment.userData.allergies.length > 0 && (
-              <div className='mb-4 p-3.5 bg-red-50 border border-red-300 rounded-2xl flex items-start gap-3'>
-                <span className='text-2xl'>🛡️</span>
-                <div>
-                  <h4 className='text-xs font-black text-red-950 uppercase tracking-wider'>
-                    Critical Safety Alert: Patient Drug Allergies
-                  </h4>
-                  <p className='text-xs text-red-800 font-bold mt-0.5'>
-                    Documented Allergies: {selectedAppointment.userData.allergies.join(', ')}
-                  </p>
-                  <p className='text-[11px] text-red-700 mt-0.5'>
-                    Please avoid prescribing compounds or derivatives related to these allergens.
-                  </p>
+            {/* INTEGRATED CLINICAL REPORT CARD: BOTH CURRENT PROBLEM & MEDICAL HISTORY */}
+            <div className='mb-5 p-4 bg-gradient-to-br from-indigo-50/70 via-slate-50 to-blue-50/70 border border-indigo-100 rounded-2xl space-y-3'>
+              <div className='flex items-center justify-between border-b border-indigo-100/80 pb-2'>
+                <span className='text-xs font-black text-indigo-950 uppercase tracking-wider flex items-center gap-1.5'>
+                  <span>📋</span> Patient Case Report & Medical Profile
+                </span>
+                <span className='text-[10px] font-bold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full'>
+                  Verified Patient Record ✓
+                </span>
+              </div>
+
+              {/* 1. Current Problem / Symptoms */}
+              <div className='bg-white p-3 rounded-xl border border-indigo-100/80'>
+                <span className='text-[10px] font-extrabold text-amber-800 uppercase tracking-wider block'>
+                  🩺 Current Problem / Reason for Visit:
+                </span>
+                <p className='text-xs sm:text-sm font-bold text-gray-900 mt-0.5 leading-relaxed'>
+                  {selectedAppointment.patientProblem || 'General Health Consultation & Routine Checkup'}
+                </p>
+              </div>
+
+              {/* 2. Drug Allergies & Chronic Conditions */}
+              <div className='grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs'>
+                {/* Allergy Safety Shield */}
+                <div className={`p-2.5 rounded-xl border ${
+                  selectedAppointment.userData?.allergies?.length > 0
+                    ? 'bg-rose-50/90 border-rose-200 text-rose-900'
+                    : 'bg-emerald-50/90 border-emerald-200 text-emerald-900'
+                }`}>
+                  <span className='text-[10px] font-extrabold uppercase tracking-wider block'>
+                    🛡️ Drug Allergies:
+                  </span>
+                  <span className='font-bold text-xs mt-0.5 block'>
+                    {selectedAppointment.userData?.allergies?.length > 0
+                      ? `⚠️ ${selectedAppointment.userData.allergies.join(', ')}`
+                      : '✓ No Known Drug Allergies'}
+                  </span>
+                </div>
+
+                {/* Chronic Conditions */}
+                <div className='p-2.5 bg-white rounded-xl border border-gray-200 text-gray-800'>
+                  <span className='text-[10px] font-bold text-gray-500 uppercase tracking-wider block'>
+                    Chronic Conditions / Past History:
+                  </span>
+                  <span className='font-semibold text-xs mt-0.5 block'>
+                    {selectedAppointment.userData?.chronicConditions?.length > 0
+                      ? selectedAppointment.userData.chronicConditions.join(', ')
+                      : 'None documented in profile'}
+                  </span>
                 </div>
               </div>
-            )}
+
+              {/* 3. Vitals Snapshot */}
+              {selectedAppointment.userData?.vitals && Object.keys(selectedAppointment.userData.vitals).length > 0 && (
+                <div className='flex items-center gap-3 text-xs bg-white/80 p-2 rounded-xl border border-gray-200 flex-wrap'>
+                  <span className='text-[10px] font-bold text-gray-500 uppercase'>Recorded Vitals:</span>
+                  {selectedAppointment.userData.vitals.bloodPressure && (
+                    <span className='font-mono font-bold text-blue-900 bg-blue-50 px-2 py-0.5 rounded'>
+                      BP: {selectedAppointment.userData.vitals.bloodPressure}
+                    </span>
+                  )}
+                  {selectedAppointment.userData.vitals.heartRate && (
+                    <span className='font-mono font-bold text-blue-900 bg-blue-50 px-2 py-0.5 rounded'>
+                      Pulse: {selectedAppointment.userData.vitals.heartRate} bpm
+                    </span>
+                  )}
+                  {selectedAppointment.userData.vitals.spo2 && (
+                    <span className='font-mono font-bold text-blue-900 bg-blue-50 px-2 py-0.5 rounded'>
+                      SpO2: {selectedAppointment.userData.vitals.spo2}%
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
 
             <form onSubmit={handleCompleteSubmit} className='flex flex-col gap-4 text-xs'>
               {/* Diagnosis Notes */}
               <div>
                 <label className='block font-bold text-gray-700 uppercase tracking-wider mb-1'>
-                  Clinical Diagnosis & Observations:
+                  Clinical Observations & Diagnosis Findings:
                 </label>
                 <textarea
                   rows='2'
                   value={diagnosisNotes}
                   onChange={(e) => setDiagnosisNotes(e.target.value)}
-                  placeholder='Clinical observations, symptoms, physical findings...'
-                  className='w-full border border-gray-300 rounded-2xl p-3 text-xs outline-none focus:border-primary'
+                  placeholder='Enter clinical observations, diagnosis, physical findings...'
+                  className='w-full border border-gray-300 rounded-2xl p-3 text-xs outline-none focus:border-primary font-sans'
                 />
               </div>
 
@@ -760,7 +833,7 @@ const DoctorAppointment = () => {
                   </button>
                 </div>
 
-                <div className='space-y-2 max-h-48 overflow-y-auto pr-1'>
+                <div className='space-y-2 max-h-44 overflow-y-auto pr-1'>
                   {structuredMedicines.map((med, idx) => (
                     <div key={idx} className='p-3 bg-gray-50 border border-gray-200 rounded-2xl grid grid-cols-1 sm:grid-cols-12 gap-2 items-center'>
                       <input
@@ -814,7 +887,7 @@ const DoctorAppointment = () => {
                   </label>
                 </div>
                 <textarea
-                  rows='3'
+                  rows='2'
                   value={prescription}
                   onChange={(e) => setPrescription(e.target.value)}
                   className='w-full border border-gray-300 rounded-2xl p-3 text-xs outline-none focus:border-primary font-sans'
@@ -822,11 +895,11 @@ const DoctorAppointment = () => {
               </div>
 
               {/* Automatic Follow-up Schedule */}
-              <div className='p-3.5 bg-blue-50/60 border border-blue-200 rounded-2xl flex items-center justify-between'>
+              <div className='p-3 bg-blue-50/60 border border-blue-200 rounded-2xl flex items-center justify-between'>
                 <div>
                   <label className='block font-bold text-blue-900'>Automatic Follow-Up Manager</label>
                   <p className='text-[11px] text-blue-700'>
-                    Schedules a follow-up check-in and re-consultation reminder in patient's portal.
+                    Schedules a follow-up reminder in the patient's portal.
                   </p>
                 </div>
                 <select
@@ -852,9 +925,9 @@ const DoctorAppointment = () => {
                 </button>
                 <button
                   type='submit'
-                  className='px-6 py-2.5 rounded-xl font-black bg-primary hover:bg-indigo-700 text-white shadow-lg transition-all'
+                  className='px-6 py-2.5 rounded-xl font-black bg-primary hover:bg-indigo-700 text-white shadow-lg transition-all flex items-center gap-1.5'
                 >
-                  ✓ Complete Consultation & Dispatch Rx
+                  <span>✓ Complete Consultation & Issue Rx</span>
                 </button>
               </div>
             </form>
@@ -862,7 +935,7 @@ const DoctorAppointment = () => {
         </div>
       )}
 
-      {/* View Record Modal */}
+      {/* View Clinical Consultation Record Modal */}
       {viewDetailsAppointment && (
         <div className='fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in'>
           <div className='bg-white rounded-3xl w-full max-w-lg p-6 sm:p-7 shadow-2xl border'>
@@ -880,6 +953,14 @@ const DoctorAppointment = () => {
                 <span className='text-gray-400 font-bold block mb-0.5 uppercase text-[10px]'>Patient</span>
                 <p className='font-bold text-sm text-gray-900'>{viewDetailsAppointment.userData.name}</p>
               </div>
+              {viewDetailsAppointment.patientProblem && (
+                <div>
+                  <span className='text-gray-400 font-bold block mb-0.5 uppercase text-[10px]'>Reported Problem</span>
+                  <p className='bg-amber-50/70 p-2.5 rounded-xl border border-amber-200 text-gray-900 font-medium'>
+                    {viewDetailsAppointment.patientProblem}
+                  </p>
+                </div>
+              )}
               {viewDetailsAppointment.diagnosisNotes && (
                 <div>
                   <span className='text-gray-400 font-bold block mb-0.5 uppercase text-[10px]'>Clinical Observations</span>
