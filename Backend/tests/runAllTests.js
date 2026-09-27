@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+import mongoose from "mongoose";
 import connectDB from "../config/mongodb.js";
 import { runAuthTests } from "./auth.test.js";
 import { runDoctorTests } from "./doctor.test.js";
@@ -67,6 +68,12 @@ const runMasterTestSuite = async () => {
   console.log(`Total Failed:             ${totalFailed === 0 ? "🟢 0" : `🔴 ${totalFailed}`}`);
   console.log(`Execution Time:           ⏱️ ${durationSec}s`);
   console.log("==================================================================");
+
+  try {
+    await mongoose.connection.close();
+  } catch (closeErr) {
+    // Ignore close error
+  }
 
   if (totalFailed === 0) {
     console.log("🎉 ALL POSITIVE, NEGATIVE & EDGE TEST CASES PASSED WITH 0 ERRORS!\n");

@@ -55,6 +55,15 @@ MEDICAL SAFETY GUARDRAILS:
 
 Tone: Professional, warm, concise, and clear.`;
 
+const withTimeout = (promise, ms = 4000) => {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error(`AI Request timed out after ${ms}ms`)), ms)
+    ),
+  ]);
+};
+
 /**
  * Intelligent Database-Backed Local Fallback Engine
  * Ensures 100% availability even if external AI API quotas or network are disrupted.
@@ -219,7 +228,6 @@ const generateSmartLocalFallback = async (userMessage, userId = null) => {
     console.warn("[Local Fallback DB Notice]:", dbErr.message);
   }
 
-  // Default friendly response
   return `Hello! I am your **Prescripto AI Assistant** 🤖\n\nI can help you:\n• **Find Doctors & Check Availability:** Inquire about General Physicians, Dermatologists, Pediatricians, Neurologists, and more.\n• **Manage Appointments:** Learn how to book, check upcoming visits, or view your **Queue Token #**.\n• **Refunds & Billing:** Understand our **100% Instant Refund Guarantee** and payment options.\n• **Healthcare Guidance:** Clarify medical terms, prescription instructions, and department specialties.\n\nHow can I assist you today?`;
 };
 
@@ -241,11 +249,10 @@ export const processAIChat = async (userMessage, conversationHistory = [], userI
 
   const geminiApiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 
-  // Build Gemini-compatible contents array
   const contents = [];
 
   if (Array.isArray(conversationHistory) && conversationHistory.length > 0) {
-    const recentTurns = conversationHistory.slice(-6);
+    const recentTurns = conversationHistory.slice(-4);
     for (const turn of recentTurns) {
       if (!turn.content || turn.content === userMessage) continue;
       const role = turn.role === "user" ? "user" : "model";
@@ -264,8 +271,6 @@ export const processAIChat = async (userMessage, conversationHistory = [], userI
   const supportedModels = [
     "gemini-3.5-flash-lite",
     "gemini-3.5-flash",
-    "gemini-flash-latest",
-    "gemini-3.8-flash",
   ];
 
   if (geminiApiKey && geminiApiKey !== "your_gemini_api_key_here") {
@@ -275,21 +280,23 @@ export const processAIChat = async (userMessage, conversationHistory = [], userI
       try {
         const chatHistory = JSON.parse(JSON.stringify(contents));
 
-        let currentResponse = await ai.models.generateContent({
-          model: modelName,
-          contents: chatHistory,
-          config: {
-            systemInstruction: PRESCRIPTO_SYSTEM_INSTRUCTION,
-            tools: [{ functionDeclarations: prescriptoToolDeclarations }],
-          },
-        });
+        let currentResponse = await withTimeout(
+          ai.models.generateContent({
+            model: modelName,
+            contents: chatHistory,
+            config: {
+              systemInstruction: PRESCRIPTO_SYSTEM_INSTRUCTION,
+              tools: [{ functionDeclarations: prescriptoToolDeclarations }],
+            },
+          }),
+          4500
+        );
 
-        // Tool Calling execution loop (up to 3 iterations)
         let iterations = 0;
         while (
           currentResponse.functionCalls &&
           currentResponse.functionCalls.length > 0 &&
-          iterations < 3
+          iterations < 2
         ) {
           iterations++;
           chatHistory.push(currentResponse.candidates[0].content);
@@ -311,14 +318,17 @@ export const processAIChat = async (userMessage, conversationHistory = [], userI
             });
           }
 
-          currentResponse = await ai.models.generateContent({
-            model: modelName,
-            contents: chatHistory,
-            config: {
-              systemInstruction: PRESCRIPTO_SYSTEM_INSTRUCTION,
-              tools: [{ functionDeclarations: prescriptoToolDeclarations }],
-            },
-          });
+          currentResponse = await withTimeout(
+            ai.models.generateContent({
+              model: modelName,
+              contents: chatHistory,
+              config: {
+                systemInstruction: PRESCRIPTO_SYSTEM_INSTRUCTION,
+                tools: [{ functionDeclarations: prescriptoToolDeclarations }],
+              },
+            }),
+            4500
+          );
         }
 
         const replyText =
@@ -336,7 +346,7 @@ export const processAIChat = async (userMessage, conversationHistory = [], userI
           };
         }
       } catch (err) {
-        console.warn(`[Gemini Attempt Failed on ${modelName}]:`, err.message);
+        console.warn(`[Gemini Attempt Notice on ${modelName}]:`, err.message);
       }
     }
   }
