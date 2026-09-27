@@ -57,11 +57,11 @@ const Home = () => {
   ]
 
   return (
-    <div className='space-y-12 py-2'>
+    <div className='space-y-8 py-1'>
       <Header />
 
       {/* Primary Key Features Grid (Clean 4 Core Highlights, No clutter) */}
-      <section className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-8'>
+      <section className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 my-6'>
         {/* Card 1 */}
         <div
           onClick={() => navigate('/doctors')}
@@ -159,32 +159,32 @@ const Home = () => {
       </section>
 
       {/* Verified Patient Reviews / Testimonials */}
-      <section className='my-16'>
-        <div className='text-center max-w-xl mx-auto mb-10'>
-          <h2 className='text-3xl sm:text-4xl font-bold text-gray-900'>What Patients Say</h2>
-          <p className='text-base sm:text-lg text-gray-500 mt-2'>
+      <section className='my-8 sm:my-10'>
+        <div className='text-center max-w-xl mx-auto mb-6'>
+          <h2 className='text-2xl sm:text-3xl font-extrabold text-gray-900'>What Patients Say</h2>
+          <p className='text-sm sm:text-base text-gray-500 mt-1.5'>
             Over 15,000+ consultations delivered with clinical safety and transparent care
           </p>
         </div>
 
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-5'>
           {testimonials.map((item, idx) => (
             <div
               key={idx}
-              className='bg-white p-7 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between'
+              className='bg-white p-6 rounded-3xl border border-gray-100 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between'
             >
               <div>
-                <div className='flex items-center gap-1.5 text-amber-400 text-base mb-3'>
+                <div className='flex items-center gap-1 text-amber-400 text-sm mb-2.5'>
                   {'★'.repeat(item.rating)}
                 </div>
-                <p className='text-gray-700 text-base italic leading-relaxed'>&ldquo;{item.comment}&rdquo;</p>
+                <p className='text-gray-700 text-sm italic leading-relaxed'>&ldquo;{item.comment}&rdquo;</p>
               </div>
-              <div className='mt-6 pt-4 border-t border-gray-100 flex items-center justify-between'>
+              <div className='mt-5 pt-3.5 border-t border-gray-100 flex items-center justify-between'>
                 <div>
-                  <p className='font-bold text-gray-900 text-base'>{item.name}</p>
+                  <p className='font-bold text-gray-900 text-sm'>{item.name}</p>
                   <p className='text-xs text-primary font-semibold'>{item.role}</p>
                 </div>
-                <span className='text-xs bg-emerald-50 text-emerald-700 font-bold px-3 py-1 rounded-full border border-emerald-200'>
+                <span className='text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2.5 py-0.5 rounded-full border border-emerald-200'>
                   ✓ Verified
                 </span>
               </div>
@@ -194,10 +194,10 @@ const Home = () => {
       </section>
 
       {/* Frequently Asked Questions (FAQ) */}
-      <section className='my-16 bg-gray-50/80 p-8 sm:p-14 rounded-3xl border border-gray-200/80'>
-        <div className='text-center max-w-xl mx-auto mb-10'>
-          <h2 className='text-3xl sm:text-4xl font-bold text-gray-900'>Frequently Asked Questions</h2>
-          <p className='text-base sm:text-lg text-gray-500 mt-2'>
+      <section className='my-8 sm:my-10 bg-gray-50/80 p-6 sm:p-10 rounded-3xl border border-gray-200/80'>
+        <div className='text-center max-w-xl mx-auto mb-6'>
+          <h2 className='text-2xl sm:text-3xl font-extrabold text-gray-900'>Frequently Asked Questions</h2>
+          <p className='text-sm sm:text-base text-gray-500 mt-1.5'>
             Everything you need to know about appointment bookings, refunds, and medicines
           </p>
         </div>

@@ -7,9 +7,9 @@ const SpecialityMenu = () => {
   const { t } = useContext(AppContext)
 
   return (
-    <div className='flex flex-col items-center gap-4 py-16 text-gray-800' id='speciality'>
-      <h1 className='text-3xl sm:text-4xl font-bold text-gray-900'>{t('findBySpeciality')}</h1>
-      <p className='max-w-md text-center text-base sm:text-lg text-gray-600'>
+    <div className='flex flex-col items-center gap-3 py-8 sm:py-10 text-gray-800' id='speciality'>
+      <h1 className='text-2xl sm:text-3xl font-extrabold text-gray-900'>{t('findBySpeciality')}</h1>
+      <p className='max-w-md text-center text-sm sm:text-base text-gray-600'>
         {t('specialitySubtitle')}
       </p>
       <div className='flex sm:justify-center gap-6 pt-6 w-full overflow-x-auto pb-2 custom-scrollbar'>

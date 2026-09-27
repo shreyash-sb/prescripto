@@ -8,9 +8,9 @@ const TopDoctors = () => {
   const { doctors, t } = useContext(AppContext)
 
   return (
-    <div className='flex flex-col items-center gap-4 my-16 text-gray-900 md:mx-10'>
-      <h1 className='text-3xl sm:text-4xl font-bold text-gray-900'>{t('topDoctorsTitle')}</h1>
-      <p className='max-w-md text-center text-base sm:text-lg text-gray-600'>
+    <div className='flex flex-col items-center gap-3 my-8 sm:my-10 text-gray-900 md:mx-4'>
+      <h1 className='text-2xl sm:text-3xl font-extrabold text-gray-900'>{t('topDoctorsTitle')}</h1>
+      <p className='max-w-md text-center text-sm sm:text-base text-gray-600'>
         {t('topDoctorsSubtitle')}
       </p>
       <div className='w-full grid grid-cols-auto gap-6 pt-6 gap-y-7 px-3 sm:px-0'>

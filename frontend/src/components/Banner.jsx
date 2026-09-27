@@ -8,9 +8,9 @@ const Banner = () => {
   const { t } = useContext(AppContext)
 
   return (
-    <div className='flex bg-gradient-to-r from-primary to-indigo-600 rounded-3xl px-6 sm:px-10 lg:px-14 my-20 md:mx-10 shadow-xl overflow-hidden'>
+    <div className='flex bg-gradient-to-r from-primary to-indigo-600 rounded-3xl px-6 sm:px-10 lg:px-14 my-8 sm:my-10 md:mx-2 shadow-xl overflow-hidden'>
       {/* Left Side */}
-      <div className='flex-1 py-10 sm:py-12 md:py-16 lg:py-20 lg:pl-5'>
+      <div className='flex-1 py-8 sm:py-10 md:py-12 lg:pl-5'>
         <div className='text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight'>
           <p>{t('bookHealthcareAppt')}</p>
           <p className='mt-3 text-emerald-200'>{t('withTrustedDoctors')}</p>
