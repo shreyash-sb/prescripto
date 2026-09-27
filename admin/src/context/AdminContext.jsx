@@ -26,7 +26,12 @@ const AdminContextProvider = ({ children }) => {
       }
     } catch (error) {
       console.log("Admin get doctors error:", error);
-      toast.error(error.response?.data?.message || error.message);
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        localStorage.removeItem("aToken");
+        setAToken("");
+      } else {
+        toast.error(error.response?.data?.message || error.message);
+      }
     }
   };
 

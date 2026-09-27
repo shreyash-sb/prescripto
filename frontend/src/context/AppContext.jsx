@@ -63,6 +63,10 @@ const AppContextProvider = ({ children }) => {
       }
     } catch (error) {
       console.log("Profile fetch error:", error);
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        localStorage.removeItem("token");
+        setToken(false);
+      }
     }
   };
 

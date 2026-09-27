@@ -26,7 +26,12 @@ const DoctorContextProvider = ({ children }) => {
       }
     } catch (error) {
       console.log("Doctor get appointments error:", error);
-      toast.error(error.response?.data?.message || error.message);
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        localStorage.removeItem("dToken");
+        setDToken("");
+      } else {
+        toast.error(error.response?.data?.message || error.message);
+      }
     }
   };
 
