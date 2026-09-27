@@ -55,7 +55,7 @@ MEDICAL SAFETY GUARDRAILS:
 
 Tone: Professional, warm, concise, and clear.`;
 
-const withTimeout = (promise, ms = 4000) => {
+const withTimeout = (promise, ms = 10000) => {
   return Promise.race([
     promise,
     new Promise((_, reject) =>
@@ -289,7 +289,7 @@ export const processAIChat = async (userMessage, conversationHistory = [], userI
               tools: [{ functionDeclarations: prescriptoToolDeclarations }],
             },
           }),
-          4500
+          10000
         );
 
         let iterations = 0;
@@ -327,7 +327,7 @@ export const processAIChat = async (userMessage, conversationHistory = [], userI
                 tools: [{ functionDeclarations: prescriptoToolDeclarations }],
               },
             }),
-            4500
+            10000
           );
         }
 
