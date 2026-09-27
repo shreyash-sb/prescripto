@@ -258,13 +258,13 @@ const DoctorAppointment = () => {
 
       {/* Appointments List Table */}
       <div className='bg-white border rounded-3xl text-sm max-h-[75vh] min-h-[50vh] overflow-y-scroll shadow-sm'>
-        <div className='hidden xl:grid grid-cols-[0.5fr_2.2fr_1.4fr_1.3fr_1.4fr_0.8fr_2.4fr] py-3.5 px-6 border-b bg-gray-50/80 text-gray-700 font-bold text-xs uppercase tracking-wider'>
-          <p># Token</p>
+        <div className='hidden xl:grid grid-cols-[85px_2.4fr_1.5fr_1.3fr_1.5fr_85px_2.3fr] py-3.5 px-6 border-b bg-gray-50/80 text-gray-700 font-bold text-xs uppercase tracking-wider items-center'>
+          <p className='text-center'>Token No.</p>
           <p>Patient & Current Problem</p>
           <p>Medical History / Age</p>
           <p>Payment Status</p>
           <p>Date & Time Slot</p>
-          <p>Fee</p>
+          <p className='text-right'>Fee</p>
           <p className='text-center'>3 Actions (Case / Accept / Reject)</p>
         </div>
 
@@ -284,11 +284,11 @@ const DoctorAppointment = () => {
             return (
               <div
                 key={index}
-                className='flex flex-col xl:grid xl:grid-cols-[0.5fr_2.2fr_1.4fr_1.3fr_1.4fr_0.8fr_2.4fr] items-start xl:items-center text-gray-600 py-3.5 px-6 border-b hover:bg-gray-50/70 transition-colors gap-3 xl:gap-0'
+                className='flex flex-col xl:grid xl:grid-cols-[85px_2.4fr_1.5fr_1.3fr_1.5fr_85px_2.3fr] items-start xl:items-center text-gray-600 py-3.5 px-6 border-b hover:bg-gray-50/70 transition-colors gap-3 xl:gap-0'
               >
                 {/* Token Number */}
-                <div className='flex items-center gap-2'>
-                  <span className='w-8 h-8 rounded-xl bg-indigo-50 border border-indigo-200 text-primary font-black text-xs flex items-center justify-center font-mono'>
+                <div className='flex items-center justify-start xl:justify-center w-full xl:w-auto'>
+                  <span className='px-2.5 py-1 rounded-xl bg-indigo-50 border border-indigo-200 text-primary font-black text-xs font-mono' title='Daily OPD Queue Token Number'>
                     #{item.tokenNumber || index + 1}
                   </span>
                 </div>
@@ -378,7 +378,7 @@ const DoctorAppointment = () => {
                 </div>
 
                 {/* Fee */}
-                <p className='font-black text-gray-900 text-xs sm:text-sm'>
+                <p className='font-black text-gray-900 text-xs sm:text-sm text-left xl:text-right pr-3'>
                   {currency}{item.amount}
                 </p>
 

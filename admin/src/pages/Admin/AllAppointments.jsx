@@ -19,30 +19,34 @@ const AllAppointments = () => {
   }, [aToken])
 
   return (
-    <div className='w-full max-w-7xl space-y-6'>
+    <div className='w-full max-w-7xl space-y-5'>
+      {/* Header */}
       <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4'>
         <div>
           <h1 className='text-2xl font-black text-gray-900'>Hospital Consultation Registry</h1>
-          <p className='text-xs sm:text-sm text-gray-500'>
-            Overview of all patient bookings, clinic tokens, automated refunds, and payment settlements
+          <p className='text-xs sm:text-sm text-gray-500 mt-0.5'>
+            Complete overview of patient bookings, OPD queue tokens, automated refunds, and payment settlements
           </p>
         </div>
-        <span className='px-4 py-2 bg-indigo-50 text-[#5F65FF] rounded-2xl border border-indigo-200 font-black text-xs self-start sm:self-auto'>
+        <span className='px-4 py-2 bg-indigo-50 text-primary rounded-2xl border border-indigo-200 font-black text-xs self-start sm:self-auto'>
           {appointments.length} Total Records
         </span>
       </div>
 
-      <div className='bg-white border rounded-3xl text-sm max-h-[80vh] min-h-[60vh] overflow-y-scroll shadow-sm'>
-        <div className='hidden lg:grid grid-cols-[0.5fr_2fr_1.8fr_0.8fr_1.8fr_2fr_1fr_1.4fr] py-4 px-6 border-b font-bold text-xs text-gray-700 bg-gray-50 uppercase tracking-wider'>
-          <p># Token</p>
+      {/* Table Container */}
+      <div className='bg-white border border-gray-200/90 rounded-3xl text-sm max-h-[80vh] min-h-[60vh] overflow-y-auto shadow-sm'>
+        {/* Table Header with explicit, aligned columns */}
+        <div className='hidden lg:grid grid-cols-[85px_1.8fr_1.6fr_75px_1.6fr_1.8fr_85px_135px] py-4 px-6 border-b font-bold text-xs text-gray-700 bg-gray-50 uppercase tracking-wider items-center'>
+          <p className='text-center'>Token No.</p>
           <p>Patient</p>
           <p>Payment / Refund</p>
-          <p>Age</p>
+          <p className='text-center'>Age</p>
           <p>Date & Time</p>
           <p>Doctor Name</p>
-          <p>Fee</p>
+          <p className='text-right'>Fee</p>
           <p className='text-center'>Status / Action</p>
         </div>
+
         {appointments.length === 0 ? (
           <div className='p-20 text-center text-gray-400'>
             <p className='text-4xl mb-3'>📋</p>
@@ -52,21 +56,21 @@ const AllAppointments = () => {
         ) : (
           [...appointments].reverse().map((item, index) => (
             <div
-              className='flex flex-col lg:grid lg:grid-cols-[0.5fr_2fr_1.8fr_0.8fr_1.8fr_2fr_1fr_1.4fr] items-start lg:items-center text-gray-500 py-4 px-6 border-b hover:bg-gray-50/80 transition-colors gap-3 lg:gap-0'
+              className='flex flex-col lg:grid lg:grid-cols-[85px_1.8fr_1.6fr_75px_1.6fr_1.8fr_85px_135px] items-start lg:items-center text-gray-600 py-4 px-6 border-b hover:bg-gray-50/80 transition-colors gap-3 lg:gap-0'
               key={index}
             >
-              {/* Token */}
-              <div className='flex items-center gap-2'>
-                <span className='w-8 h-8 rounded-xl bg-indigo-50 border border-indigo-200 text-primary font-black text-xs flex items-center justify-center font-mono'>
+              {/* Token Number */}
+              <div className='flex items-center justify-start lg:justify-center w-full lg:w-auto'>
+                <span className='px-2.5 py-1 rounded-xl bg-indigo-50 border border-indigo-200 text-primary font-black text-xs font-mono' title='Daily OPD Queue Token Number'>
                   #{item.tokenNumber || index + 1}
                 </span>
               </div>
 
               {/* Patient */}
-              <div className='flex items-center gap-2.5'>
-                <UserIdentity name={item.userData?.name || 'Patient'} className='w-9 h-9' />
-                <div>
-                  <p className='font-bold text-gray-900'>{item.userData?.name || 'Patient'}</p>
+              <div className='flex items-center gap-2.5 min-w-0 pr-2'>
+                <UserIdentity name={item.userData?.name || 'Patient'} className='w-9 h-9 flex-shrink-0' />
+                <div className='min-w-0'>
+                  <p className='font-bold text-gray-900 truncate'>{item.userData?.name || 'Patient'}</p>
                   <p className='text-[10px] text-gray-400 lg:hidden'>
                     {slotDateFormat(item.slotDate)} | {item.slotTime}
                   </p>
@@ -74,7 +78,7 @@ const AllAppointments = () => {
               </div>
 
               {/* Payment Status & Refund */}
-              <div>
+              <div className='pr-2'>
                 {item.refundStatus === 'Refunded' ? (
                   <span className='text-[11px] px-2.5 py-1 rounded-full font-black bg-purple-50 text-purple-700 border border-purple-200 inline-flex items-center gap-1'>
                     <span>🛡️ 100% Refunded</span>
@@ -113,38 +117,39 @@ const AllAppointments = () => {
               </div>
 
               {/* Age */}
-              <p className='text-xs text-gray-600 font-semibold'>{calculateAge(item.userData?.dob)} yrs</p>
+              <p className='text-xs text-gray-600 font-semibold text-left lg:text-center'>
+                {calculateAge(item.userData?.dob)} yrs
+              </p>
 
               {/* Date & Time */}
-              <p className='text-xs text-gray-700 font-medium'>
+              <p className='text-xs text-gray-700 font-medium pr-2'>
                 {slotDateFormat(item.slotDate)}, <span className='font-bold text-indigo-600'>{item.slotTime}</span>
               </p>
 
               {/* Doctor */}
-              <div className='flex items-center gap-2'>
+              <div className='flex items-center gap-2 min-w-0 pr-2'>
                 <DoctorIdentity
                   name={item.docData?.name || 'Doctor'}
                   speciality={item.docData?.speciality}
                   docId={item.docData?._id}
                   mode='avatar'
-                  className='w-7 h-7 text-[10px]'
+                  className='w-7 h-7 text-[10px] flex-shrink-0'
                 />
-                <div>
-                  <p className='font-bold text-gray-900 text-xs'>{item.docData?.name || 'Doctor'}</p>
-                  <p className='text-[10px] text-gray-400'>{item.docData?.speciality}</p>
+                <div className='min-w-0'>
+                  <p className='font-bold text-gray-900 text-xs truncate'>{item.docData?.name || 'Doctor'}</p>
+                  <p className='text-[10px] text-gray-400 truncate'>{item.docData?.speciality}</p>
                 </div>
               </div>
 
               {/* Fee */}
-              <p className='text-gray-900 font-black text-xs'>
-                {currency}
-                {item.amount}
+              <p className='text-gray-900 font-black text-xs text-left lg:text-right pr-3'>
+                {currency}{item.amount}
               </p>
 
               {/* Action / Completion */}
-              <div className='text-center flex items-center justify-start lg:justify-center gap-2'>
+              <div className='text-center flex items-center justify-start lg:justify-center gap-2 w-full lg:w-auto'>
                 {item.cancelled ? (
-                  <span className='text-rose-500 bg-rose-50 border border-rose-200 text-xs font-bold px-3 py-1 rounded-xl'>
+                  <span className='text-rose-600 bg-rose-50 border border-rose-200 text-xs font-bold px-3 py-1 rounded-xl'>
                     Cancelled
                   </span>
                 ) : item.isCompleted ? (
@@ -155,7 +160,7 @@ const AllAppointments = () => {
                     {(item.prescription || item.diagnosisNotes) && (
                       <button
                         onClick={() => setSelectedDetailsAppt(item)}
-                        className='text-[11px] text-[#5F65FF] hover:underline font-bold'
+                        className='text-[11px] text-primary hover:underline font-bold'
                         title='View Clinical Notes'
                       >
                         Notes

@@ -9,16 +9,21 @@ export const chatWithAI = async (req, res, next) => {
   try {
     const { message, conversationHistory } = req.body;
 
-    if (!message || typeof message !== "string") {
-      return res.status(400).json({
-        success: false,
-        message: "Please provide a valid message prompt",
+    if (!message || typeof message !== "string" || !message.trim()) {
+      return res.status(200).json({
+        success: true,
+        response: "Please enter a message prompt, and I'll be happy to assist you!",
+        source: "default",
       });
     }
 
-    // Optional user token extraction to support both public visitors and authenticated patients
+    // Support token, atoken, dtoken, authorization headers
     let userId = null;
-    const token = req.headers.token || req.headers.authorization?.replace(/^Bearer\s+/i, "");
+    const token =
+      req.headers.token ||
+      req.headers.atoken ||
+      req.headers.dtoken ||
+      req.headers.authorization?.replace(/^Bearer\s+/i, "");
 
     if (token) {
       try {
@@ -28,13 +33,13 @@ export const chatWithAI = async (req, res, next) => {
         );
         userId = decoded.id || decoded._id;
       } catch (tokenErr) {
-        // Invalid or expired token, continue as unauthenticated visitor
+        // Continue gracefully as visitor if token verification fails
         userId = null;
       }
     }
 
     const result = await processAIChat(
-      message,
+      message.trim(),
       Array.isArray(conversationHistory) ? conversationHistory : [],
       userId
     );
@@ -42,14 +47,15 @@ export const chatWithAI = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       response: result.response,
-      source: result.source,
+      source: result.source || "gemini-hybrid",
     });
   } catch (error) {
     console.error("AI Controller Error:", error);
-    return res.status(500).json({
-      success: false,
-      message: "An error occurred while processing your AI request. Please try again.",
-      response: "I apologize, but I encountered a temporary error. Please try asking again in a moment.",
+    return res.status(200).json({
+      success: true,
+      response:
+        "Hello! I am your Prescripto Assistant. I can help you find verified doctors, check live availability, understand refund rules, or explain healthcare services. How can I help you today?",
+      source: "fallback",
     });
   }
 };
