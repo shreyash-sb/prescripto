@@ -35,19 +35,7 @@ app.use(
 // Resilient CORS configuration
 app.use(
   cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin or any localhost / 127.0.0.1 port in dev
-      if (
-        !origin ||
-        origin.startsWith("http://localhost:") ||
-        origin.startsWith("http://127.0.0.1:") ||
-        origin.includes("vercel.app") ||
-        origin.includes("onrender.com")
-      ) {
-        return callback(null, true);
-      }
-      return callback(null, true);
-    },
+    origin: true,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: [
@@ -59,6 +47,7 @@ app.use(
     ],
   })
 );
+app.options("*", cors());
 
 // Body Parsers
 app.use(express.json({ limit: "10mb" }));

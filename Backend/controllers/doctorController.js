@@ -172,14 +172,23 @@ export const loginDoctor = async (req, res, next) => {
  */
 export const doctorList = async (req, res, next) => {
   try {
-    const doctors = await doctorModel
+    let doctors = await doctorModel
       .find({})
       .select("-password -email")
       .sort({ rating: -1 });
 
+    if (!doctors || doctors.length === 0) {
+      const { seedDatabase } = await import("../utils/seedData.js");
+      await seedDatabase(true);
+      doctors = await doctorModel
+        .find({})
+        .select("-password -email")
+        .sort({ rating: -1 });
+    }
+
     return res.status(200).json({
       success: true,
-      doctors,
+      doctors: doctors || [],
     });
   } catch (error) {
     next(error);

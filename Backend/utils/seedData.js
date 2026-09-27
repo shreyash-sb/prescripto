@@ -237,38 +237,47 @@ export const seedDatabase = async (force = false) => {
       console.log("Connected to MongoDB for seeding...");
     }
 
-    const doctorCount = await doctorModel.countDocuments();
-    if (doctorCount > 0 && !force) {
-      console.log(`Database already has ${doctorCount} doctors. Skipping seed (use force=true to override).`);
-      return;
-    }
-
-    console.log("Seeding sample doctors, administrators, and demo patients...");
-
     // Default password hash for sample accounts: "doctor12345", "admin12345", "patient12345"
-    const salt = await bcrypt.genSalt(10);
+    const salt = await bcrypt.genSalt(8);
     const doctorPasswordHash = await bcrypt.hash("doctor12345", salt);
     const adminPasswordHash = await bcrypt.hash("admin12345", salt);
     const patientPasswordHash = await bcrypt.hash("patient12345", salt);
 
-    // 1. Seed or Upsert Admin
-    const adminEmail = process.env.ADMIN_EMAIL || "admin@example.com";
-    const existingAdmin = await adminModel.findOne({ email: adminEmail });
+    // 1. Always Ensure Admin Exists
+    const adminEmail = (process.env.ADMIN_EMAIL || "admin@example.com").toLowerCase().trim();
+    let existingAdmin = await adminModel.findOne({ email: adminEmail });
     if (!existingAdmin) {
       await adminModel.create({
-        name: "System Administrator",
+        name: "Hospital Super Admin",
         email: adminEmail,
         password: adminPasswordHash,
         role: "admin",
       });
       console.log(`Admin account created: ${adminEmail} (password: admin12345)`);
+    } else {
+      await adminModel.updateOne({ _id: existingAdmin._id }, { password: adminPasswordHash });
     }
 
-    // 2. Seed or Upsert Demo Patient
+    // Also ensure admin@example.com exists
+    if (adminEmail !== "admin@example.com") {
+      let defaultAdmin = await adminModel.findOne({ email: "admin@example.com" });
+      if (!defaultAdmin) {
+        await adminModel.create({
+          name: "Hospital Administrator",
+          email: "admin@example.com",
+          password: adminPasswordHash,
+          role: "admin",
+        });
+      } else {
+        await adminModel.updateOne({ _id: defaultAdmin._id }, { password: adminPasswordHash });
+      }
+    }
+
+    // 2. Always Ensure Demo Patient Exists
     let demoPatient = await userModel.findOne({ email: "patient@example.com" });
     if (!demoPatient) {
       demoPatient = await userModel.create({
-        name: "Alex Johnson",
+        name: "Alex Johnson (Verified)",
         email: "patient@example.com",
         password: patientPasswordHash,
         phone: "+1 555-0199",
@@ -277,9 +286,11 @@ export const seedDatabase = async (force = false) => {
         address: { line1: "42 Wallaby Way", line2: "Sydney Harbor, Suite 10" },
       });
       console.log("Demo patient created: patient@example.com (password: patient12345)");
+    } else {
+      await userModel.updateOne({ _id: demoPatient._id }, { password: patientPasswordHash });
     }
 
-    // Also add a general demo doctor account: doctor@example.com
+    // 3. Always Ensure Demo Doctor Exists: doctor@example.com
     const generalDoctorDoc = {
       name: "Dr. Richard James",
       email: "doctor@example.com",
@@ -302,7 +313,17 @@ export const seedDatabase = async (force = false) => {
     if (!existingDemoDoctor) {
       await doctorModel.create(generalDoctorDoc);
       console.log("Primary demo doctor created: doctor@example.com (password: doctor12345)");
+    } else {
+      await doctorModel.updateOne({ _id: existingDemoDoctor._id }, { password: doctorPasswordHash });
     }
+
+    const doctorCount = await doctorModel.countDocuments();
+    if (doctorCount > 3 && !force) {
+      console.log(`Database already has ${doctorCount} doctors. Core demo accounts verified.`);
+      return;
+    }
+
+    console.log("Seeding full set of sample doctors across all specialities...");
 
     // 3. Seed Doctors
     let createdDoctors = [];
