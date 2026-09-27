@@ -55,7 +55,7 @@ MEDICAL SAFETY GUARDRAILS:
 
 Tone: Professional, warm, concise, and clear.`;
 
-const withTimeout = (promise, ms = 10000) => {
+const withTimeout = (promise, ms = 25000) => {
   return Promise.race([
     promise,
     new Promise((_, reject) =>
@@ -210,17 +210,44 @@ const generateSmartLocalFallback = async (userMessage, userId = null) => {
       return `A **Gynecologist** provides specialized healthcare for women's reproductive health, prenatal care, menstrual health, and maternity consultations.`;
     }
 
-    // 7. General Healthcare explanations
+    // 7. Medical Tests & Diagnostic Scans (MRI, CT scan, X-Ray, Ultrasound, ECG)
+    if (
+      (query.includes("mri") && query.includes("ct")) ||
+      query.includes("mri vs ct") ||
+      query.includes("difference between mri and ct")
+    ) {
+      return `### Key Differences: MRI vs. CT Scan
+
+| Feature | CT Scan (Computed Tomography) | MRI (Magnetic Resonance Imaging) |
+| :--- | :--- | :--- |
+| **Technology** | Rotating X-rays (ionizing radiation) | Strong magnetic fields & radio waves |
+| **Best For** | Bones, acute trauma, chest/lungs, bleeding, emergencies | Soft tissues, brain, spinal cord, ligaments, joints |
+| **Duration** | Very fast (under 5 minutes) | Slower (15 to 45+ minutes) |
+| **Radiation** | Contains low-dose radiation | **Zero radiation** |
+| **Safety** | Safe for most metal implants | **No magnetic metals or pacemakers allowed** |
+
+💡 *Summary: Doctors typically choose a **CT scan** for emergency trauma, fractures, or chest scans, and an **MRI** when high-detail views of soft tissue (brain, spinal cord, ligaments) are needed.*`;
+    }
+
+    if (query.includes("mri")) {
+      return `**MRI (Magnetic Resonance Imaging):**\n• A non-invasive imaging test using powerful magnets and radio waves to generate detailed cross-sectional pictures of your body.\n• **Best suited for:** Brain, spine, nerves, torn ligaments (ACL, meniscus), and deep organs.\n• **Key safety note:** Because of the strong magnet, patients with pacemakers or magnetic metal implants cannot enter an MRI room.`;
+    }
+
+    if (query.includes("ct scan") || query.includes("cat scan")) {
+      return `**CT Scan (Computed Tomography):**\n• An advanced imaging technique that combines a series of X-ray views from different angles to create 3D cross-sectional images.\n• **Best suited for:** Acute trauma, bone fractures, pulmonary embolism, abdominal pain (appendicitis), and emergency diagnostics.\n• **Advantage:** Scans are extremely fast (often under 3-5 minutes).`;
+    }
+
+    // 8. General Healthcare explanations
     if (query.includes("after food") || query.includes("before food") || query.includes("empty stomach")) {
       return `**Medication Timing Guide:**\n• **After Food (Postprandial):** Take medication within 15–30 minutes after eating. This helps reduce gastric irritation and improves absorption for certain drugs (like NSAIDs or antibiotics).\n• **Before Food / Empty Stomach:** Take 30–60 minutes before meals or 2 hours after meals with a glass of water (common for thyroid medications and acid reducers).\n\nAlways follow your doctor's specific prescription instructions!`;
     }
 
-    // 8. Emergency SOS
+    // 9. Emergency SOS
     if (query.includes("emergency") || query.includes("urgent") || query.includes("ambulance") || query.includes("sos") || query.includes("108") || query.includes("112")) {
       return `🚨 **EMERGENCY ASSISTANCE ALERT** 🚨\n\nIf you or someone nearby is experiencing a life-threatening medical emergency (such as severe chest pain, shortness of breath, sudden weakness, or heavy bleeding), please contact emergency services immediately:\n\n• **National Medical Helpline / Ambulance:** **108**\n• **National Emergency Service:** **112**\n• **Police Helpline:** **100 / 112**\n\nPrescripto is intended for planned consultations. For acute crises, visit the nearest emergency room immediately.`;
     }
 
-    // 9. About Prescripto
+    // 10. About Prescripto
     if (query.includes("what is prescripto") || query.includes("about prescripto") || query.includes("features")) {
       return `**Prescripto** is an intelligent healthcare appointment and clinical management platform.\n\n**Core Features:**\n• **Specialist Booking:** Certified doctors across 6+ departments with transparent fees & patient reviews.\n• **Sequential Queue Tokens:** Orderly token numbers (#1, #2, #3...) for daily OPD clinics.\n• **100% Instant Refund:** Immediate reimbursement to Healthcare Wallet on cancellation.\n• **Allergy Safety Shield:** Pre-consultation drug allergy check to prevent adverse drug reactions.\n• **Smart Medicine Schedules:** Digital e-prescriptions converted into timed daily dose reminders.\n• **Doctor & Admin Consoles:** Real-time queue management, earnings tracker, and cash verification.`;
     }
@@ -269,8 +296,11 @@ export const processAIChat = async (userMessage, conversationHistory = [], userI
   });
 
   const supportedModels = [
+    "gemini-flash-lite-latest",
     "gemini-3.5-flash-lite",
-    "gemini-3.5-flash",
+    "gemini-3.1-flash-lite",
+    "gemini-flash-latest",
+    "gemini-3.8-flash",
   ];
 
   if (geminiApiKey && geminiApiKey !== "your_gemini_api_key_here") {
@@ -289,7 +319,7 @@ export const processAIChat = async (userMessage, conversationHistory = [], userI
               tools: [{ functionDeclarations: prescriptoToolDeclarations }],
             },
           }),
-          10000
+          25000
         );
 
         let iterations = 0;
@@ -327,7 +357,7 @@ export const processAIChat = async (userMessage, conversationHistory = [], userI
                 tools: [{ functionDeclarations: prescriptoToolDeclarations }],
               },
             }),
-            10000
+            25000
           );
         }
 
