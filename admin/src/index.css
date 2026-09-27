@@ -3,6 +3,23 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary: #5F6FFF;
+  --primary-dark: #4B55E6;
+}
+
+.bg-primary {
+  background-color: #5F6FFF !important;
+}
+
+.text-primary {
+  color: #5F6FFF !important;
+}
+
+.border-primary {
+  border-color: #5F6FFF !important;
+}
+
 ::-webkit-scrollbar {
   @apply hidden;
 }

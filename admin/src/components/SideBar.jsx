@@ -15,7 +15,7 @@ const SideBar = () => {
         {/* Role Identity Badge */}
         {aToken && (
           <div className='bg-indigo-50/80 border border-indigo-100 rounded-2xl p-3 flex items-center gap-3'>
-            <div className='w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center text-base font-bold shadow-sm'>
+            <div className='w-9 h-9 rounded-xl bg-[#5F6FFF] text-white flex items-center justify-center text-base font-bold shadow-sm flex-shrink-0'>
               🛡️
             </div>
             <div className='min-w-0 flex-1'>
@@ -30,7 +30,7 @@ const SideBar = () => {
 
         {dToken && (
           <div className='bg-emerald-50/80 border border-emerald-100 rounded-2xl p-3 flex items-center gap-3'>
-            <div className='w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-base font-bold shadow-sm'>
+            <div className='w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-base font-bold shadow-sm flex-shrink-0'>
               👨‍⚕️
             </div>
             <div className='min-w-0 flex-1'>
@@ -47,21 +47,29 @@ const SideBar = () => {
         {aToken && (
           <div className='space-y-1.5'>
             <p className='text-[10px] font-extrabold uppercase tracking-wider text-gray-400 px-3 pb-1'>
-              Navigation
+              Management
             </p>
-            <nav className='space-y-1'>
+            <nav className='space-y-1.5'>
               <NavLink
                 to='/admin-dashboard'
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
                     isActive
-                      ? 'bg-primary text-white shadow-md'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-[#5F6FFF] text-white shadow-md'
+                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
                   }`
                 }
               >
-                <img src={assets.home_icon} alt='' className='w-4.5 h-4.5 brightness-0 invert-0 group-hover:brightness-0' />
-                <span>Dashboard</span>
+                {({ isActive }) => (
+                  <>
+                    <img
+                      src={assets.home_icon}
+                      alt=''
+                      className={`w-4.5 h-4.5 transition-all ${isActive ? 'brightness-0 invert' : 'opacity-70'}`}
+                    />
+                    <span className={`block font-bold ${isActive ? 'text-white' : 'text-gray-700'}`}>Dashboard</span>
+                  </>
+                )}
               </NavLink>
 
               <NavLink
@@ -69,13 +77,21 @@ const SideBar = () => {
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
                     isActive
-                      ? 'bg-primary text-white shadow-md'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-[#5F6FFF] text-white shadow-md'
+                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
                   }`
                 }
               >
-                <img src={assets.appointment_icon} alt='' className='w-4.5 h-4.5' />
-                <span>Appointments</span>
+                {({ isActive }) => (
+                  <>
+                    <img
+                      src={assets.appointment_icon}
+                      alt=''
+                      className={`w-4.5 h-4.5 transition-all ${isActive ? 'brightness-0 invert' : 'opacity-70'}`}
+                    />
+                    <span className={`block font-bold ${isActive ? 'text-white' : 'text-gray-700'}`}>Appointments</span>
+                  </>
+                )}
               </NavLink>
 
               <NavLink
@@ -83,13 +99,21 @@ const SideBar = () => {
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
                     isActive
-                      ? 'bg-primary text-white shadow-md'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-[#5F6FFF] text-white shadow-md'
+                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
                   }`
                 }
               >
-                <img src={assets.add_icon} alt='' className='w-4.5 h-4.5' />
-                <span>Add Doctor</span>
+                {({ isActive }) => (
+                  <>
+                    <img
+                      src={assets.add_icon}
+                      alt=''
+                      className={`w-4.5 h-4.5 transition-all ${isActive ? 'brightness-0 invert' : 'opacity-70'}`}
+                    />
+                    <span className={`block font-bold ${isActive ? 'text-white' : 'text-gray-700'}`}>Add Doctor</span>
+                  </>
+                )}
               </NavLink>
 
               <NavLink
@@ -97,13 +121,21 @@ const SideBar = () => {
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
                     isActive
-                      ? 'bg-primary text-white shadow-md'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-[#5F6FFF] text-white shadow-md'
+                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
                   }`
                 }
               >
-                <img src={assets.people_icon} alt='' className='w-4.5 h-4.5' />
-                <span>Doctors List</span>
+                {({ isActive }) => (
+                  <>
+                    <img
+                      src={assets.people_icon}
+                      alt=''
+                      className={`w-4.5 h-4.5 transition-all ${isActive ? 'brightness-0 invert' : 'opacity-70'}`}
+                    />
+                    <span className={`block font-bold ${isActive ? 'text-white' : 'text-gray-700'}`}>Doctors List</span>
+                  </>
+                )}
               </NavLink>
             </nav>
           </div>
@@ -113,21 +145,29 @@ const SideBar = () => {
         {dToken && (
           <div className='space-y-1.5'>
             <p className='text-[10px] font-extrabold uppercase tracking-wider text-gray-400 px-3 pb-1'>
-              Navigation
+              Doctor Workspace
             </p>
-            <nav className='space-y-1'>
+            <nav className='space-y-1.5'>
               <NavLink
                 to='/doctor-dashboard'
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
                     isActive
-                      ? 'bg-primary text-white shadow-md'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-[#5F6FFF] text-white shadow-md'
+                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
                   }`
                 }
               >
-                <img src={assets.home_icon} alt='' className='w-4.5 h-4.5' />
-                <span>Dashboard</span>
+                {({ isActive }) => (
+                  <>
+                    <img
+                      src={assets.home_icon}
+                      alt=''
+                      className={`w-4.5 h-4.5 transition-all ${isActive ? 'brightness-0 invert' : 'opacity-70'}`}
+                    />
+                    <span className={`block font-bold ${isActive ? 'text-white' : 'text-gray-700'}`}>Dashboard</span>
+                  </>
+                )}
               </NavLink>
 
               <NavLink
@@ -135,13 +175,21 @@ const SideBar = () => {
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
                     isActive
-                      ? 'bg-primary text-white shadow-md'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-[#5F6FFF] text-white shadow-md'
+                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
                   }`
                 }
               >
-                <img src={assets.appointment_icon} alt='' className='w-4.5 h-4.5' />
-                <span>Appointments</span>
+                {({ isActive }) => (
+                  <>
+                    <img
+                      src={assets.appointment_icon}
+                      alt=''
+                      className={`w-4.5 h-4.5 transition-all ${isActive ? 'brightness-0 invert' : 'opacity-70'}`}
+                    />
+                    <span className={`block font-bold ${isActive ? 'text-white' : 'text-gray-700'}`}>Appointments</span>
+                  </>
+                )}
               </NavLink>
 
               <NavLink
@@ -149,13 +197,21 @@ const SideBar = () => {
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
                     isActive
-                      ? 'bg-primary text-white shadow-md'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-[#5F6FFF] text-white shadow-md'
+                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
                   }`
                 }
               >
-                <img src={assets.people_icon} alt='' className='w-4.5 h-4.5' />
-                <span>Profile</span>
+                {({ isActive }) => (
+                  <>
+                    <img
+                      src={assets.people_icon}
+                      alt=''
+                      className={`w-4.5 h-4.5 transition-all ${isActive ? 'brightness-0 invert' : 'opacity-70'}`}
+                    />
+                    <span className={`block font-bold ${isActive ? 'text-white' : 'text-gray-700'}`}>Profile</span>
+                  </>
+                )}
               </NavLink>
             </nav>
           </div>

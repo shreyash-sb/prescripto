@@ -5,7 +5,15 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'primary': "#5F6FFF",
+        'primary-dark': "#4B55E6",
+      },
+      gridTemplateColumns: {
+        'auto': 'repeat(auto-fill, minmax(200px , 1fr))'
+      }
+    },
   },
   plugins: [],
 }
