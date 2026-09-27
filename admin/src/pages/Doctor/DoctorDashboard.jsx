@@ -12,7 +12,6 @@ const DoctorDashboard = () => {
     getDashData,
     dToken,
     completeAppointment,
-    cancelAppointment,
     acceptAppointment,
     rejectAppointment,
     collectPayment,
@@ -302,7 +301,7 @@ const DoctorDashboard = () => {
           <div>
             <h2 className='text-sm sm:text-base font-black'>Live OPD Token Dispatcher</h2>
             <p className='text-xs text-indigo-200 mt-0.5'>
-              Click "Call Next Token" to advance patient queue and notify the waiting area.
+              Click &quot;Call Next Token&quot; to advance patient queue and notify the waiting area.
             </p>
           </div>
         </div>
@@ -721,7 +720,7 @@ const DoctorDashboard = () => {
               {/* Patient's Current Problem / Chief Complaint Report */}
               <div className='p-4.5 bg-amber-50/90 border border-amber-200 rounded-2xl'>
                 <span className='text-xs font-black text-amber-900 uppercase tracking-wider block mb-1 flex items-center gap-1.5'>
-                  <span>🩺</span> Patient's Current Problem & Symptoms Report
+                  <span>🩺</span> Patient&apos;s Current Problem & Symptoms Report
                 </span>
                 <p className='text-sm sm:text-base text-gray-900 font-semibold leading-relaxed'>
                   {selectedCaseAppt.patientProblem || 'General health checkup and consultation request.'}
@@ -998,7 +997,7 @@ const DoctorDashboard = () => {
               <div>
                 <div className='flex items-center justify-between mb-1.5'>
                   <label className='font-bold text-gray-700 uppercase tracking-wider'>
-                    Medications (Auto-synced into patient's Medicine Routine & Alarms):
+                    Medications (Auto-synced into patient&apos;s Medicine Routine & Alarms):
                   </label>
                   <button
                     type='button'
@@ -1075,7 +1074,7 @@ const DoctorDashboard = () => {
                 <div>
                   <label className='block font-bold text-blue-900'>Automatic Follow-Up Manager</label>
                   <p className='text-[11px] text-blue-700'>
-                    Schedules a follow-up reminder in the patient's portal.
+                    Schedules a follow-up reminder in the patient&apos;s portal.
                   </p>
                 </div>
                 <select
@@ -1189,7 +1188,7 @@ const DoctorDashboard = () => {
 
               {rejectingAppt.payment && (
                 <div className='p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900 text-xs'>
-                  ✓ <strong>100% Automated Refund:</strong> The consultation fee of {currency}{rejectingAppt.amount} will be immediately refunded to the patient's wallet.
+                  ✓ <strong>100% Automated Refund:</strong> The consultation fee of {currency}{rejectingAppt.amount} will be immediately refunded to the patient&apos;s wallet.
                 </div>
               )}
 

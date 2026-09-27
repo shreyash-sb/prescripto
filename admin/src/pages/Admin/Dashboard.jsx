@@ -3,7 +3,6 @@ import { AdminContext } from '../../context/AdminContext'
 import { assets } from '../../assets/assets'
 import { AppContext } from '../../context/AppContext'
 import DoctorIdentity from '../../components/DoctorIdentity'
-import UserIdentity from '../../components/UserIdentity'
 import { useNavigate } from 'react-router-dom'
 
 const Dashboard = () => {
@@ -11,13 +10,12 @@ const Dashboard = () => {
     aToken,
     getDashData,
     cancelAppointment,
-    collectPayment,
     dashData,
     doctors,
     getAllDoctors,
     changeAvailability,
   } = useContext(AdminContext)
-  const { slotDateFormat, currency, calculateAge } = useContext(AppContext)
+  const { slotDateFormat, currency } = useContext(AppContext)
   const navigate = useNavigate()
 
   // Dynamic Dashboard View Selector Dropdown State
@@ -186,7 +184,7 @@ const Dashboard = () => {
           <div className='grid grid-cols-2 lg:grid-cols-4 gap-3'>
             <div className='bg-white p-4 rounded-2xl border border-gray-200/80 shadow-xs flex items-center justify-between'>
               <div>
-                <p className='text-[11px] font-bold text-gray-500 uppercase'>Today's Income</p>
+                <p className='text-[11px] font-bold text-gray-500 uppercase'>Today&apos;s Income</p>
                 <p className='text-xl font-black text-emerald-700 mt-0.5'>
                   {currency}{dashData.todayIncome || 0}
                 </p>
@@ -324,7 +322,7 @@ const Dashboard = () => {
               })}
             </div>
             <div className='flex items-center justify-between text-[11px] text-gray-500 pt-2.5'>
-              <span>Today's Cashflow: <strong className='text-emerald-700 font-bold'>{currency}{dashData.todayIncome || 0}</strong></span>
+              <span>Today&apos;s Cashflow: <strong className='text-emerald-700 font-bold'>{currency}{dashData.todayIncome || 0}</strong></span>
               <span className='text-primary font-bold'>Settled Weekly: {currency}{dashData.weeklyIncome || 0}</span>
             </div>
           </div>
