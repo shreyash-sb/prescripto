@@ -145,7 +145,7 @@ const DoctorDashboard = () => {
   })
 
   return (
-    <div className='w-full max-w-7xl m-4 sm:m-6 space-y-6'>
+    <div className='w-full max-w-7xl space-y-6'>
       {/* 1. Doctor Welcome Hero Card */}
       <div className='bg-gradient-to-r from-indigo-900 via-indigo-800 to-indigo-950 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden'>
         <div className='absolute -right-10 -bottom-10 w-64 h-64 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none'></div>

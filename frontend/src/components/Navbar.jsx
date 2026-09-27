@@ -4,13 +4,11 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { AppContext } from '../context/AppContext.jsx'
 import UserIdentity from './UserIdentity.jsx'
 import EmergencySOSModal from './EmergencySOSModal.jsx'
-import SymptomTriageModal from './SymptomTriageModal.jsx'
 
 const Navbar = () => {
   const [showSidePanel, setShowSidePanel] = useState(false)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
   const [showSOSModal, setShowSOSModal] = useState(false)
-  const [showTriageModal, setShowTriageModal] = useState(false)
 
   const { token, setToken, userData, t } = useContext(AppContext)
   const navigate = useNavigate()
@@ -32,7 +30,6 @@ const Navbar = () => {
   return (
     <>
       <EmergencySOSModal isOpen={showSOSModal} onClose={() => setShowSOSModal(false)} />
-      <SymptomTriageModal isOpen={showTriageModal} onClose={() => setShowTriageModal(false)} />
 
       {/* Main Top Navigation Bar (Clean, uncluttered, authentic Prescripto design) */}
       <nav className='sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-gray-100 py-3.5 mb-6 transition-all'>
@@ -286,29 +283,8 @@ const Navbar = () => {
                 {/* Section 2: Smart Clinical Tools & Privacy */}
                 <div className='space-y-1 pt-2.5 pb-2'>
                   <p className='text-[10px] font-extrabold uppercase tracking-wider text-gray-400 px-3 pt-1'>
-                    Smart Health Tools & Privacy
+                    Security & Emergency
                   </p>
-
-                  <button
-                    onClick={() => {
-                      setShowSidePanel(false)
-                      setShowTriageModal(true)
-                    }}
-                    className='w-full text-left p-3 rounded-2xl hover:bg-indigo-50/80 transition-all flex items-center gap-3.5 group'
-                  >
-                    <div className='w-10 h-10 rounded-xl bg-amber-100/70 text-amber-700 flex items-center justify-center text-lg group-hover:scale-105 transition-transform'>
-                      🤖
-                    </div>
-                    <div className='flex-1 min-w-0'>
-                      <p className='font-bold text-gray-900 text-xs group-hover:text-primary transition-colors'>
-                        {t('aiSymptomChecker')}
-                      </p>
-                      <p className='text-[11px] text-gray-500 truncate'>
-                        Instant symptom triage & specialist finder
-                      </p>
-                    </div>
-                    <span className='text-gray-300 group-hover:text-primary transition-colors text-xs'>→</span>
-                  </button>
 
                   <button
                     onClick={() => navigateAndClose('/privacy-logs')}

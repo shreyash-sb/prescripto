@@ -123,7 +123,7 @@ const DoctorProfile = () => {
   }
 
   return (
-    <div className='w-full max-w-6xl m-4 sm:m-6 space-y-6'>
+    <div className='w-full max-w-6xl space-y-6'>
       {/* Page Title & Controls */}
       <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-3'>
         <div>

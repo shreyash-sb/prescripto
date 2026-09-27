@@ -9,9 +9,9 @@ const SideBar = () => {
   const { dToken, profileData } = useContext(DoctorContext)
 
   return (
-    <aside className='w-60 md:w-68 bg-white border-r border-gray-200/80 flex-shrink-0 min-h-screen p-4 flex flex-col justify-between select-none shadow-sm'>
+    <aside className='w-56 sm:w-64 bg-white border-r border-gray-200/80 flex-shrink-0 sticky top-[61px] h-[calc(100vh-61px)] p-4 flex flex-col justify-between select-none shadow-xs overflow-y-auto z-20'>
       {/* Navigation Sections */}
-      <div className='space-y-5'>
+      <div className='space-y-4'>
         {/* Role Identity Badge */}
         {aToken && (
           <div className='bg-indigo-50/80 border border-indigo-100 rounded-2xl p-3 flex items-center gap-3'>
@@ -47,30 +47,30 @@ const SideBar = () => {
         {aToken && (
           <div className='space-y-1.5'>
             <p className='text-[10px] font-extrabold uppercase tracking-wider text-gray-400 px-3 pb-1'>
-              Menu
+              Navigation
             </p>
             <nav className='space-y-1'>
               <NavLink
                 to='/admin-dashboard'
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all ${
+                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
                     isActive
                       ? 'bg-primary text-white shadow-md'
-                      : 'text-gray-700 hover:bg-gray-100/80'
+                      : 'text-gray-700 hover:bg-gray-100'
                   }`
                 }
               >
-                <img src={assets.home_icon} alt='' className='w-4.5 h-4.5' />
+                <img src={assets.home_icon} alt='' className='w-4.5 h-4.5 brightness-0 invert-0 group-hover:brightness-0' />
                 <span>Dashboard</span>
               </NavLink>
 
               <NavLink
                 to='/all-appointments'
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all ${
+                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
                     isActive
                       ? 'bg-primary text-white shadow-md'
-                      : 'text-gray-700 hover:bg-gray-100/80'
+                      : 'text-gray-700 hover:bg-gray-100'
                   }`
                 }
               >
@@ -81,10 +81,10 @@ const SideBar = () => {
               <NavLink
                 to='/add-doctor'
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all ${
+                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
                     isActive
                       ? 'bg-primary text-white shadow-md'
-                      : 'text-gray-700 hover:bg-gray-100/80'
+                      : 'text-gray-700 hover:bg-gray-100'
                   }`
                 }
               >
@@ -95,10 +95,10 @@ const SideBar = () => {
               <NavLink
                 to='/doctor-list'
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all ${
+                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
                     isActive
                       ? 'bg-primary text-white shadow-md'
-                      : 'text-gray-700 hover:bg-gray-100/80'
+                      : 'text-gray-700 hover:bg-gray-100'
                   }`
                 }
               >
@@ -113,16 +113,16 @@ const SideBar = () => {
         {dToken && (
           <div className='space-y-1.5'>
             <p className='text-[10px] font-extrabold uppercase tracking-wider text-gray-400 px-3 pb-1'>
-              Menu
+              Navigation
             </p>
             <nav className='space-y-1'>
               <NavLink
                 to='/doctor-dashboard'
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all ${
+                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
                     isActive
                       ? 'bg-primary text-white shadow-md'
-                      : 'text-gray-700 hover:bg-gray-100/80'
+                      : 'text-gray-700 hover:bg-gray-100'
                   }`
                 }
               >
@@ -133,10 +133,10 @@ const SideBar = () => {
               <NavLink
                 to='/doctor-appointments'
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all ${
+                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
                     isActive
                       ? 'bg-primary text-white shadow-md'
-                      : 'text-gray-700 hover:bg-gray-100/80'
+                      : 'text-gray-700 hover:bg-gray-100'
                   }`
                 }
               >
@@ -147,10 +147,10 @@ const SideBar = () => {
               <NavLink
                 to='/doctor-profile'
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all ${
+                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
                     isActive
                       ? 'bg-primary text-white shadow-md'
-                      : 'text-gray-700 hover:bg-gray-100/80'
+                      : 'text-gray-700 hover:bg-gray-100'
                   }`
                 }
               >
@@ -162,13 +162,13 @@ const SideBar = () => {
         )}
       </div>
 
-      {/* Clean Bottom Switcher */}
-      <div className='pt-4 border-t border-gray-100'>
+      {/* Patient Portal Link */}
+      <div className='pt-3 border-t border-gray-100'>
         <a
-          href='http://localhost:5173'
+          href='https://prescripto-frontend-ten-theta.vercel.app'
           target='_blank'
           rel='noopener noreferrer'
-          className='w-full py-2.5 px-3 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm'
+          className='w-full py-2.5 px-3 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-xs'
         >
           <span>🌐 Patient Portal ↗</span>
         </a>

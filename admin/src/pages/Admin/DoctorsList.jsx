@@ -22,7 +22,7 @@ const DoctorsList = () => {
   }
 
   return (
-    <div className='m-5 max-h-[90vh] overflow-y-scroll'>
+    <div className='w-full max-w-7xl space-y-4'>
       <div className='flex items-center justify-between mb-4'>
         <div>
           <h1 className='text-xl font-bold text-gray-800 mb-0.5'>Doctor Staff Directory</h1>

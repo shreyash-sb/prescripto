@@ -3,7 +3,7 @@ import { assets } from '../assets/assets'
 import { useNavigate } from 'react-router-dom'
 import { AppContext } from '../context/AppContext'
 
-const Header = ({ onOpenTriage }) => {
+const Header = () => {
   const navigate = useNavigate()
   const { t } = useContext(AppContext)
 
@@ -31,32 +31,18 @@ const Header = ({ onOpenTriage }) => {
           <div className='flex flex-col sm:flex-row items-start sm:items-center gap-3 text-white/95 text-sm sm:text-base font-normal'>
             <img className='w-28 sm:w-32 drop-shadow-sm' src={assets.group_profiles} alt='Patient Avatars' />
             <p className='leading-relaxed'>
-              Schedule verified doctor consultations, receive automated allergy cross-checks, and auto-sync prescriptions to daily medicine alarms.
+              Schedule verified doctor consultations, receive automated allergy safety cross-checks, and auto-sync prescriptions to daily medicine alarms.
             </p>
           </div>
 
-          <div className='flex flex-wrap items-center gap-3 pt-2'>
+          <div className='pt-2'>
             <a
               href='#speciality'
-              className='flex items-center gap-2 bg-white text-primary px-7 sm:px-9 py-3.5 rounded-full font-bold text-sm sm:text-base hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-300'
+              className='inline-flex items-center gap-2.5 bg-white text-primary px-8 sm:px-10 py-4 rounded-full font-extrabold text-sm sm:text-base shadow-lg hover:shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300'
             >
               <span>{t('bookDoctor')}</span>
               <img src={assets.arrow_icon} className='w-3.5' alt='' />
             </a>
-
-            <button
-              onClick={() => onOpenTriage && onOpenTriage()}
-              className='flex items-center gap-2 px-6 py-3.5 rounded-full bg-emerald-400/20 hover:bg-emerald-400/30 text-emerald-200 border border-emerald-300/40 text-sm sm:text-base font-bold transition-all'
-            >
-              <span>🎯 {t('checkSymptomsBtn')}</span>
-            </button>
-
-            <button
-              onClick={() => navigate('/doctors')}
-              className='px-6 py-3.5 rounded-full border border-white/40 text-white hover:bg-white/15 text-sm sm:text-base font-bold transition-all'
-            >
-              {t('findDoctorBtn')} 👨‍⚕️
-            </button>
           </div>
         </div>
 

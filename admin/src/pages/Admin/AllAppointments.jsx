@@ -19,7 +19,7 @@ const AllAppointments = () => {
   }, [aToken])
 
   return (
-    <div className='w-full max-w-7xl m-4 sm:m-6 space-y-6'>
+    <div className='w-full max-w-7xl space-y-6'>
       <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4'>
         <div>
           <h1 className='text-2xl font-black text-gray-900'>Hospital Consultation Registry</h1>

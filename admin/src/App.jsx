@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { AdminContext } from './context/AdminContext'
 import Navbar from './components/Navbar'
 import SideBar from './components/SideBar'
+import AIAssistant from './components/AIAssistant'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import Dashboard from './pages/Admin/Dashboard.jsx'
 import AllAppointments from "./pages/Admin/AllAppointments.jsx"
@@ -23,9 +24,9 @@ const App = () => {
     <div className='bg-[#F8F9FD] min-h-screen flex flex-col'>
       <ToastContainer position="top-right" autoClose={3000} />
       <Navbar />
-      <div className='flex flex-1 items-start'>
+      <div className='flex flex-1 items-start min-h-[calc(100vh-65px)]'>
         <SideBar />
-        <main className='flex-1 min-w-0 p-4 sm:p-6 overflow-x-hidden'>
+        <main className='flex-1 min-w-0 p-4 sm:p-6 lg:p-8'>
           <Routes>
             {/* Admin Routes */}
             <Route path='/' element={<Navigate to={aToken ? '/admin-dashboard' : '/doctor-dashboard'} replace />} />
@@ -41,6 +42,8 @@ const App = () => {
           </Routes>
         </main>
       </div>
+      {/* Intelligent AI Assistant for Admin & Doctor */}
+      <AIAssistant />
     </div>
   ) : (
     <>

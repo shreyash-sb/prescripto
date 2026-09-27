@@ -1,16 +1,12 @@
-import { useState, useContext } from 'react'
+import { useState } from 'react'
 import Header from '../components/Header'
 import SpecialityMenu from '../components/SpecialityMenu'
 import TopDoctors from '../components/TopDoctors'
 import Banner from '../components/Banner'
-import SymptomTriageModal from '../components/SymptomTriageModal'
-import { AppContext } from '../context/AppContext'
 import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
   const [openFaq, setOpenFaq] = useState(null)
-  const [showTriage, setShowTriage] = useState(false)
-  const { t } = useContext(AppContext)
   const navigate = useNavigate()
 
   const faqs = [
@@ -62,7 +58,7 @@ const Home = () => {
 
   return (
     <div className='space-y-12 py-2'>
-      <Header onOpenTriage={() => setShowTriage(true)} />
+      <Header />
 
       {/* Primary Key Features Grid (Clean 4 Core Highlights, No clutter) */}
       <section className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-8'>
@@ -236,9 +232,6 @@ const Home = () => {
       </section>
 
       <Banner />
-
-      {/* Symptom Triage Modal */}
-      {showTriage && <SymptomTriageModal onClose={() => setShowTriage(false)} />}
     </div>
   )
 }
