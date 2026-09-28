@@ -9,7 +9,7 @@ const AppContextProvider = ({ children }) => {
   const backendUrl = (
     import.meta.env.VITE_BACKEND_URL || "http://localhost:5000"
   ).replace(/\/$/, "");
-  const currencySymbol = "$";
+  const currencySymbol = "₹";
   const [token, setToken] = useState(
     localStorage.getItem("token") ? localStorage.getItem("token") : false
   );

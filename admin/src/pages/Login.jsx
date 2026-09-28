@@ -300,11 +300,12 @@ const Login = () => {
               </div>
 
               <div>
-                <p className='font-bold text-xs mb-1'>Consultation Fee ($)</p>
+                <p className='font-bold text-xs mb-1'>Consultation Fee (₹ INR)</p>
                 <input
                   type='number'
                   required
                   min='0'
+                  placeholder='e.g. 500'
                   value={fees}
                   onChange={(e) => setFees(e.target.value)}
                   className='border border-gray-300 rounded-lg w-full p-2 text-xs focus:border-[#5F65FF] outline-none'

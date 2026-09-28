@@ -30,7 +30,7 @@ export const runAIAssistantTests = async () => {
   });
 
   // ==========================================
-  // POSITIVE TESTS
+  // POSITIVE TESTS: LIVE TOOLS & DATA
   // ==========================================
   await record("Positive: Live Tool 'findDoctors' retrieves real doctors from MongoDB", async () => {
     const result = await executePrescriptoTool("findDoctors", { query: "General", availableOnly: true });
@@ -50,6 +50,9 @@ export const runAIAssistantTests = async () => {
     assert(result.specialties.length >= 6, "Must list at least 6 departments");
   })();
 
+  // ==========================================
+  // POSITIVE TESTS: DOCTORS, PLATFORM, HEALTH, MEDICINES
+  // ==========================================
   await record("Positive: AI Process answers Live Doctor Availability Question", async () => {
     const res = await processAIChat("Which doctors are currently available on Prescripto?", []);
     assert(res.success, "AI Chat must return success: true");
@@ -74,6 +77,24 @@ export const runAIAssistantTests = async () => {
     );
   })();
 
+  await record("Positive: AI Process explains Medicine positive uses & negative side effects (Ibuprofen)", async () => {
+    const res = await processAIChat("What are the uses and side effects of Ibuprofen?", []);
+    assert(res.success, "AI Chat must return success: true");
+    assert(
+      res.response.toLowerCase().includes("ibuprofen") && (res.response.toLowerCase().includes("side effect") || res.response.toLowerCase().includes("stomach")),
+      "Response must detail uses, meal timing, and side effects"
+    );
+  })();
+
+  await record("Positive: AI Process handles Health Symptom guidance & red flags (Fever)", async () => {
+    const res = await processAIChat("I have a high fever and chills, what precautions should I take?", []);
+    assert(res.success, "AI Chat must return success: true");
+    assert(
+      res.response.toLowerCase().includes("fever") && (res.response.toLowerCase().includes("physician") || res.response.toLowerCase().includes("temperature")),
+      "Response must provide fever care and red flag advice"
+    );
+  })();
+
   await record("Positive: Multi-turn chat maintains conversation context", async () => {
     const history = [
       { role: "user", content: "I have a severe skin allergy" },
@@ -85,8 +106,26 @@ export const runAIAssistantTests = async () => {
   })();
 
   // ==========================================
-  // NEGATIVE & EDGE CASE TESTS
+  // NEGATIVE, DOMAIN BOUNDARY & OFF-TOPIC TESTS
   // ==========================================
+  await record("Negative / Domain Guard: Off-topic non-medical question returns 'improvement stage' response", async () => {
+    const res = await processAIChat("Write me a Python game script for space invaders", []);
+    assert(res.success, "Must return success: true");
+    assert(
+      res.response.includes("improvement stage") || res.response.includes("non-healthcare"),
+      "Off-topic query must trigger the improvement stage message"
+    );
+  })();
+
+  await record("Negative / Domain Guard: Random non-healthcare query returns 'improvement stage'", async () => {
+    const res = await processAIChat("What is the stock price of Tesla in 2030?", []);
+    assert(res.success, "Must return success: true");
+    assert(
+      res.response.includes("improvement stage"),
+      "Random non-medical question must return improvement stage notice"
+    );
+  })();
+
   await record("Negative / Edge: Empty or whitespace query returns polite guidance prompt", async () => {
     const res = await processAIChat("   ", []);
     assert(res.success, "Must return success: true with guidance");

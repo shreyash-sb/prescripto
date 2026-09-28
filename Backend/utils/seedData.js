@@ -20,7 +20,7 @@ const sampleDoctors = [
     experience: "4 Years",
     about:
       "Dr. Richard James has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective management strategies.",
-    fees: 50,
+    fees: 500,
     address: {
       line1: "17th Cross, Richmond Circle",
       line2: "Ring Road, Medical Hub",
@@ -38,7 +38,7 @@ const sampleDoctors = [
     experience: "5 Years",
     about:
       "Dr. Emily Larson specializes in women's reproductive health, prenatal care, and modern gynecological therapies with compassionate, patient-centered guidance.",
-    fees: 60,
+    fees: 600,
     address: {
       line1: "27th Cross, Pall Mall Avenue",
       line2: "Green Park Health Center",
@@ -56,7 +56,7 @@ const sampleDoctors = [
     experience: "3 Years",
     about:
       "Dr. Chloe Evans has extensive experience in clinical dermatology, cosmetic skincare, acne treatments, and hair wellness with state-of-the-art procedures.",
-    fees: 40,
+    fees: 400,
     address: {
       line1: "42nd Avenue, Central Square",
       line2: "Metro Skin & Hair Clinic",
@@ -74,7 +74,7 @@ const sampleDoctors = [
     experience: "5 Years",
     about:
       "Dr. Patrick Harris is dedicated to child healthcare, developmental milestones tracking, childhood immunizations, and pediatric acute care.",
-    fees: 45,
+    fees: 450,
     address: {
       line1: "57th Street, Sunshine Plaza",
       line2: "Children First Wellness Wing",
@@ -92,7 +92,7 @@ const sampleDoctors = [
     experience: "9 Years",
     about:
       "Dr. Zoe Kelly is a distinguished neurologist specialized in stroke rehabilitation, migraine disorders, neuro-muscular conditions, and seizure management.",
-    fees: 90,
+    fees: 900,
     address: {
       line1: "12th Boulevard, Cambridge Heights",
       line2: "NeuroCare Specialty Pavilion",
@@ -110,7 +110,7 @@ const sampleDoctors = [
     experience: "6 Years",
     about:
       "Dr. Jennifer Garcia focuses on digestive system disorders, endoscopy diagnostics, liver wellness, and personalized dietetic therapeutic plans.",
-    fees: 70,
+    fees: 700,
     address: {
       line1: "88th Ocean Drive, Suite 4",
       line2: "Digestive Health & GI Center",
@@ -128,7 +128,7 @@ const sampleDoctors = [
     experience: "7 Years",
     about:
       "Dr. Christopher Lee brings over seven years of patient-first family healthcare, chronic illness supervision, and lifestyle disease reversal coaching.",
-    fees: 55,
+    fees: 550,
     address: {
       line1: "101 Grand Central Road",
       line2: "Civic Health Tower",
@@ -146,7 +146,7 @@ const sampleDoctors = [
     experience: "8 Years",
     about:
       "Dr. Sarah Patel is known for her gentle demeanor and high success rate in high-risk pregnancy management, hormonal balance, and fertility consultation.",
-    fees: 75,
+    fees: 750,
     address: {
       line1: "33 Pearl Street, Lotus Block",
       line2: "Bloom Mother & Child Hospital",
@@ -164,7 +164,7 @@ const sampleDoctors = [
     experience: "7 Years",
     about:
       "Dr. Ryan Martinez has pioneered minimally-invasive aesthetic laser treatments, pigmentation correction, and modern eczema/psoriasis management.",
-    fees: 65,
+    fees: 650,
     address: {
       line1: "14 Westgate Square",
       line2: "Aura Laser & Derma Clinic",
@@ -182,7 +182,7 @@ const sampleDoctors = [
     experience: "4 Years",
     about:
       "Dr. Jessica Taylor has a friendly approach with infants and young children, making clinic visits fear-free while addressing pediatric nutritional and growth concerns.",
-    fees: 50,
+    fees: 500,
     address: {
       line1: "64 Maple Street, North End",
       line2: "Little Stars Clinic",
@@ -200,7 +200,7 @@ const sampleDoctors = [
     experience: "11 Years",
     about:
       "Dr. Alexander Bennett is an internationally trained neurologist specializing in neuro-critical care, memory disorders, and advanced neuropathic pain management.",
-    fees: 110,
+    fees: 1100,
     address: {
       line1: "808 University Avenue",
       line2: "Apex Brain & Spine Institute",
@@ -218,7 +218,7 @@ const sampleDoctors = [
     experience: "10 Years",
     about:
       "Dr. David Mitchell provides specialized surgical and diagnostic interventions for acid reflux, colon health, pancreatitis, and liver metabolic diseases.",
-    fees: 85,
+    fees: 850,
     address: {
       line1: "215 South Medical Boulevard",
       line2: "Heritage GI Diagnostics Center",
@@ -299,7 +299,7 @@ export const seedDatabase = async (force = false) => {
       degree: "MBBS, MD - General Medicine",
       experience: "5 Years",
       about: "Dr. Richard James is the primary demonstration physician with extensive experience across common health conditions and wellness counseling.",
-      fees: 50,
+      fees: 500,
       address: { line1: "123 Medical Center Way", line2: "Downtown Healthcare Block" },
       image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=500&auto=format&fit=crop",
       available: true,

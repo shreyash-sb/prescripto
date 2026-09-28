@@ -10,7 +10,7 @@ const Navbar = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false)
   const [showSOSModal, setShowSOSModal] = useState(false)
 
-  const { token, setToken, userData, t } = useContext(AppContext)
+  const { token, setToken, userData, t, currencySymbol } = useContext(AppContext)
   const navigate = useNavigate()
 
   const logOut = () => {
@@ -179,7 +179,7 @@ const Navbar = () => {
                     <p className='text-xs text-gray-500 truncate'>{userData?.email || 'patient@example.com'}</p>
                     <div className='mt-1.5 flex flex-wrap items-center gap-1.5'>
                       <span className='inline-flex items-center gap-1 text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-md'>
-                        💰 Wallet: ${userData?.walletBalance || 0}
+                        💰 Wallet: {currencySymbol || '₹'}{userData?.walletBalance || 0}
                       </span>
                       {userData?.bloodGroup && (
                         <span className='inline-flex items-center text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-200 px-1.5 py-0.5 rounded-md'>

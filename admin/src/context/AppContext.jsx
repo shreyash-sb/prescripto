@@ -4,7 +4,7 @@ import { calculateAge, slotDateFormat, formatCurrency } from "../utils/formatter
 export const AppContext = createContext();
 
 const AppContextProvider = ({ children }) => {
-  const currency = "$";
+  const currency = "₹";
 
   const value = {
     calculateAge,

@@ -188,9 +188,9 @@ const Appointment = () => {
 
   return (
     docInfo && (
-      <div className='py-6'>
+      <div className='py-6 max-w-6xl mx-auto'>
         {/* Breadcrumb Navigation */}
-        <div className='flex items-center gap-2 text-sm text-gray-500 mb-5 font-medium'>
+        <div className='flex items-center gap-2 text-xs sm:text-sm text-gray-500 mb-5 font-medium'>
           <span onClick={() => navigate('/')} className='cursor-pointer hover:text-primary'>
             {t('home')}
           </span>
@@ -204,27 +204,27 @@ const Appointment = () => {
 
         {/* Pre-Consultation Safety & Allergy Warning Banner if patient has documented allergies */}
         {userData?.allergies?.length > 0 && (
-          <div className='mb-6 p-4.5 bg-amber-50/90 border border-amber-200 rounded-3xl flex items-center justify-between gap-4 shadow-sm animate-fade-in'>
-            <div className='flex items-center gap-3'>
-              <span className='text-2xl flex-shrink-0'>🛡️</span>
+          <div className='mb-5 p-4 bg-amber-50/90 border border-amber-200 rounded-2xl flex items-center justify-between gap-3 shadow-2xs'>
+            <div className='flex items-center gap-2.5'>
+              <span className='text-xl flex-shrink-0'>🛡️</span>
               <div>
-                <p className='font-bold text-amber-950 text-sm'>
-                  Pre-Consultation Safety Shield Active
+                <p className='font-bold text-amber-950 text-xs sm:text-sm'>
+                  Allergy Safety Shield Active
                 </p>
-                <p className='text-xs text-amber-800 mt-0.5'>
+                <p className='text-[11px] sm:text-xs text-amber-800 mt-0.5'>
                   Your documented allergies ({userData.allergies.join(', ')}) will be automatically flagged for Dr. {docInfo.name} to avoid adverse drug interactions.
                 </p>
               </div>
             </div>
-            <span className='text-xs font-black bg-amber-200 text-amber-900 px-3 py-1 rounded-full'>
-              Safe Prescribe ✓
+            <span className='text-[10px] font-bold bg-amber-200 text-amber-900 px-2.5 py-0.5 rounded-full flex-shrink-0'>
+              Shield Active ✓
             </span>
           </div>
         )}
 
         {/* Doctor Profile Card with Live Crowd & Queue Info */}
-        <div className='flex flex-col sm:flex-row gap-8 bg-white p-6 sm:p-10 rounded-3xl border border-gray-200/90 shadow-sm'>
-          <div className='sm:max-w-80 w-full relative'>
+        <div className='flex flex-col sm:flex-row gap-6 bg-white p-6 sm:p-8 rounded-2xl border border-gray-100 shadow-xs'>
+          <div className='sm:max-w-72 w-full relative'>
             <DoctorIdentity
               name={docInfo.name}
               speciality={docInfo.speciality}
@@ -237,34 +237,35 @@ const Appointment = () => {
           <div className='flex-1 flex flex-col justify-between'>
             <div>
               <div className='flex flex-wrap items-center justify-between gap-3'>
-                <p className='flex items-center gap-2.5 text-2xl sm:text-3xl font-extrabold text-gray-900'>
+                <h1 className='flex items-center gap-2 text-2xl font-bold text-gray-900'>
                   {docInfo.name}
-                  <img src={assets.verified_icon} className='w-6' alt='Verified Doctor' />
-                </p>
-                <div className='bg-amber-50 text-amber-900 border border-amber-200 px-4 py-1.5 rounded-full text-sm font-bold flex items-center gap-1.5 shadow-sm'>
+                  <img src={assets.verified_icon} className='w-5' alt='Verified Doctor' />
+                </h1>
+                <div className='bg-amber-50 text-amber-900 border border-amber-200 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1'>
                   <span>⭐</span> {docInfo.rating || '4.9'} ({docInfo.ratingsCount || 20}+ Verified Reviews)
                 </div>
               </div>
 
-              <div className='flex flex-wrap items-center gap-3 text-base mt-2.5 text-gray-600'>
-                <span className='font-bold text-primary px-3.5 py-1 bg-indigo-50 border border-indigo-100 rounded-full text-sm'>
+              <div className='flex flex-wrap items-center gap-2.5 text-sm mt-2 text-gray-600'>
+                <span className='font-semibold text-primary px-3 py-0.5 bg-indigo-50 border border-indigo-100 rounded-full text-xs'>
                   {docInfo.speciality}
                 </span>
                 <span>•</span>
-                <p className='font-semibold text-gray-800 text-sm'>{docInfo.degree}</p>
-                <span className='py-1 px-3 bg-gray-100 text-gray-800 text-xs rounded-full font-bold'>
+                <span className='text-gray-700 font-medium text-xs sm:text-sm'>{docInfo.degree}</span>
+                <span>•</span>
+                <span className='text-xs font-semibold text-gray-500 bg-gray-100 px-2.5 py-0.5 rounded-full'>
                   {docInfo.experience} Experience
                 </span>
               </div>
 
               {/* Live Crowd & Clinic Queue Status Bar */}
-              <div className='grid grid-cols-1 sm:grid-cols-3 gap-3 my-5 p-4 bg-gray-50 rounded-2xl border border-gray-200'>
-                <div className='flex items-center gap-2.5'>
-                  <span className='text-2xl'>👥</span>
+              <div className='grid grid-cols-1 sm:grid-cols-3 gap-3 my-4 p-3.5 bg-gray-50 rounded-xl border border-gray-100 text-xs'>
+                <div className='flex items-center gap-2'>
+                  <span className='text-xl'>👥</span>
                   <div>
-                    <span className='text-[10px] uppercase font-bold text-gray-400 block'>Clinic Crowd Level</span>
+                    <span className='text-[10px] uppercase font-bold text-gray-400 block'>Crowd Level</span>
                     <span
-                      className={`text-xs font-black px-2.5 py-0.5 rounded-md ${
+                      className={`text-xs font-bold px-2 py-0.5 rounded ${
                         crowd === 'Low'
                           ? 'bg-emerald-100 text-emerald-800'
                           : crowd === 'Busy'
@@ -272,23 +273,23 @@ const Appointment = () => {
                           : 'bg-amber-100 text-amber-800'
                       }`}
                     >
-                      ● {crowd} Crowd
+                      ● {crowd}
                     </span>
                   </div>
                 </div>
 
-                <div className='flex items-center gap-2.5'>
-                  <span className='text-2xl'>⏱️</span>
+                <div className='flex items-center gap-2'>
+                  <span className='text-xl'>⏱️</span>
                   <div>
                     <span className='text-[10px] uppercase font-bold text-gray-400 block'>Est. Wait Time</span>
                     <span className='font-bold text-xs sm:text-sm text-gray-900'>~{estWait} Mins</span>
                   </div>
                 </div>
 
-                <div className='flex items-center gap-2.5'>
-                  <span className='text-2xl'>🚪</span>
+                <div className='flex items-center gap-2'>
+                  <span className='text-xl'>🚪</span>
                   <div>
-                    <span className='text-[10px] uppercase font-bold text-gray-400 block'>Room / OPD Desk</span>
+                    <span className='text-[10px] uppercase font-bold text-gray-400 block'>OPD Desk</span>
                     <span className='font-bold text-xs sm:text-sm text-gray-900'>{docInfo.roomNumber || 'OPD-102'}</span>
                   </div>
                 </div>
@@ -296,61 +297,59 @@ const Appointment = () => {
 
               {/* Doctor About */}
               <div>
-                <p className='flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-400'>
-                  Professional Background <img src={assets.info_icon} className='w-4' alt='' />
+                <p className='text-[10px] font-bold uppercase tracking-wider text-gray-400'>
+                  About Doctor
                 </p>
-                <p className='text-sm sm:text-base text-gray-700 mt-2 leading-relaxed max-w-3xl font-normal'>{docInfo.about}</p>
+                <p className='text-xs sm:text-sm text-gray-600 mt-1 leading-relaxed'>{docInfo.about}</p>
               </div>
 
               {/* Clinic Location */}
               {docInfo.address && (
-                <div className='mt-4 p-3.5 bg-gray-50/80 rounded-2xl border border-gray-200 text-xs sm:text-sm text-gray-700 flex items-start gap-2.5'>
-                  <span className='text-lg'>📍</span>
+                <div className='mt-3 p-2.5 bg-gray-50 rounded-xl border border-gray-100 text-xs text-gray-600 flex items-start gap-2'>
+                  <span className='text-sm'>📍</span>
                   <div>
-                    <p className='font-bold text-gray-900'>Clinic Location:</p>
-                    <p className='text-gray-600 mt-0.5'>
-                      {docInfo.address.line1}, {docInfo.address.line2}
-                    </p>
+                    <span className='font-semibold text-gray-800'>Clinic Location: </span>
+                    <span>{docInfo.address.line1}, {docInfo.address.line2}</span>
                   </div>
                 </div>
               )}
             </div>
 
-            <div className='pt-6 mt-6 border-t border-gray-100 flex items-center justify-between'>
-              <div className='flex items-center gap-3'>
-                <p className='text-gray-500 font-medium text-sm'>Consultation Fee:</p>
-                <span className='text-primary font-black text-3xl'>
+            <div className='pt-4 mt-4 border-t border-gray-100 flex items-center justify-between'>
+              <div className='flex items-center gap-2'>
+                <span className='text-xs text-gray-500 font-medium'>Consultation Fee:</span>
+                <span className='text-primary font-bold text-2xl'>
                   {currencySymbol}
                   {docInfo.fees}
                 </span>
               </div>
               <div
-                className={`text-xs sm:text-sm px-4 py-2 rounded-full font-bold shadow-sm ${
+                className={`text-xs px-3 py-1 rounded-full font-semibold ${
                   docInfo.available
                     ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                     : 'bg-rose-50 text-rose-700 border border-rose-200'
                 }`}
               >
-                {docInfo.available ? '● Accepting Bookings' : '● Currently Unavailable'}
+                {docInfo.available ? '● Accepting Patients' : '● Currently Unavailable'}
               </div>
             </div>
           </div>
         </div>
 
         {/* 7-Day Slot Booking Section */}
-        <div className='mt-8 bg-white p-6 sm:p-10 rounded-3xl border border-gray-200/90 shadow-sm'>
-          <div className='flex flex-wrap items-center justify-between gap-3 mb-5'>
+        <div className='mt-6 bg-white p-6 sm:p-8 rounded-2xl border border-gray-100 shadow-xs'>
+          <div className='flex flex-wrap items-center justify-between gap-3 mb-4'>
             <div>
-              <h2 className='text-xl sm:text-2xl font-bold text-gray-900'>Select Consultation Date & Time</h2>
-              <p className='text-sm text-gray-500 mt-1'>Choose a preferred 30-minute consultation session</p>
+              <h2 className='text-lg sm:text-xl font-bold text-gray-900'>Select Consultation Date & Time</h2>
+              <p className='text-xs sm:text-sm text-gray-500 mt-0.5'>Choose an available 30-minute consultation slot</p>
             </div>
-            <span className='text-sm bg-indigo-50 text-primary border border-indigo-200 px-4 py-1.5 rounded-full font-bold'>
-              7-Day Live Calendar
+            <span className='text-xs bg-indigo-50 text-primary border border-indigo-100 px-3 py-1 rounded-full font-bold'>
+              7-Day Calendar
             </span>
           </div>
 
           {/* Date Selector Carousel */}
-          <div className='flex gap-4 items-center w-full overflow-x-auto pb-4 custom-scrollbar'>
+          <div className='flex gap-3 items-center w-full overflow-x-auto pb-3 custom-scrollbar'>
             {docSlots.length > 0 &&
               docSlots.map((item, index) => {
                 const dateObj = new Date()
@@ -366,17 +365,17 @@ const Appointment = () => {
                       setSlotTime('')
                     }}
                     key={index}
-                    className={`text-center py-5 px-5 min-w-[95px] rounded-2xl cursor-pointer transition-all ${
+                    className={`text-center py-4 px-4 min-w-[85px] rounded-xl cursor-pointer transition-all ${
                       slotIndex === index
-                        ? 'bg-primary text-white shadow-xl scale-105 font-bold'
-                        : 'border border-gray-200 hover:border-primary text-gray-700 bg-gray-50/80 hover:bg-white'
+                        ? 'bg-primary text-white shadow-xs font-bold'
+                        : 'border border-gray-200 hover:border-primary text-gray-700 bg-gray-50/70 hover:bg-white'
                     }`}
                   >
-                    <p className='text-xs uppercase font-bold opacity-80'>
+                    <p className='text-[11px] uppercase font-bold opacity-80'>
                       {isToday ? 'Today' : dayName}
                     </p>
-                    <p className='text-2xl font-black mt-1'>{dayNum}</p>
-                    <span className={`text-xs block mt-1 font-semibold ${
+                    <p className='text-xl font-bold mt-0.5'>{dayNum}</p>
+                    <span className={`text-[10px] block mt-0.5 font-medium ${
                       item.isVacation ? 'text-amber-500' : 'opacity-80'
                     }`}>
                       {item.isVacation ? '🏖️ Leave' : item.length > 0 ? `${item.length} slots` : 'Closed'}
@@ -387,37 +386,37 @@ const Appointment = () => {
           </div>
 
           {/* Categorized Time Slots */}
-          <div className='mt-8 space-y-5'>
+          <div className='mt-6 space-y-4'>
             {currentSlots.isVacation ? (
-              <div className='p-10 bg-amber-50/80 border border-amber-200 rounded-3xl text-center text-sm text-amber-900'>
-                <p className='text-4xl mb-3'>🏖️</p>
-                <p className='font-bold text-base text-amber-900'>Doctor on Scheduled Leave / Vacation</p>
-                <p className='mt-2 text-amber-700 text-sm max-w-md mx-auto'>
-                  Dr. {docInfo.name} is unavailable on this date. Please choose another day from the 7-day calendar above.
+              <div className='p-8 bg-amber-50/80 border border-amber-200 rounded-xl text-center text-xs text-amber-900'>
+                <p className='text-3xl mb-2'>🏖️</p>
+                <p className='font-bold text-sm text-amber-900'>Doctor on Scheduled Leave</p>
+                <p className='mt-1 text-amber-700 text-xs max-w-sm mx-auto'>
+                  Dr. {docInfo.name} is unavailable on this date. Please choose another day from the 7-day calendar.
                 </p>
               </div>
             ) : currentSlots.length === 0 ? (
-              <div className='p-10 bg-gray-50 border border-dashed rounded-3xl text-center text-sm text-gray-500'>
-                <p className='text-3xl mb-2'>⏳</p>
-                <p className='font-bold text-base text-gray-800'>No slots available for this date</p>
-                <p className='mt-1 text-sm'>Please select another day from the 7-day calendar above.</p>
+              <div className='p-8 bg-gray-50 border border-dashed rounded-xl text-center text-xs text-gray-500'>
+                <p className='text-2xl mb-1'>⏳</p>
+                <p className='font-bold text-sm text-gray-700'>No slots available for this date</p>
+                <p className='mt-0.5 text-xs'>Please select another day from the calendar above.</p>
               </div>
             ) : (
               <>
                 {morningSlots.length > 0 && (
                   <div>
-                    <p className='text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 flex items-center gap-2'>
-                      <span>🌅</span> Morning Slots (09:00 AM – 12:00 PM)
+                    <p className='text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1.5'>
+                      <span>🌅</span> Morning (09:00 AM – 12:00 PM)
                     </p>
-                    <div className='flex flex-wrap gap-3'>
+                    <div className='flex flex-wrap gap-2'>
                       {morningSlots.map((item, index) => (
                         <button
                           type='button'
                           onClick={() => setSlotTime(item.time)}
-                          className={`text-sm sm:text-base px-5 py-3 rounded-2xl transition-all font-bold ${
+                          className={`text-xs sm:text-sm px-4 py-2 rounded-xl transition-all font-semibold ${
                             item.time === slotTime
-                              ? 'bg-primary text-white shadow-lg scale-105'
-                              : 'border border-gray-300 text-gray-700 hover:border-primary bg-white'
+                              ? 'bg-primary text-white shadow-2xs font-bold'
+                              : 'border border-gray-200 text-gray-700 hover:border-primary bg-white'
                           }`}
                           key={index}
                         >
@@ -429,19 +428,19 @@ const Appointment = () => {
                 )}
 
                 {afternoonSlots.length > 0 && (
-                  <div className='pt-2'>
-                    <p className='text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 flex items-center gap-2'>
-                      <span>☀️</span> Afternoon Slots (12:00 PM – 05:00 PM)
+                  <div className='pt-1'>
+                    <p className='text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1.5'>
+                      <span>☀️</span> Afternoon (12:00 PM – 05:00 PM)
                     </p>
-                    <div className='flex flex-wrap gap-3'>
+                    <div className='flex flex-wrap gap-2'>
                       {afternoonSlots.map((item, index) => (
                         <button
                           type='button'
                           onClick={() => setSlotTime(item.time)}
-                          className={`text-sm sm:text-base px-5 py-3 rounded-2xl transition-all font-bold ${
+                          className={`text-xs sm:text-sm px-4 py-2 rounded-xl transition-all font-semibold ${
                             item.time === slotTime
-                              ? 'bg-primary text-white shadow-lg scale-105'
-                              : 'border border-gray-300 text-gray-700 hover:border-primary bg-white'
+                              ? 'bg-primary text-white shadow-2xs font-bold'
+                              : 'border border-gray-200 text-gray-700 hover:border-primary bg-white'
                           }`}
                           key={index}
                         >
@@ -453,19 +452,19 @@ const Appointment = () => {
                 )}
 
                 {eveningSlots.length > 0 && (
-                  <div className='pt-2'>
-                    <p className='text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 flex items-center gap-2'>
-                      <span>🌙</span> Evening Slots (05:00 PM – 09:00 PM)
+                  <div className='pt-1'>
+                    <p className='text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1.5'>
+                      <span>🌙</span> Evening (05:00 PM – 09:00 PM)
                     </p>
-                    <div className='flex flex-wrap gap-3'>
+                    <div className='flex flex-wrap gap-2'>
                       {eveningSlots.map((item, index) => (
                         <button
                           type='button'
                           onClick={() => setSlotTime(item.time)}
-                          className={`text-sm sm:text-base px-5 py-3 rounded-2xl transition-all font-bold ${
+                          className={`text-xs sm:text-sm px-4 py-2 rounded-xl transition-all font-semibold ${
                             item.time === slotTime
-                              ? 'bg-primary text-white shadow-lg scale-105'
-                              : 'border border-gray-300 text-gray-700 hover:border-primary bg-white'
+                              ? 'bg-primary text-white shadow-2xs font-bold'
+                              : 'border border-gray-200 text-gray-700 hover:border-primary bg-white'
                           }`}
                           key={index}
                         >
@@ -480,26 +479,26 @@ const Appointment = () => {
           </div>
 
           {/* Action Footer */}
-          <div className='mt-10 pt-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-5'>
-            <div className='text-sm text-gray-600'>
+          <div className='mt-8 pt-5 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4'>
+            <div className='text-xs sm:text-sm text-gray-600'>
               {slotTime ? (
-                <div className='flex items-center gap-2.5'>
-                  <span className='w-3 h-3 rounded-full bg-emerald-500' />
-                  <span className='text-base'>
-                    Selected Slot: <strong className='text-primary text-lg font-extrabold'>{slotTime}</strong>
+                <div className='flex items-center gap-2'>
+                  <span className='w-2.5 h-2.5 rounded-full bg-emerald-500' />
+                  <span>
+                    Selected Slot: <strong className='text-primary text-base font-bold'>{slotTime}</strong>
                   </span>
                 </div>
               ) : (
-                <p className='text-gray-500 text-base'>Click on any available time slot above to schedule</p>
+                <p className='text-gray-500 text-xs sm:text-sm'>Select an available time slot above to proceed</p>
               )}
             </div>
 
             <button
               disabled={!slotTime || !docInfo.available}
               onClick={handleBookingClick}
-              className={`w-full sm:w-auto text-base font-extrabold px-10 py-4 rounded-full transition-all shadow-lg active:scale-95 ${
+              className={`w-full sm:w-auto text-xs sm:text-sm font-bold px-8 py-3 rounded-full transition-all shadow-xs active:scale-95 ${
                 !slotTime || !docInfo.available
-                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                   : 'bg-primary text-white hover:bg-opacity-95'
               }`}
             >
@@ -510,37 +509,37 @@ const Appointment = () => {
 
         {/* Confirmation & Medical Case Submission Modal */}
         {showConfirmModal && (
-          <div className='fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in overflow-y-auto'>
-            <div className='bg-white rounded-3xl w-full max-w-xl p-6 sm:p-8 shadow-2xl border my-6'>
-              <div className='flex justify-between items-center pb-4 border-b border-gray-100'>
+          <div className='fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in overflow-y-auto'>
+            <div className='bg-white rounded-2xl w-full max-w-lg p-6 sm:p-7 shadow-xl border border-gray-100 my-4'>
+              <div className='flex justify-between items-center pb-3 border-b border-gray-100'>
                 <div>
-                  <h3 className='font-extrabold text-xl text-gray-900'>Book & Submit Medical Case</h3>
-                  <p className='text-xs text-gray-500 mt-0.5'>Consultation with Dr. {docInfo.name}</p>
+                  <h3 className='font-bold text-base text-gray-900'>Confirm Consultation Booking</h3>
+                  <p className='text-xs text-gray-500'>Dr. {docInfo.name} ({docInfo.speciality})</p>
                 </div>
                 <button
                   onClick={() => setShowConfirmModal(false)}
-                  className='w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 font-bold flex items-center justify-center'
+                  className='w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 font-bold flex items-center justify-center text-xs'
                 >
                   ✕
                 </button>
               </div>
 
-              <div className='my-5 space-y-4 text-sm'>
+              <div className='my-4 space-y-3.5 text-xs sm:text-sm'>
                 {/* Appointment Summary Box */}
-                <div className='bg-indigo-50/70 p-4 sm:p-5 rounded-2xl border border-indigo-100/80 grid grid-cols-2 gap-3 text-xs sm:text-sm'>
+                <div className='bg-indigo-50/70 p-3.5 rounded-xl border border-indigo-100 grid grid-cols-2 gap-2 text-xs'>
                   <div>
-                    <span className='text-gray-500 font-medium block text-[11px] uppercase tracking-wider'>Specialist Doctor</span>
+                    <span className='text-gray-500 block text-[10px] uppercase font-bold'>Doctor</span>
                     <span className='font-bold text-gray-900'>{docInfo.name}</span>
-                    <span className='text-primary font-bold block text-xs'>{docInfo.speciality}</span>
+                    <span className='text-primary block text-[11px] font-semibold'>{docInfo.speciality}</span>
                   </div>
                   <div>
-                    <span className='text-gray-500 font-medium block text-[11px] uppercase tracking-wider'>Scheduled Slot</span>
+                    <span className='text-gray-500 block text-[10px] uppercase font-bold'>Slot</span>
                     <span className='font-bold text-gray-900'>{slotTime}</span>
-                    <span className='text-xs text-gray-600 block'>Room: {docInfo.roomNumber || 'OPD-102'}</span>
+                    <span className='text-gray-500 block text-[11px]'>Room {docInfo.roomNumber || 'OPD-102'}</span>
                   </div>
-                  <div className='col-span-2 flex justify-between border-t border-indigo-200/80 pt-2.5 font-bold text-sm text-gray-900'>
+                  <div className='col-span-2 flex justify-between border-t border-indigo-200/80 pt-2 font-bold text-gray-900'>
                     <span>Consultation Fee:</span>
-                    <span className='text-primary font-black text-base sm:text-lg'>
+                    <span className='text-primary font-bold text-sm'>
                       {currencySymbol}{docInfo.fees}
                     </span>
                   </div>
@@ -548,62 +547,53 @@ const Appointment = () => {
 
                 {/* Patient Current Problem / Symptoms Input */}
                 <div>
-                  <label className='block font-bold text-gray-900 mb-1.5 text-xs sm:text-sm'>
-                    🩺 Describe Your Current Problem / Symptoms <span className='text-rose-500'>*</span>
+                  <label className='block font-bold text-gray-800 mb-1 text-xs'>
+                    🩺 Describe Your Current Symptoms / Case <span className='text-rose-500'>*</span>
                   </label>
-                  <p className='text-xs text-gray-500 mb-2'>
-                    The doctor will review this case before accepting your consultation.
+                  <p className='text-[11px] text-gray-500 mb-1.5'>
+                    The attending doctor will review this prior to your consultation.
                   </p>
                   <textarea
                     rows='3'
                     required
                     value={patientProblem}
                     onChange={(e) => setPatientProblem(e.target.value)}
-                    placeholder='e.g., Severe throat pain, dry cough, and fever since yesterday. Experiencing mild fatigue...'
-                    className='w-full border border-gray-300 rounded-2xl p-3.5 text-xs sm:text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 bg-gray-50/50 hover:bg-white transition-all font-sans'
+                    placeholder='e.g., Fever and mild cough since yesterday. Feeling fatigued...'
+                    className='w-full border border-gray-200 rounded-xl p-3 text-xs outline-none focus:border-primary font-sans'
                   />
                 </div>
 
-                {/* Profile Medical History Attached Preview Card */}
-                <div className='p-4 bg-slate-50 border border-slate-200/90 rounded-2xl space-y-2'>
+                {/* Auto-attached medical summary */}
+                <div className='p-3 bg-slate-50 border border-slate-100 rounded-xl space-y-1.5 text-xs'>
                   <div className='flex items-center justify-between'>
-                    <span className='text-xs font-bold text-gray-800 flex items-center gap-1.5'>
-                      <span>📋</span> Profile Medical History Attached
+                    <span className='font-bold text-gray-800 text-[11px] flex items-center gap-1'>
+                      <span>📋</span> Profile Health Shield Attached
                     </span>
-                    <span className='text-[10px] font-black bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full'>
-                      Auto-Transmitted ✓
+                    <span className='text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded'>
+                      Verified ✓
                     </span>
                   </div>
-                  <p className='text-[11px] text-gray-500'>
-                    Your recorded medical profile will be securely shared with Dr. {docInfo.name} for diagnostic safety:
-                  </p>
 
                   <div className='grid grid-cols-2 gap-2 text-xs pt-1'>
-                    <div className='bg-white p-2.5 rounded-xl border border-gray-100'>
+                    <div className='bg-white p-2 rounded-lg border border-gray-100'>
                       <span className='text-[10px] text-gray-400 font-bold block uppercase'>Blood Group</span>
-                      <span className='font-extrabold text-rose-600'>{userData?.bloodGroup || 'O+'}</span>
+                      <span className='font-bold text-rose-600'>{userData?.bloodGroup || 'O+'}</span>
                     </div>
-                    <div className='bg-white p-2.5 rounded-xl border border-gray-100'>
+                    <div className='bg-white p-2 rounded-lg border border-gray-100'>
                       <span className='text-[10px] text-gray-400 font-bold block uppercase'>Drug Allergies</span>
-                      <span className={`font-bold ${userData?.allergies?.length > 0 ? 'text-amber-700' : 'text-emerald-700'}`}>
-                        {userData?.allergies?.length > 0 ? userData.allergies.join(', ') : 'None documented'}
-                      </span>
-                    </div>
-                    <div className='bg-white p-2.5 rounded-xl border border-gray-100 col-span-2'>
-                      <span className='text-[10px] text-gray-400 font-bold block uppercase'>Chronic Health Conditions</span>
                       <span className='font-medium text-gray-800'>
-                        {userData?.chronicConditions?.length > 0 ? userData.chronicConditions.join(', ') : 'None recorded'}
+                        {userData?.allergies?.length > 0 ? userData.allergies.join(', ') : 'None recorded'}
                       </span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className='flex gap-3 pt-3 border-t border-gray-100'>
+              <div className='flex gap-2.5 pt-3 border-t border-gray-100'>
                 <button
                   type='button'
                   onClick={() => setShowConfirmModal(false)}
-                  className='w-1/3 py-3 rounded-2xl border border-gray-300 text-xs sm:text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors'
+                  className='w-1/3 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-600 hover:bg-gray-50'
                 >
                   Back
                 </button>
@@ -611,19 +601,9 @@ const Appointment = () => {
                   type='button'
                   disabled={isBooking}
                   onClick={confirmAndBookAppointment}
-                  className='w-2/3 py-3 rounded-2xl bg-primary text-white text-xs sm:text-sm font-extrabold shadow-lg hover:bg-opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2'
+                  className='w-2/3 py-2.5 rounded-xl bg-primary text-white text-xs font-bold shadow-xs hover:bg-opacity-95 active:scale-95 transition-all flex items-center justify-center gap-1.5'
                 >
-                  {isBooking ? (
-                    <>
-                      <span className='inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin'></span>
-                      <span>Submitting Case...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>Submit Case & Book</span>
-                      <span>→</span>
-                    </>
-                  )}
+                  {isBooking ? 'Submitting...' : 'Submit & Book Slot →'}
                 </button>
               </div>
             </div>

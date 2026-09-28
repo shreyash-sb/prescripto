@@ -12,23 +12,23 @@ const Home = () => {
   const faqs = [
     {
       q: 'How do I search and book certified doctors?',
-      a: 'In the All Doctors page, search by specialist name, department (General Physician, Dermatologist, Gynecologist, etc.), or sort by consultation fee to book instantly.',
+      a: 'Browse the All Doctors directory, filter by clinical department (General Physician, Dermatologist, Gynecologist, etc.), or search by specialist name. Select an available 30-minute slot from the 7-day calendar to book instantly.',
     },
     {
-      q: 'How does the automated 100% refund policy work?',
-      a: 'If you or the attending doctor cancels a paid consultation, our Automated Refund Engine immediately issues a 100% full refund to your healthcare wallet with zero cancellation deductions.',
-    },
-    {
-      q: 'How do I convert my doctor prescription into a medicine schedule?',
-      a: 'Go to My Appointments and click "Sync Rx to Routine", or navigate to Medicine Schedule and click "AI Prescription Photo Parser". It automatically detects medicine names, timings (Morning/Night), and sets daily alarms.',
-    },
-    {
-      q: 'Can I see who has accessed my medical records and when?',
-      a: 'Yes! Prescripto includes a dedicated Privacy Access Audit Log. You can view timestamped trails of every doctor or administrator who opened your profile, vitals, or medical history.',
+      q: 'How does the 100% instant refund guarantee work?',
+      a: 'If you or the attending doctor cancels an appointment before consultation, our automated refund engine immediately credits 100% of your consultation fee back to your Healthcare Wallet with zero cancellation deductions.',
     },
     {
       q: 'What is the sequential token system?',
-      a: 'Every appointment booking generates an orderly sequential Token # for the doctor’s OPD queue on your chosen date, keeping consultation flow transparent and organized.',
+      a: 'Every consultation booking automatically generates an orderly sequential Token # (#1, #2, #3...) for the doctor’s daily OPD queue, ensuring fair and transparent entry without waiting in physical lines.',
+    },
+    {
+      q: 'How do I convert a doctor prescription into a daily medicine schedule?',
+      a: 'Open My Appointments and click "Sync Rx to Daily Routine", or navigate to Medicine Schedule and upload a photo of your prescription. It automatically organizes medicines into Morning, Afternoon, Evening, and Night dose timers.',
+    },
+    {
+      q: 'How does the Pre-Consultation Allergy Shield protect me?',
+      a: 'Documenting your drug allergies (such as Penicillin, Sulfa, or Aspirin) in your Profile automatically flags warning notices to attending doctors before they prescribe medications, preventing adverse drug reactions.',
     },
   ]
 
@@ -38,81 +38,80 @@ const Home = () => {
       role: 'Verified Patient',
       rating: 5,
       comment:
-        'The live queue tracker and sequential token system saved me hours! I was attended right on schedule by the doctor.',
+        'The sequential token system saved me hours! I walked into the clinic knowing my exact queue number and was attended right on schedule.',
     },
     {
       name: 'Amit Deshmukh',
-      role: 'Cardiology Patient (Pune)',
+      role: 'Patient (Pune)',
       rating: 5,
       comment:
-        'The interface is extremely clean and fast. My doctor prescription automatically synced to my daily medicine schedule with timely alarm reminders!',
+        'The interface is simple, clean, and intuitive. My doctor’s prescription automatically synced to my daily medicine schedule with timely alarm reminders!',
     },
     {
       name: 'Elena Rostova',
       role: 'Dermatology Patient',
       rating: 5,
       comment:
-        'When I had to cancel my slot, the 100% refund was credited immediately into my healthcare wallet. True transparency and peace of mind.',
+        'When I had to cancel my appointment due to work, 100% of the consultation fee was credited immediately into my wallet without any deduction. Truly transparent care.',
     },
   ]
 
   return (
-    <div className='space-y-8 py-1'>
+    <div className='space-y-10 py-2'>
       <Header />
       <SpecialityMenu />
       <TopDoctors />
 
-      {/* 100% Refund & Patient Rights Banner */}
-      <section className='bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-800 text-white rounded-3xl p-8 sm:p-12 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden'>
+      {/* 100% Instant Refund & Patient Protection Section */}
+      <section className='bg-gradient-to-r from-teal-700 via-emerald-700 to-teal-800 text-white rounded-3xl p-7 sm:p-10 shadow-lg flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden'>
         <div className='max-w-xl'>
           <span className='px-3 py-1 bg-white/20 text-white rounded-full text-xs font-bold uppercase tracking-wider'>
-            Automated Protection
+            Patient First Policy
           </span>
-          <h2 className='text-2xl sm:text-3xl font-black mt-3'>
+          <h2 className='text-2xl sm:text-3xl font-bold mt-2.5'>
             100% Instant Refund Guarantee on Cancellation
           </h2>
-          <p className='text-emerald-100 text-sm sm:text-base mt-2 leading-relaxed'>
-            Plans change. If you or the attending doctor cancels an appointment, your entire consultation fee is
-            refunded instantly with zero deductions.
+          <p className='text-teal-100 text-xs sm:text-sm mt-2 leading-relaxed'>
+            We respect your time and schedule. If an appointment is cancelled by you or the attending doctor prior to consultation, 100% of your fee is reimbursed instantly to your Healthcare Wallet.
           </p>
         </div>
-        <div className='shrink-0 flex items-center gap-3'>
+        <div className='shrink-0'>
           <button
             onClick={() => navigate('/my-appointments')}
-            className='px-8 py-4 bg-white text-emerald-800 hover:bg-emerald-50 rounded-full font-extrabold text-base shadow-lg transition-all hover:scale-105'
+            className='px-7 py-3.5 bg-white text-teal-800 hover:bg-teal-50 rounded-full font-bold text-sm shadow-md transition-all hover:scale-105 active:scale-95'
           >
-            Track My Appointments
+            Track My Consultations
           </button>
         </div>
       </section>
 
-      {/* Verified Patient Reviews / Testimonials */}
-      <section className='my-8 sm:my-10'>
-        <div className='text-center max-w-xl mx-auto mb-6'>
-          <h2 className='text-2xl sm:text-3xl font-extrabold text-gray-900'>What Patients Say</h2>
-          <p className='text-sm sm:text-base text-gray-500 mt-1.5'>
-            Over 15,000+ consultations delivered with clinical safety and transparent care
+      {/* Verified Patient Feedback */}
+      <section className='my-8'>
+        <div className='text-center max-w-lg mx-auto mb-6'>
+          <h2 className='text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight'>What Patients Say</h2>
+          <p className='text-xs sm:text-sm text-gray-500 mt-1'>
+            Real experiences from patients consulting verified specialists
           </p>
         </div>
 
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-5'>
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5'>
           {testimonials.map((item, idx) => (
             <div
               key={idx}
-              className='bg-white p-6 rounded-3xl border border-gray-100 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between'
+              className='bg-white p-5 sm:p-6 rounded-2xl border border-gray-100 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between'
             >
               <div>
-                <div className='flex items-center gap-1 text-amber-400 text-sm mb-2.5'>
+                <div className='flex items-center gap-1 text-amber-400 text-sm mb-2'>
                   {'★'.repeat(item.rating)}
                 </div>
-                <p className='text-gray-700 text-sm italic leading-relaxed'>&ldquo;{item.comment}&rdquo;</p>
+                <p className='text-gray-700 text-xs sm:text-sm leading-relaxed'>&ldquo;{item.comment}&rdquo;</p>
               </div>
-              <div className='mt-5 pt-3.5 border-t border-gray-100 flex items-center justify-between'>
+              <div className='mt-4 pt-3 border-t border-gray-100 flex items-center justify-between'>
                 <div>
-                  <p className='font-bold text-gray-900 text-sm'>{item.name}</p>
-                  <p className='text-xs text-primary font-semibold'>{item.role}</p>
+                  <p className='font-bold text-gray-900 text-xs sm:text-sm'>{item.name}</p>
+                  <p className='text-[11px] text-primary font-semibold'>{item.role}</p>
                 </div>
-                <span className='text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2.5 py-0.5 rounded-full border border-emerald-200'>
+                <span className='text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full border border-emerald-200'>
                   ✓ Verified
                 </span>
               </div>
@@ -121,35 +120,35 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Frequently Asked Questions (FAQ) */}
-      <section className='my-8 sm:my-10 bg-gray-50/80 p-6 sm:p-10 rounded-3xl border border-gray-200/80'>
-        <div className='text-center max-w-xl mx-auto mb-6'>
-          <h2 className='text-2xl sm:text-3xl font-extrabold text-gray-900'>Frequently Asked Questions</h2>
-          <p className='text-sm sm:text-base text-gray-500 mt-1.5'>
-            Everything you need to know about appointment bookings, refunds, and medicines
+      {/* Frequently Asked Questions */}
+      <section className='my-8 bg-gray-50/70 p-6 sm:p-9 rounded-3xl border border-gray-100'>
+        <div className='text-center max-w-lg mx-auto mb-6'>
+          <h2 className='text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight'>Frequently Asked Questions</h2>
+          <p className='text-xs sm:text-sm text-gray-500 mt-1'>
+            Quick answers about appointments, queue tokens, and medicine schedules
           </p>
         </div>
 
-        <div className='max-w-3xl mx-auto space-y-4'>
+        <div className='max-w-2xl mx-auto space-y-3'>
           {faqs.map((faq, idx) => {
             const isOpen = openFaq === idx
             return (
               <div
                 key={idx}
-                className='bg-white border border-gray-200 rounded-2xl overflow-hidden transition-all shadow-sm'
+                className='bg-white border border-gray-200/80 rounded-xl overflow-hidden transition-all shadow-2xs'
               >
                 <button
                   type='button'
                   onClick={() => setOpenFaq(isOpen ? null : idx)}
-                  className='w-full text-left px-7 py-5 flex items-center justify-between gap-4 font-bold text-base sm:text-lg text-gray-800 hover:text-primary transition-colors'
+                  className='w-full text-left px-5 py-3.5 flex items-center justify-between gap-3 font-semibold text-sm sm:text-base text-gray-800 hover:text-primary transition-colors'
                 >
                   <span>{faq.q}</span>
-                  <span className={`text-2xl font-bold transition-transform ${isOpen ? 'rotate-45 text-primary' : 'text-gray-400'}`}>
+                  <span className={`text-xl font-bold transition-transform ${isOpen ? 'rotate-45 text-primary' : 'text-gray-400'}`}>
                     +
                   </span>
                 </button>
                 {isOpen && (
-                  <div className='px-7 pb-5 text-base text-gray-600 leading-relaxed border-t border-gray-100 pt-4 animate-fade-in'>
+                  <div className='px-5 pb-4 text-xs sm:text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-3 animate-fade-in'>
                     {faq.a}
                   </div>
                 )}

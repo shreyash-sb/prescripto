@@ -56,7 +56,7 @@ export const calculateAge = (dob) => {
  * @param {string} symbol
  * @returns {string}
  */
-export const formatCurrency = (amount, symbol = "$") => {
+export const formatCurrency = (amount, symbol = "₹") => {
   if (amount === undefined || amount === null || isNaN(Number(amount))) {
     return `${symbol}0`;
   }

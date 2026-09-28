@@ -325,7 +325,7 @@ export const appointmentCancel = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: refundProcessed
-        ? `Appointment cancelled by Admin. 100% Refund of $${appointmentData.amount} credited to patient wallet (Ref: ${refundId}).`
+        ? `Appointment cancelled by Admin. 100% Refund of ₹${appointmentData.amount} credited to patient wallet (Ref: ${refundId}).`
         : "Appointment cancelled and doctor slot released",
       refundProcessed,
       refundId,

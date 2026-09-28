@@ -4,30 +4,51 @@ import doctorModel from "../../models/doctorModel.js";
 import appointmentModel from "../../models/appointmentModel.js";
 import medicineRoutineModel from "../../models/medicineRoutineModel.js";
 
-const PRESCRIPTO_SYSTEM_INSTRUCTION = `You are the Prescripto AI Assistant — a smart, helpful, and empathetic healthcare and platform companion for the Prescripto platform.
+const IMPROVEMENT_STAGE_MESSAGE = `⚠️ **Prescripto Assistant is currently in the improvement stage for general non-healthcare and off-topic questions.**
+
+I am specifically trained and optimized to assist you with:
+• **Platform & Booking:** How Prescripto works, booking appointments, queue tokens (#1, #2...), and our 100% instant refund guarantee
+• **Doctor Discovery:** Verified specialists, real-time availability, consultation fees, and clinic details
+• **Health & Symptoms:** Medical explanations, wellness tips, precautions, and symptom triage (positive & negative)
+• **Medicines & Prescriptions:** Uses, dosages, meal timings (before/after food), side effects, and routine dose reminders
+
+How can I assist you with your health, medicines, or Prescripto consultation today?`;
+
+const PRESCRIPTO_SYSTEM_INSTRUCTION = `You are the Prescripto AI Assistant — a specialized, knowledgeable, and empathetic healthcare and platform guide for Prescripto.
 
 ============================================================
-CORE PURPOSE & CAPABILITIES:
+STRICT TOPIC SCOPE & DOMAIN BOUNDARY:
 ============================================================
-You intelligently answer three types of questions:
-1. PRESCRIPTO APPLICATION KNOWLEDGE: How Prescripto works, booking procedures, refund rules, token numbers, prescription schedules, and clinical safety features.
-2. LIVE PRESCRIPTO DATABASE DATA: Doctor listings, real-time availability, specialist lookup, user appointments, and digital prescriptions via tools.
-3. GEMINI GENERAL KNOWLEDGE: General healthcare concepts, medical terminology, explanations of medical specialties, first aid basics, wellness tips, and general questions.
+You are exclusively designed to answer questions within these four core domains:
+1. PRESCRIPTO PLATFORM & WORKING:
+   • Booking procedures, 7-day slot availability, sequential queue tokens (#1, #2, #3...)
+   • 100% Instant Refund Guarantee on cancellation (zero deductions, immediate wallet credit)
+   • Payment methods (Cards, UPI dynamic QR, Cash on Visit at clinic)
+   • Patient health profile, medical allergy safety shield, digital e-prescriptions, daily medicine routine timers, follow-up tracking, privacy access audit logs, emergency SOS
+   • Doctor and Admin consoles & clinic workflows
+2. DOCTORS & SPECIALISTS:
+   • Finding verified doctors across departments (General Physician, Gynecologist, Dermatologist, Pediatrician, Neurologist, Gastroenterologist, Cardiologist, etc.)
+   • Doctor qualifications, experience, ratings, consultation fees in Indian Rupees (₹), clinic address & OPD room numbers
+   • Live queue crowd levels (Low, Moderate, Busy) and estimated wait times
+3. HEALTH, SYMPTOMS & WELLNESS (Positive & Negative aspects):
+   • Positive: Preventive health habits, wellness guidance, nutrition, sleep, hydration, exercise
+   • Negative & Warning Signs: Fever, chills, body aches, persistent cough, cold, flu, chest pain/tightness (emergency triage), shortness of breath, sudden weakness, dizziness, high/low BP, diabetes management, skin rashes, digestive issues, allergies
+   • Diagnostic tests explanations (e.g. MRI vs CT scan, X-Ray, ECG, blood tests)
+   • First aid basics, self-care precautions, when to seek urgent doctor consultation vs emergency services (108/112)
+4. MEDICINES & PRESCRIPTIONS (Positive & Negative aspects):
+   • Common medications (Paracetamol, Amoxicillin, Ibuprofen, Metformin, Cetirizine, Antacids, Antibiotics, etc.)
+   • Indications, dosage concepts, meal timing (before food / after food / empty stomach)
+   • Positive health benefits of prescription adherence
+   • Negative side effects, drug interactions, contraindications, allergy warnings (Penicillin, Sulfa, Aspirin)
+   • What to do on missed doses and safety precautions
 
 ============================================================
-AUTHENTIC PRESCRIPTO APPLICATION FEATURES:
+STRICT RULE FOR OFF-TOPIC / UNRELATED / MISSING INFORMATION:
 ============================================================
-• Patient Registration & Login: Patients sign up with email and password to access their personal health hub, appointments, and wallet.
-• Doctor Discovery: Browse doctors across 6+ specialties (General physician, Gynecologist, Dermatologist, Pediatricians, Neurologist, Gastroenterologist). Filter by specialty, live clinic crowd level, or sort by fee and rating.
-• 7-Day Slot System & Sequential Token Numbers: Patients choose a date and time slot. Every booking automatically generates an orderly sequential Token # (#1, #2, #3...) for the doctor's daily OPD queue.
-• 100% Instant Refund Guarantee: If an appointment is cancelled by either the patient or the attending doctor before consultation, 100% of the consultation fee is immediately refunded into the patient's Healthcare Wallet with zero cancellation deductions.
-• Payment Options: Online checkout with invoice receipt or Cash on Visit at the hospital counter.
-• Pre-Consultation Allergy Safety Shield: Patients can document known drug allergies (e.g., Penicillin, Sulfa, Aspirin) and chronic conditions. These are cross-checked and flagged to attending doctors before prescribing.
-• Digital Prescriptions & Smart Medicine Schedule: Completed consultations include e-prescriptions. Patients can sync prescriptions or upload prescription photos to create daily timed dose reminders (Morning 8:00 AM, Afternoon 1:00 PM, Evening 6:00 PM, Night 9:00 PM) with adherence tracking.
-• Privacy Access Audit Logs: Transparent HIPAA-style logs showing patients exactly which doctor or admin accessed their records and when.
-• Emergency SOS: Instant one-click access to National Emergency Helplines (108/112/102) and emergency contacts.
-• Doctor Portal: Dedicated console for doctors to track earnings, manage the patient queue, use "Call Next Patient", review patient allergy history and current complaints, and issue digital prescriptions.
-• Admin Portal: Hospital Operations Console to manage doctor onboarding, toggle doctor availability (Available vs Off-duty), verify cash payments, and track revenue analytics.
+• If the user's question is OUTSIDE healthcare, medicines, symptoms, medical tests, doctors, or Prescripto platform working (e.g. general programming/coding for video games, politics, movies, entertainment, sports trivia, stock trading, crypto, cooking recipes, personal chit-chat, or random topics), OR if the answer/information is not available or unknown:
+• You MUST NOT invent, hallucinate, or give generic useless answers.
+• Instead, politely and clearly inform the user that the chatbot is currently in the improvement stage for general off-topic queries:
+${IMPROVEMENT_STAGE_MESSAGE}
 
 ============================================================
 RULES FOR LIVE DATABASE TOOLS:
@@ -36,14 +57,6 @@ RULES FOR LIVE DATABASE TOOLS:
 • NEVER invent or hallucinate doctor names, appointment dates, fees, or prescription records.
 • If a tool returns no matches (e.g. no cardiologist found), explicitly tell the user that no matching doctor was found in the Prescripto database.
 • For private user data ('getMyAppointments', 'getMyPrescriptions'), if the tool reports that the user is not signed in, politely prompt them to log into their Prescripto account.
-
-============================================================
-COMBINING GENERAL KNOWLEDGE & LIVE DATA:
-============================================================
-• If a question requires both general knowledge and live data (e.g., "I have a skin rash. Which specialist should I see and do you have one?"):
-  1. Use general knowledge to identify that a skin rash requires a Dermatologist.
-  2. Use the 'findDoctorsBySpeciality' tool to check real dermatologists on Prescripto.
-  3. Combine the clinical explanation and actual doctor list into one natural, seamless response.
 
 ============================================================
 MEDICAL SAFETY GUARDRAILS:
@@ -65,11 +78,71 @@ const withTimeout = (promise, ms = 25000) => {
 };
 
 /**
- * Intelligent Database-Backed Local Fallback Engine
- * Ensures 100% availability even if external AI API quotas or network are disrupted.
+ * Checks if a query is within the healthcare, medicine, doctor, or Prescripto platform domain
+ */
+const isHealthcareOrPlatformQuery = (query) => {
+  const q = query.toLowerCase().trim();
+  if (!q) return false;
+
+  const healthcareKeywords = [
+    // Platform & Booking
+    "prescripto", "book", "appointment", "slot", "token", "queue", "opd", "refund",
+    "cancel", "cancellation", "wallet", "pay", "payment", "card", "upi", "cash",
+    "fee", "cost", "receipt", "invoice", "schedule", "routine", "audit", "privacy",
+    "sos", "emergency", "helpline", "108", "112", "login", "register", "account",
+    "profile", "doctor", "doctors", "specialist", "physician", "clinic", "hospital",
+    "admin", "portal", "console", "dr.", "dr ", "room", "wait", "crowd",
+
+    // Specialties & Departments
+    "dermatolog", "skin", "acne", "rash", "eczema", "hair", "psoriasis",
+    "gynecolog", "women", "period", "menstrual", "pregnancy", "prenatal", "maternity", "cramp",
+    "pediatric", "child", "baby", "infant", "toddler", "vaccine", "vaccination",
+    "neurolog", "brain", "nerve", "headache", "migraine", "seizure", "stroke", "paralysis",
+    "gastroenterolog", "stomach", "digestion", "liver", "acid", "acidity", "gerd", "reflux", "gut",
+    "cardiolog", "heart", "chest", "bp", "blood pressure", "hypertension", "pulse",
+    "orthopedic", "bone", "joint", "fracture", "arthritis", "sprain",
+    "ent", "ear", "nose", "throat", "sinus", "tonsil",
+    "psychiat", "mental", "stress", "anxiety", "depression", "sleep", "insomnia",
+
+    // Symptoms & Health (Positive & Negative)
+    "health", "healthy", "symptom", "illness", "disease", "fever", "temperature", "chill",
+    "cold", "cough", "flu", "pain", "ache", "sore", "infection", "bleed", "bleeding",
+    "dizzy", "dizziness", "nausea", "vomit", "vomiting", "diarrhea", "loose motion",
+    "fatigue", "tired", "weakness", "shortness of breath", "breathless", "breathing",
+    "asthma", "wheezing", "allergy", "allergic", "swelling", "swollen", "diabetic", "diabetes",
+    "sugar", "glucose", "thyroid", "cholesterol", "diet", "nutrition", "water", "hydration",
+    "exercise", "wellness", "fitness", "lifestyle", "prevention", "first aid", "bandage",
+    "wound", "burn", "cut", "injury",
+
+    // Medicines & Prescriptions (Positive & Negative)
+    "medicine", "medicines", "medication", "drug", "drugs", "prescription", "rx", "pill",
+    "tablet", "capsule", "syrup", "dose", "dosage", "paracetamol", "acetaminophen",
+    "amoxicillin", "antibiotic", "antibiotics", "ibuprofen", "advil", "aspirin", "azithromycin",
+    "metformin", "omeprazole", "pantoprazole", "antacid", "cetirizine", "antihistamine",
+    "cough syrup", "vitamin", "multivitamin", "supplement", "after food", "before food",
+    "empty stomach", "meal", "side effect", "side effects", "adverse", "contraindication",
+    "interaction", "missed dose", "overdose", "penicillin", "sulfa", "safe", "safety",
+
+    // Tests & Diagnostics
+    "mri", "ct scan", "cat scan", "x-ray", "xray", "ultrasound", "sonography", "ecg",
+    "ekg", "blood test", "urine test", "lab test", "biopsy", "scan", "diagnosis", "test"
+  ];
+
+  return healthcareKeywords.some((keyword) => q.includes(keyword));
+};
+
+/**
+ * Intelligent Database-Backed Local Engine
+ * Provides rich positive/negative health, medicine, doctor, and platform answers,
+ * and strictly returns the "improvement stage" message for off-topic/unrelated queries.
  */
 const generateSmartLocalFallback = async (userMessage, userId = null) => {
   const query = userMessage.toLowerCase().trim();
+
+  // If the query is not related to healthcare or the platform, strictly return improvement stage
+  if (!isHealthcareOrPlatformQuery(query)) {
+    return IMPROVEMENT_STAGE_MESSAGE;
+  }
 
   try {
     // 1. Doctor search / availability / list queries
@@ -83,6 +156,8 @@ const generateSmartLocalFallback = async (userMessage, userId = null) => {
       query.includes("pediatric") ||
       query.includes("neurolog") ||
       query.includes("gastroenterolog") ||
+      query.includes("cardiolog") ||
+      query.includes("orthopedic") ||
       query.includes("dr.") ||
       query.includes("dr ")
     ) {
@@ -90,7 +165,7 @@ const generateSmartLocalFallback = async (userMessage, userId = null) => {
 
       if (query.includes("dermatolog") || query.includes("skin") || query.includes("rash") || query.includes("acne")) {
         filter.speciality = { $regex: "dermatolog", $options: "i" };
-      } else if (query.includes("gynecolog") || query.includes("women") || query.includes("pregnancy")) {
+      } else if (query.includes("gynecolog") || query.includes("women") || query.includes("pregnancy") || query.includes("period")) {
         filter.speciality = { $regex: "gynecolog", $options: "i" };
       } else if (query.includes("pediatric") || query.includes("child") || query.includes("baby") || query.includes("infant")) {
         filter.speciality = { $regex: "pediatric", $options: "i" };
@@ -105,7 +180,7 @@ const generateSmartLocalFallback = async (userMessage, userId = null) => {
       // Check if a specific doctor name is in the query
       const words = query.replace(/[?.,!]/g, "").split(/\s+/);
       const nameKeywords = words.filter(
-        (w) => !["who", "is", "the", "are", "any", "doctor", "doctors", "available", "on", "in", "prescripto", "find", "show", "me", "what", "how"].includes(w)
+        (w) => !["who", "is", "the", "are", "any", "doctor", "doctors", "available", "on", "in", "prescripto", "find", "show", "me", "what", "how", "list", "which"].includes(w)
       );
 
       if (nameKeywords.length > 0 && !filter.speciality) {
@@ -127,22 +202,22 @@ const generateSmartLocalFallback = async (userMessage, userId = null) => {
         const docList = docs
           .map(
             (d) =>
-              `• **${d.name}** – ${d.speciality} (${d.degree || "MBBS"})\n  - **Fee:** $${d.fees || d.amount || 50} | **Experience:** ${d.experience || "5+ Years"} | **Status:** ${d.available ? "🟢 Available for OPD" : "🔴 Off-Duty"}`
+              `• **${d.name}** – ${d.speciality} (${d.degree || "MBBS"})\n  - **Fee:** ₹${d.fees || d.amount || 500} | **Experience:** ${d.experience || "5+ Years"} | **Status:** ${d.available ? "🟢 Available for OPD" : "🔴 Off-Duty"}\n  - **Clinic / Room:** ${d.address?.line1 || "Main Clinic"}, Room ${d.roomNumber || "OPD-101"}`
           )
           .join("\n\n");
 
-        return `Here are the matching verified doctors on **Prescripto**:\n\n${docList}\n\n💡 *Tip: When you book an appointment, you'll receive a sequential queue token number (#1, #2, #3...) for the doctor's daily OPD schedule.*`;
+        return `Here are the matching verified doctors on **Prescripto**:\n\n${docList}\n\n💡 *Tip: When you book an appointment, you will automatically receive a sequential queue token number (#1, #2, #3...) for the doctor's daily OPD schedule.*`;
       } else {
-        const allDocs = await doctorModel.find({ available: true }).select("name speciality fees").limit(6).lean();
+        const allDocs = await doctorModel.find({ available: true }).select("name speciality fees experience").limit(6).lean();
         if (allDocs && allDocs.length > 0) {
-          const sample = allDocs.map((d) => `• **${d.name}** (${d.speciality}) - $${d.fees}`).join("\n");
-          return `I couldn't find a doctor specifically matching your query, but here are some of our currently available specialists:\n\n${sample}\n\nYou can view all doctors on our platform under the **All Doctors** page.`;
+          const sample = allDocs.map((d) => `• **${d.name}** (${d.speciality}) - ₹${d.fees} [${d.experience} exp]`).join("\n");
+          return `I couldn't find a doctor specifically matching that name or specialty in our database, but here are some of our currently available specialists:\n\n${sample}\n\nYou can view all verified doctors under the **All Doctors** tab.`;
         }
       }
     }
 
-    // 2. User Appointments
-    if (query.includes("my appointment") || query.includes("my booking") || query.includes("when is my")) {
+    // 2. User Appointments & Queue Tokens
+    if (query.includes("my appointment") || query.includes("my booking") || query.includes("when is my") || (query.includes("token") && query.includes("my"))) {
       if (!userId) {
         return "To view your personalized upcoming appointments and queue token numbers, please log into your **Prescripto** patient account and check the **My Appointments** section.";
       }
@@ -156,110 +231,328 @@ const generateSmartLocalFallback = async (userMessage, userId = null) => {
         const list = appts
           .map(
             (a) =>
-              `• **Dr. ${a.docData?.name || "Doctor"}** (${a.docData?.speciality || "Specialist"})\n  - **Date & Time:** ${a.slotDate} at ${a.slotTime}\n  - **Queue Token #:** #${a.tokenNumber || 1}\n  - **Status:** ${a.isCompleted ? "Completed ✓" : a.appointmentStatus === "Accepted" ? "Accepted by Doctor ✓" : "Scheduled"}`
+              `• **Dr. ${a.docData?.name || "Doctor"}** (${a.docData?.speciality || "Specialist"})\n  - **Date & Time:** ${a.slotDate} at ${a.slotTime}\n  - **Queue Token #:** #${a.tokenNumber || 1}\n  - **Status:** ${a.isCompleted ? "Completed ✓" : a.appointmentStatus === "Accepted" ? "Accepted by Doctor ✓" : "Scheduled (Pending Review)"}\n  - **Payment:** ${a.payment ? `Paid (${a.paymentMethod || "Online"})` : "Payment Due"}`
           )
           .join("\n\n");
         return `Here are your active appointments on Prescripto:\n\n${list}`;
       } else {
-        return "You currently have no active upcoming appointments. You can book a consultation with any of our verified doctors from the **Doctors** tab.";
+        return "You currently have no active upcoming appointments. You can browse specialists and schedule a visit from the **All Doctors** page.";
       }
     }
 
     // 3. Prescriptions & Medication Schedule
-    if (query.includes("prescription") || query.includes("medicine") || query.includes("schedule") || query.includes("routine")) {
+    if (query.includes("my prescription") || query.includes("my medicine") || query.includes("my routine") || query.includes("my schedule")) {
       if (!userId) {
         return "Prescripto allows you to manage digital prescriptions and timed daily dose routines (Morning 8 AM, Afternoon 1 PM, Evening 6 PM, Night 9 PM). Please log in to view your personal prescriptions.";
       }
       const routines = await medicineRoutineModel.find({ userId }).limit(5).lean();
       if (routines && routines.length > 0) {
         const medList = routines.map((r) => `• **${r.medicineName}** (${r.dosage}) - ${r.mealTiming || "After Food"} [${(r.timesOfDay || []).join(", ")}]`).join("\n");
-        return `Here is your current active medicine routine:\n\n${medList}\n\nYou can view full reminders in **Medicine Schedule**.`;
+        return `Here is your current active medicine routine:\n\n${medList}\n\nYou can view full reminders and log your daily doses in **Medicine Schedule**.`;
       }
       return "You don't have any active medication routines yet. After your consultation, you can convert your doctor's e-prescription into daily dose reminders in **Medicine Schedule**.";
     }
 
-    // 4. Refund Guarantee
-    if (query.includes("refund") || query.includes("cancellation") || query.includes("cancel")) {
-      return `On **Prescripto**, all bookings are covered by our **100% Instant Refund Guarantee**:\n\n• **Zero Deductions:** If you or the attending doctor cancel an appointment before the consultation, 100% of your consultation fee is refunded immediately.\n• **Instant Wallet Credit:** Refunded funds are credited directly to your **Healthcare Wallet** with zero delay.\n• **How to Cancel:** Go to **My Appointments** and click **Cancel Appointment**.`;
+    // 4. 100% Instant Refund Guarantee & Cancellation Rules (Positive & Negative)
+    if (query.includes("refund") || query.includes("cancellation") || query.includes("cancel") || query.includes("money back")) {
+      return `### 100% Instant Refund Guarantee on Prescripto:
+• **Zero Cancellation Fees:** If you or the attending doctor cancel an appointment before the consultation, 100% of your consultation fee is refunded immediately.
+• **Instant Healthcare Wallet Credit:** Refunded amounts are credited directly into your **Healthcare Wallet** instantly with zero waiting period.
+• **Doctor Rejection Protection:** If a doctor is unable to accept your submitted consultation case, your booking is cancelled and 100% reimbursed automatically.
+• **How to Cancel:** Go to **My Appointments**, locate the scheduled booking, and click **Cancel Appointment**.`;
     }
 
-    // 5. Booking & Slots
-    if (query.includes("book") || query.includes("how to") || query.includes("slot") || query.includes("token")) {
-      return `### How to Book an Appointment on Prescripto:
-1. **Browse Doctors:** Choose a specialist from the **All Doctors** page or filter by department.
-2. **Select Date & Slot:** Pick your preferred consultation date (up to 7 days ahead) and time slot.
-3. **Queue Token Number:** Each booking generates a unique **Queue Token #** (#1, #2, #3...) for orderly OPD entry.
-4. **Payment Options:** Pay online instantly or choose **Cash on Visit** at the hospital counter.
-5. **Instant Confirmation:** Your appointment and queue token will appear immediately under **My Appointments**.`;
+    // 5. Booking Process, Slots, Sequential Tokens, and Payments
+    if (query.includes("book") || query.includes("how to") || query.includes("slot") || query.includes("token") || query.includes("payment") || query.includes("upi") || query.includes("cash")) {
+      return `### How Appointment Booking & Tokens Work on Prescripto:
+1. **Browse Doctors:** Select a specialist by department (General Physician, Dermatologist, Gynecologist, Neurologist, etc.) or search by doctor name.
+2. **Select Date & Slot:** Pick your preferred consultation date (up to 7 days in advance) and a 30-minute time slot (Morning, Afternoon, or Evening).
+3. **Sequential Queue Token #:** Every booking automatically generates an orderly sequential **Token #** (#1, #2, #3...) for the doctor's daily OPD queue.
+4. **Submit Medical Case:** Briefly describe your symptoms so the doctor can review your case prior to entry.
+5. **Flexible Payment Options:** Pay online via Card / UPI dynamic QR code, or select **Cash on Visit** at the clinic counter.
+6. **Confirmation & Status:** Track your token and acceptance in real-time under **My Appointments**.`;
     }
 
-    // 6. Medical Specialty explanations & symptom triage
-    if (query.includes("dermatolog") || query.includes("skin") || query.includes("acne") || query.includes("hair")) {
-      return `A **Dermatologist** specializes in diagnosing and treating conditions affecting the skin, hair, and nails (e.g. acne, eczema, allergies, psoriasis, infections). Prescripto has verified dermatologists available for online and in-clinic consultation.`;
-    }
-    if (query.includes("pediatric") || query.includes("child") || query.includes("baby")) {
-      return `A **Pediatrician** specializes in medical care for infants, children, and adolescents, covering growth milestones, vaccinations, and childhood illnesses.`;
-    }
-    if (query.includes("neurolog") || query.includes("brain") || query.includes("migraine") || query.includes("nerve")) {
-      return `A **Neurologist** diagnoses and treats disorders of the brain, spinal cord, and peripheral nerves (e.g., migraines, nerve pain, seizures, neuropathy).`;
-    }
-    if (query.includes("gastroenterolog") || query.includes("stomach") || query.includes("digestion") || query.includes("liver")) {
-      return `A **Gastroenterologist** treats digestive system conditions, including the stomach, intestines, liver, gallbladder, and pancreas.`;
-    }
-    if (query.includes("gynecolog") || query.includes("women") || query.includes("pregnancy")) {
-      return `A **Gynecologist** provides specialized healthcare for women's reproductive health, prenatal care, menstrual health, and maternity consultations.`;
+    // 6. MEDICINES & DRUG GUIDELINES (Positive & Negative Questions)
+    // Paracetamol / Acetaminophen
+    if (query.includes("paracetamol") || query.includes("acetaminophen") || query.includes("tylenol") || query.includes("dolo") || query.includes("crocin")) {
+      return `### 💊 Paracetamol (Acetaminophen) Medical Guide
+
+**Positive Uses & Benefits:**
+• Relieves mild-to-moderate pain (headaches, muscle aches, toothaches, backaches).
+• Effectively lowers fever (antipyretic) in viral or bacterial infections.
+
+**Negative Aspects, Side Effects & Cautions:**
+• **Meal Timing:** Usually safe on an empty stomach or with a light snack, but taking with water after food helps prevent mild stomach discomfort.
+• **Maximum Safe Limit:** Adults must **never exceed 4,000 mg (4 grams)** within 24 hours. Keep doses spaced at least 4 to 6 hours apart.
+• **Liver Toxicity Warning:** Severe liver damage can occur with overdose or when combined with alcohol.
+• **Allergy Caution:** If you experience skin rashes, swelling, or breathing difficulty, discontinue immediately and seek medical care.`;
     }
 
-    // 7. Medical Tests & Diagnostic Scans (MRI, CT scan, X-Ray, Ultrasound, ECG)
-    if (
-      (query.includes("mri") && query.includes("ct")) ||
-      query.includes("mri vs ct") ||
-      query.includes("difference between mri and ct")
-    ) {
-      return `### Key Differences: MRI vs. CT Scan
+    // Ibuprofen / NSAIDs
+    if (query.includes("ibuprofen") || query.includes("nsaid") || query.includes("advil") || query.includes("motrin") || query.includes("combiflam")) {
+      return `### 💊 Ibuprofen (NSAID) Medical Guide
+
+**Positive Uses & Benefits:**
+• Non-Steroidal Anti-Inflammatory Drug (NSAID) that reduces swelling, inflammation, dental pain, arthritis, and body aches.
+
+**Negative Aspects, Side Effects & Cautions:**
+• **MUST Take After Food:** Always take Ibuprofen with food, milk, or a full meal. Taking on an empty stomach can cause gastric irritation, acidity, or stomach ulcers.
+• **Side Effects:** May cause heartburn, stomach upset, nausea, dizziness, or fluid retention.
+• **Contraindications:** Avoid if you have active stomach ulcers, severe kidney disease, or a known aspirin/NSAID allergy. Consult a doctor before combining with blood pressure medications.`;
+    }
+
+    // Amoxicillin / Antibiotics
+    if (query.includes("amoxicillin") || query.includes("antibiotic") || query.includes("azithromycin") || query.includes("augmentin") || query.includes("penicillin")) {
+      return `### 💊 Antibiotics (e.g. Amoxicillin, Azithromycin) Medical Guide
+
+**Positive Uses & Benefits:**
+• Prescribed exclusively to kill or inhibit the growth of **bacterial infections** (e.g. bacterial throat infections, ear infections, chest infections, skin infections).
+
+**Negative Aspects, Side Effects & Cautions:**
+• **Ineffective Against Viruses:** Antibiotics do **NOT** cure viral colds, flu, or viral coughs.
+• **Complete Full Course:** Always finish the entire course prescribed by your doctor, even if symptoms improve early. Stopping early causes **antibiotic resistance**.
+• **Common Side Effects:** Mild diarrhea, nausea, stomach cramping, or yeast infections. Take with meals and adequate water to reduce nausea.
+• **Severe Allergy Warning:** If allergic to Penicillin, inform your doctor immediately so safe non-penicillin alternatives can be selected. Document this in your **Prescripto Allergy Shield**.`;
+    }
+
+    // Metformin / Diabetes
+    if (query.includes("metformin") || query.includes("glycomet") || query.includes("diabetes medicine")) {
+      return `### 💊 Metformin (Type-2 Diabetes) Guide
+
+**Positive Uses & Benefits:**
+• First-line medication to lower blood glucose levels and increase insulin sensitivity in Type-2 Diabetes.
+
+**Negative Aspects, Side Effects & Cautions:**
+• **Timing:** Always take with or immediately after meals to minimize stomach upset.
+• **Common Side Effects:** Nausea, diarrhea, abdominal bloating, metallic taste. These typically subside after 1-2 weeks.
+• **Caution:** Avoid heavy alcohol consumption while taking Metformin to prevent lactic acidosis.`;
+    }
+
+    // Omeprazole / Pantoprazole / Antacids / Acidity
+    if (query.includes("omeprazole") || query.includes("pantoprazole") || query.includes("antacid") || query.includes("pan 40") || query.includes("pantocid") || query.includes("digene") || query.includes("gelusil")) {
+      return `### 💊 Antacids & Proton Pump Inhibitors (PPIs) Guide
+
+**Positive Uses & Benefits:**
+• Reduces stomach acid production, treating acid reflux (GERD), heartburn, gastric ulcers, and indigestion.
+
+**Negative Aspects, Meal Timing & Cautions:**
+• **Meal Timing for PPIs (Omeprazole, Pantoprazole):** Take **30 to 60 minutes BEFORE breakfast on an empty stomach** with water for optimal acid suppression.
+• **Liquid Antacids (Digene, Gelusil):** Take 1 hour after meals or at bedtime when heartburn occurs.
+• **Side Effects:** Extended unmonitored use may affect calcium and Vitamin B12 absorption. Avoid self-medicating beyond 14 days without a physician consultation.`;
+    }
+
+    // Cetirizine / Antihistamines / Allergies
+    if (query.includes("cetirizine") || query.includes("allegra") || query.includes("fexofenadine") || query.includes("antihistamine") || query.includes("zyrtec")) {
+      return `### 💊 Cetirizine & Antihistamines Guide
+
+**Positive Uses & Benefits:**
+• Blocks histamine to relieve seasonal allergy symptoms, sneezing, runny nose, watery eyes, itching, and hives.
+
+**Negative Aspects & Side Effects:**
+• **Timing:** Best taken in the evening or night.
+• **Drowsiness:** Can cause mild drowsiness, fatigue, or dry mouth. Avoid driving or operating heavy machinery if feeling sleepy.
+• **Alcohol Caution:** Do not combine with alcohol or sedatives as it intensifies drowsiness.`;
+    }
+
+    // Meal Timing Concepts ("After Food", "Before Food", "Empty Stomach")
+    if (query.includes("after food") || query.includes("before food") || query.includes("empty stomach") || query.includes("with food")) {
+      return `### 🍽️ Medication Meal Timing Guide
+
+• **After Food (Postprandial):** Take medication within 15–30 minutes after completing your meal. This coats the stomach lining, prevents gastric irritation/ulcers (critical for NSAIDs like Ibuprofen), and enhances absorption for fat-soluble drugs.
+• **Before Food / Empty Stomach:** Take 30–60 minutes before eating, or 2 hours after a meal with a full glass of water. Common for thyroid hormone (Levothyroxine) and acid-reducing PPIs (Pantoprazole).
+• **With Food:** Take in the middle of your meal to prevent gastrointestinal upset (common with Metformin and Iron supplements).
+• **At Bedtime:** Take 15–30 minutes before sleep (common for cholesterol medications or sedating antihistamines).
+
+Always follow the specific instructions on your Prescripto digital prescription!`;
+    }
+
+    // Missed Dose Guidance
+    if (query.includes("missed dose") || query.includes("forgot to take") || query.includes("forgot medicine")) {
+      return `### ⏰ What to Do If You Miss a Medication Dose:
+• **Take It When Remembered:** If you remember within a few hours, take the missed dose immediately.
+• **Skip If Next Dose is Soon:** If it is almost time for your next scheduled dose, skip the missed dose and resume your regular schedule.
+• **NEVER Double Up:** Do not take two doses at once to make up for a missed dose, as this can cause accidental toxicity.
+• **Use Prescripto Routine Timers:** Enable daily reminders in **Medicine Schedule** to avoid missed doses!`;
+    }
+
+    // 7. HEALTH & SYMPTOMS GUIDANCE (Positive & Negative Questions)
+    // Fever / High Temperature / Chills
+    if (query.includes("fever") || query.includes("high temperature") || query.includes("chills") || query.includes("shivering")) {
+      return `### 🌡️ Fever & High Temperature Guidance
+
+**Positive Care Steps:**
+• Rest and stay hydrated with water, electrolytes, and warm broths.
+• Use a light cotton blanket; do not over-bundle.
+• Paracetamol (500mg/650mg for adults) can be used as directed to reduce discomfort.
+
+**Negative Red Flags (Seek Doctor Immediately):**
+• Temperature above **103°F (39.4°C)** or fever lasting more than 3 consecutive days.
+• Stiff neck, severe headache, confusion, or sudden skin rash.
+• Difficulty breathing or persistent vomiting.
+
+💡 *Recommended Specialist on Prescripto:* Consult a **General Physician**.`;
+    }
+
+    // Cough, Cold & Sore Throat
+    if (query.includes("cough") || query.includes("cold") || query.includes("sore throat") || query.includes("throat pain") || query.includes("runny nose")) {
+      return `### 🤧 Cough, Cold & Sore Throat Guidance
+
+**Self-Care Precautions:**
+• Warm salt-water gargles 3-4 times daily for throat inflammation.
+• Steam inhalation with plain water to clear nasal congestion.
+• Stay hydrated with warm fluids (herbal teas, honey with warm water).
+
+**When to See a Specialist:**
+• Cough producing dark yellow/green phlegm or blood.
+• Inability to swallow fluids or high fever lasting over 3 days.
+• Shortness of breath or persistent chest tightness.
+
+💡 *Recommended Specialist on Prescripto:* Consult a **General Physician** or **ENT Specialist**.`;
+    }
+
+    // Chest Pain / Emergency Triage (Negative / Red Flag)
+    if (query.includes("chest pain") || query.includes("chest tightness") || query.includes("heart attack") || query.includes("stroke") || query.includes("shortness of breath") || query.includes("cannot breathe")) {
+      return `🚨 **CRITICAL MEDICAL EMERGENCY ALERT** 🚨
+
+If you or someone nearby is experiencing:
+• Crushing or squeezing chest pain spreading to the jaw, neck, back, or left arm
+• Sudden shortness of breath, cold sweats, or extreme dizziness
+• Sudden facial drooping, arm weakness, or slurred speech (Stroke FAST signs)
+
+**PLEASE CALL NATIONAL EMERGENCY SERVICES IMMEDIATELY:**
+• **National Medical Helpline / Ambulance:** **108**
+• **National Emergency Service:** **112**
+
+*Prescripto is intended for elective, scheduled outpatient consultations. Please proceed to the nearest Emergency Room right away for acute crises.*`;
+    }
+
+    // Skin Rashes, Acne, Eczema
+    if (query.includes("dermatolog") || query.includes("skin") || query.includes("rash") || query.includes("acne") || query.includes("eczema") || query.includes("itching") || query.includes("psoriasis")) {
+      return `### 🧴 Skin & Dermatology Health Guidance
+
+**Care Tips:**
+• Keep the affected skin clean and gently moisturized with fragrance-free lotion.
+• Avoid scratching to prevent secondary bacterial infection.
+• Avoid hot water baths and harsh chemical soaps.
+
+**Specialist Role:**
+• A **Dermatologist** specializes in treating acne, eczema, psoriasis, fungal infections, allergic contact dermatitis, and hair loss.
+
+💡 *Check our **All Doctors** page to consult a verified Dermatologist on Prescripto.*`;
+    }
+
+    // Stomach Pain, Acidity, Digestion, Diarrhea
+    if (query.includes("gastroenterolog") || query.includes("stomach") || query.includes("acidity") || query.includes("digestion") || query.includes("diarrhea") || query.includes("vomiting") || query.includes("constipation")) {
+      return `### 🫄 Digestive Health & Gastroenterology Guide
+
+**Care Tips:**
+• Eat small, frequent meals rather than large heavy dinners.
+• Stay upright for at least 2 hours after eating to prevent acid reflux.
+• For loose motions/diarrhea: Drink Oral Rehydration Salts (ORS), coconut water, and bland foods (bananas, rice, applesauce).
+
+**When to Seek Medical Care:**
+• Severe localized abdominal pain (especially lower right abdomen).
+• Blood in stool or vomit.
+• Inability to keep fluids down for more than 12 hours.
+
+💡 *Recommended Specialist on Prescripto:* Consult a **Gastroenterologist**.`;
+    }
+
+    // Headaches & Migraines
+    if (query.includes("neurolog") || query.includes("headache") || query.includes("migraine") || query.includes("nerve") || query.includes("dizziness")) {
+      return `### 🧠 Headache & Neurology Health Guide
+
+**Care Tips:**
+• Rest in a quiet, dark room during migraine episodes.
+• Apply a cold compress to your forehead or temples.
+• Ensure adequate hydration and consistent sleep cycles.
+
+**Red Flags:**
+• Sudden "thunderclap" headache (most severe headache of your life).
+• Headache accompanied by fever, stiff neck, confusion, numbness, or vision loss.
+
+💡 *Recommended Specialist on Prescripto:* Consult a **Neurologist**.`;
+    }
+
+    // Children & Infant Care
+    if (query.includes("pediatric") || query.includes("child") || query.includes("baby") || query.includes("infant") || query.includes("toddler") || query.includes("vaccination")) {
+      return `### 👶 Pediatric Care & Child Health Guide
+
+• **Pediatricians** specialize in developmental milestones, growth tracking, childhood immunizations, respiratory infections, and infant nutrition.
+• **Infant Care Alert:** Any infant under 3 months with a rectal temperature of 100.4°F (38°C) or higher requires immediate medical evaluation by a pediatrician.
+
+💡 *Check our **All Doctors** page to consult a certified Pediatrician on Prescripto.*`;
+    }
+
+    // Women's Health & Maternity
+    if (query.includes("gynecolog") || query.includes("women") || query.includes("pregnancy") || query.includes("menstrual") || query.includes("period") || query.includes("cramps")) {
+      return `### 🌸 Women's Health & Gynecology Guide
+
+• **Gynecologists** provide specialized care for reproductive health, menstrual irregularities, PCOS/PCOD management, prenatal maternity care, and wellness screenings.
+• Use warm compresses or approved pain relief for severe period cramps, and maintain routine annual checkups.
+
+💡 *Check our **All Doctors** page to consult a certified Gynecologist on Prescripto.*`;
+    }
+
+    // Positive Lifestyle & Wellness Habits
+    if (query.includes("wellness") || query.includes("lifestyle") || query.includes("diet") || query.includes("healthy") || query.includes("water") || query.includes("sleep") || query.includes("nutrition")) {
+      return `### 🌿 Positive Health & Wellness Foundations
+
+1. **Hydration:** Drink 2 to 3 liters of clean water daily for optimal organ function, skin elasticity, and digestion.
+2. **Quality Sleep:** Maintain 7 to 8 hours of restorative sleep on a consistent bedtime schedule.
+3. **Balanced Nutrition:** Incorporate fresh vegetables, whole grains, lean proteins, and fiber while minimizing refined sugars and trans fats.
+4. **Daily Physical Activity:** Aim for at least 30 minutes of moderate activity (brisk walking, cycling, yoga) 5 days a week.
+5. **Preventive Screenings:** Schedule regular health checkups with our verified **General Physicians** on Prescripto!`;
+    }
+
+    // Diagnostic Scans (MRI vs CT Scan)
+    if (query.includes("mri") || query.includes("ct scan") || query.includes("x-ray") || query.includes("ecg") || query.includes("ultrasound")) {
+      if ((query.includes("mri") && query.includes("ct")) || query.includes("mri vs ct") || query.includes("difference")) {
+        return `### 🔬 Diagnostic Imaging Comparison: MRI vs. CT Scan
 
 | Feature | CT Scan (Computed Tomography) | MRI (Magnetic Resonance Imaging) |
 | :--- | :--- | :--- |
 | **Technology** | Rotating X-rays (ionizing radiation) | Strong magnetic fields & radio waves |
-| **Best For** | Bones, acute trauma, chest/lungs, bleeding, emergencies | Soft tissues, brain, spinal cord, ligaments, joints |
-| **Duration** | Very fast (under 5 minutes) | Slower (15 to 45+ minutes) |
+| **Best For** | Bone fractures, acute trauma, chest/lungs, internal bleeding | Soft tissues, brain, spinal cord, ligaments, tendons, joints |
+| **Scan Speed** | Very fast (under 5 minutes) | Slower (20 to 45 minutes) |
 | **Radiation** | Contains low-dose radiation | **Zero radiation** |
-| **Safety** | Safe for most metal implants | **No magnetic metals or pacemakers allowed** |
+| **Safety** | Compatible with most metal implants | **No magnetic metal or pacemakers allowed** |
 
-💡 *Summary: Doctors typically choose a **CT scan** for emergency trauma, fractures, or chest scans, and an **MRI** when high-detail views of soft tissue (brain, spinal cord, ligaments) are needed.*`;
+💡 *Summary: Doctors typically order a **CT scan** for emergency trauma, fractures, or chest infections, and an **MRI** when high-detail views of soft tissue (brain, spinal cord, joints) are needed.*`;
+      }
+      if (query.includes("mri")) {
+        return `**MRI (Magnetic Resonance Imaging):**\n• Uses powerful magnetic fields and radio waves (zero radiation) to create detailed 3D cross-sections of soft tissues, the brain, spine, and joints.\n• **Safety:** Patients with pacemakers or ferromagnetic metal implants cannot enter an MRI scanner.`;
+      }
+      if (query.includes("ct scan")) {
+        return `**CT Scan (Computed Tomography):**\n• Combines multiple X-ray images to generate cross-sectional views of bones, organs, and blood vessels in under 5 minutes.\n• Ideal for acute emergencies, fractures, chest scans, and abdominal assessments.`;
+      }
     }
 
-    if (query.includes("mri")) {
-      return `**MRI (Magnetic Resonance Imaging):**\n• A non-invasive imaging test using powerful magnets and radio waves to generate detailed cross-sectional pictures of your body.\n• **Best suited for:** Brain, spine, nerves, torn ligaments (ACL, meniscus), and deep organs.\n• **Key safety note:** Because of the strong magnet, patients with pacemakers or magnetic metal implants cannot enter an MRI room.`;
-    }
+    // About Prescripto Platform Features
+    if (query.includes("what is prescripto") || query.includes("about prescripto") || query.includes("feature")) {
+      return `### 🏥 About Prescripto Healthcare Platform
 
-    if (query.includes("ct scan") || query.includes("cat scan")) {
-      return `**CT Scan (Computed Tomography):**\n• An advanced imaging technique that combines a series of X-ray views from different angles to create 3D cross-sectional images.\n• **Best suited for:** Acute trauma, bone fractures, pulmonary embolism, abdominal pain (appendicitis), and emergency diagnostics.\n• **Advantage:** Scans are extremely fast (often under 3-5 minutes).`;
-    }
+**Prescripto** is a full-featured clinical management and outpatient booking platform designed for seamless patient-doctor interactions:
 
-    // 8. General Healthcare explanations
-    if (query.includes("after food") || query.includes("before food") || query.includes("empty stomach")) {
-      return `**Medication Timing Guide:**\n• **After Food (Postprandial):** Take medication within 15–30 minutes after eating. This helps reduce gastric irritation and improves absorption for certain drugs (like NSAIDs or antibiotics).\n• **Before Food / Empty Stomach:** Take 30–60 minutes before meals or 2 hours after meals with a glass of water (common for thyroid medications and acid reducers).\n\nAlways follow your doctor's specific prescription instructions!`;
-    }
-
-    // 9. Emergency SOS
-    if (query.includes("emergency") || query.includes("urgent") || query.includes("ambulance") || query.includes("sos") || query.includes("108") || query.includes("112")) {
-      return `🚨 **EMERGENCY ASSISTANCE ALERT** 🚨\n\nIf you or someone nearby is experiencing a life-threatening medical emergency (such as severe chest pain, shortness of breath, sudden weakness, or heavy bleeding), please contact emergency services immediately:\n\n• **National Medical Helpline / Ambulance:** **108**\n• **National Emergency Service:** **112**\n• **Police Helpline:** **100 / 112**\n\nPrescripto is intended for planned consultations. For acute crises, visit the nearest emergency room immediately.`;
-    }
-
-    // 10. About Prescripto
-    if (query.includes("what is prescripto") || query.includes("about prescripto") || query.includes("features")) {
-      return `**Prescripto** is an intelligent healthcare appointment and clinical management platform.\n\n**Core Features:**\n• **Specialist Booking:** Certified doctors across 6+ departments with transparent fees & patient reviews.\n• **Sequential Queue Tokens:** Orderly token numbers (#1, #2, #3...) for daily OPD clinics.\n• **100% Instant Refund:** Immediate reimbursement to Healthcare Wallet on cancellation.\n• **Allergy Safety Shield:** Pre-consultation drug allergy check to prevent adverse drug reactions.\n• **Smart Medicine Schedules:** Digital e-prescriptions converted into timed daily dose reminders.\n• **Doctor & Admin Consoles:** Real-time queue management, earnings tracker, and cash verification.`;
+• **Verified Specialists:** Certified doctors across 6+ clinical departments with transparent fees and genuine patient reviews.
+• **Sequential Queue Tokens:** Automatic sequential Token # (#1, #2, #3...) for orderly, predictable daily OPD entry.
+• **100% Instant Refund Guarantee:** Zero cancellation fee — immediate reimbursement to your Healthcare Wallet upon cancellation.
+• **Allergy Safety Shield:** Document known drug allergies to alert doctors before any prescription is generated.
+• **Smart Medicine Schedule:** Convert doctor e-prescriptions into timed daily reminders (Morning, Afternoon, Evening, Night) with adherence tracking.
+• **Privacy Audit Logs:** Transparent HIPAA-style access logs showing exactly which doctor or admin accessed your records and when.
+• **Emergency SOS:** Instant access to national helplines (108/112) for acute medical crises.`;
     }
   } catch (dbErr) {
-    console.warn("[Local Fallback DB Notice]:", dbErr.message);
+    console.warn("[Local Engine Notice]:", dbErr.message);
   }
 
-  return `Hello! I am your **Prescripto AI Assistant** 🤖\n\nI can help you:\n• **Find Doctors & Check Availability:** Inquire about General Physicians, Dermatologists, Pediatricians, Neurologists, and more.\n• **Manage Appointments:** Learn how to book, check upcoming visits, or view your **Queue Token #**.\n• **Refunds & Billing:** Understand our **100% Instant Refund Guarantee** and payment options.\n• **Healthcare Guidance:** Clarify medical terms, prescription instructions, and department specialties.\n\nHow can I assist you today?`;
+  // Final catch-all for any healthcare query that wasn't matched above
+  return `Hello! I am your **Prescripto AI Assistant** 🤖\n\nI can help you:\n• **Find Verified Doctors & Check Live Availability**\n• **Understand Booking, Queue Tokens (#1, #2...), and 100% Instant Refunds**\n• **Explain Health Conditions, Symptoms & Precautions (Positive & Negative)**\n• **Medicine Guidelines, Dosages, Meal Timings & Side Effects**\n\nHow can I assist you with your healthcare today?`;
 };
 
 /**
- * Process AI Chat Request using Gemini API with Function Calling & Resilient Local Fallback
+ * Process AI Chat Request using Gemini API with Function Calling & Strict Domain Filtering
  *
  * @param {string} userMessage - User's input prompt
  * @param {Array} conversationHistory - Previous conversation turns [{ role, content }]
@@ -274,6 +567,17 @@ export const processAIChat = async (userMessage, conversationHistory = [], userI
     };
   }
 
+  const query = userMessage.trim();
+
+  // Strict domain check: If query is clearly off-topic / unrelated, return improvement stage immediately
+  if (!isHealthcareOrPlatformQuery(query)) {
+    return {
+      success: true,
+      response: IMPROVEMENT_STAGE_MESSAGE,
+      source: "prescripto-domain-guard",
+    };
+  }
+
   const geminiApiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 
   const contents = [];
@@ -281,7 +585,7 @@ export const processAIChat = async (userMessage, conversationHistory = [], userI
   if (Array.isArray(conversationHistory) && conversationHistory.length > 0) {
     const recentTurns = conversationHistory.slice(-4);
     for (const turn of recentTurns) {
-      if (!turn.content || turn.content === userMessage) continue;
+      if (!turn.content || turn.content === query) continue;
       const role = turn.role === "user" ? "user" : "model";
       contents.push({
         role,
@@ -292,7 +596,7 @@ export const processAIChat = async (userMessage, conversationHistory = [], userI
 
   contents.push({
     role: "user",
-    parts: [{ text: userMessage.trim() }],
+    parts: [{ text: query }],
   });
 
   const supportedModels = [
@@ -381,8 +685,8 @@ export const processAIChat = async (userMessage, conversationHistory = [], userI
     }
   }
 
-  // Resilient Local Engine fallback (Never fails, always provides accurate Prescripto data)
-  const fallbackReply = await generateSmartLocalFallback(userMessage, userId);
+  // Resilient Local Engine fallback (Always provides rich domain answers or improvement stage notice)
+  const fallbackReply = await generateSmartLocalFallback(query, userId);
   return {
     success: true,
     response: fallbackReply,

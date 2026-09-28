@@ -408,7 +408,7 @@ export const appointmentCancel = async (req, res, next) => {
         resource: "Appointment Status & Refund",
         action: "UPDATED",
         details: refundProcessed
-          ? `Appointment cancelled by doctor. 100% refund credited: $${appointmentData.amount} (Ref: ${refundId})`
+          ? `Appointment cancelled by doctor. 100% refund credited: ₹${appointmentData.amount} (Ref: ${refundId})`
           : "Appointment cancelled by doctor and slot released.",
       });
     }
@@ -416,7 +416,7 @@ export const appointmentCancel = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: refundProcessed
-        ? `Appointment cancelled. 100% Refund ($${appointmentData.amount}) automatically credited to patient wallet (Ref: ${refundId}).`
+        ? `Appointment cancelled. 100% Refund (₹${appointmentData.amount}) automatically credited to patient wallet (Ref: ${refundId}).`
         : "Appointment cancelled and time slot released.",
       refundProcessed,
       refundId,
@@ -548,7 +548,7 @@ export const rejectAppointment = async (req, res, next) => {
         resource: "Appointment Rejection & Refund",
         action: "REJECTED",
         details: refundProcessed
-          ? `Appointment rejected by doctor. Reason: ${updatePayload.rejectionReason}. 100% Refund ($${appointmentData.amount}) credited to wallet.`
+          ? `Appointment rejected by doctor. Reason: ${updatePayload.rejectionReason}. 100% Refund (₹${appointmentData.amount}) credited to wallet.`
           : `Appointment rejected by doctor. Reason: ${updatePayload.rejectionReason}.`,
       });
     }
@@ -556,7 +556,7 @@ export const rejectAppointment = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: refundProcessed
-        ? `Appointment rejected. 100% refund ($${appointmentData.amount}) credited to patient wallet.`
+        ? `Appointment rejected. 100% refund (₹${appointmentData.amount}) credited to patient wallet.`
         : "Appointment rejected and time slot released.",
       refundProcessed,
       refundId,

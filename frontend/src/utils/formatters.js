@@ -35,10 +35,10 @@ export const slotDateFormat = (slotDate) => {
 /**
  * Formats currency amount with symbol
  * @param {number} amount - Numeric amount
- * @param {string} symbol - Currency symbol (default '$')
+ * @param {string} symbol - Currency symbol (default '₹')
  * @returns {string} - Formatted currency string
  */
-export const formatCurrency = (amount, symbol = "$") => {
+export const formatCurrency = (amount, symbol = "₹") => {
   return `${symbol}${Number(amount || 0).toLocaleString()}`;
 };
 

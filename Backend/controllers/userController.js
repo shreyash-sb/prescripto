@@ -560,14 +560,14 @@ export const cancelAppointment = async (req, res, next) => {
       resource: "Appointment & Payment Status",
       action: "UPDATED",
       details: refundProcessed
-        ? `Appointment cancelled. 100% Refund credited: $${appointmentData.amount} (Ref: ${refundId})`
+        ? `Appointment cancelled. 100% Refund credited: ₹${appointmentData.amount} (Ref: ${refundId})`
         : "Appointment cancelled and slot released.",
     });
 
     return res.status(200).json({
       success: true,
       message: refundProcessed
-        ? `Appointment cancelled successfully! 100% Refund of $${appointmentData.amount} has been credited to your healthcare wallet (Ref: ${refundId}).`
+        ? `Appointment cancelled successfully! 100% Refund of ₹${appointmentData.amount} has been credited to your healthcare wallet (Ref: ${refundId}).`
         : "Appointment cancelled successfully and doctor slot released.",
       refundProcessed,
       refundId,
@@ -631,7 +631,7 @@ export const payAppointment = async (req, res, next) => {
       accessorId: userId.toString(),
       resource: "Financial & Payment Invoice",
       action: "UPDATED",
-      details: `Paid $${appointmentData.amount} via ${paymentMethod || "Online Card"} (Txn: ${generatedTxnId})`,
+      details: `Paid ₹${appointmentData.amount} via ${paymentMethod || "Online Card"} (Txn: ${generatedTxnId})`,
     });
 
     return res.status(200).json({

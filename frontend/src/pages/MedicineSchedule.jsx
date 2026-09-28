@@ -20,7 +20,7 @@ const MedicineSchedule = () => {
   const [selectedSlots, setSelectedSlots] = useState(['Morning', 'Night'])
   const [notes, setNotes] = useState('')
 
-  // Prescription Photo Upload & OCR simulation state
+  // Prescription Photo Upload & text parser
   const [rxImage, setRxImage] = useState(null)
   const [rxText, setRxText] = useState('')
 
@@ -74,7 +74,6 @@ const MedicineSchedule = () => {
       if (data.success) {
         toast.success('Medicine routine created successfully!')
         setShowAddModal(false)
-        // Reset form
         setMedicineName('')
         setNotes('')
         getMedicineRoutines()
@@ -114,7 +113,7 @@ const MedicineSchedule = () => {
   }
 
   const handleDeleteRoutine = async (routineId) => {
-    if (!window.confirm('Are you sure you want to remove this medicine schedule?')) return
+    if (!window.confirm('Are you sure you want to remove this medicine routine?')) return
     try {
       const { data } = await axios.post(
         `${backendUrl}/api/user/delete-medicine-routine`,
@@ -178,99 +177,101 @@ const MedicineSchedule = () => {
   const adherencePercent = totalDosesToday > 0 ? Math.round((dosesTakenToday / totalDosesToday) * 100) : 100
 
   return (
-    <div className='py-6'>
+    <div className='py-6 max-w-5xl mx-auto'>
       {/* Header */}
-      <div className='flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b'>
+      <div className='flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-gray-100'>
         <div>
-          <h1 className='text-2xl sm:text-3xl font-extrabold text-gray-900 flex items-center gap-2.5'>
-            <span>💊</span> {t('medicineScheduleTitle')}
+          <h1 className='text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight'>
+            Daily Medicine Schedule & Timers
           </h1>
-          <p className='text-sm sm:text-base text-gray-500 mt-1'>{t('medicineScheduleSubtitle')}</p>
+          <p className='text-sm sm:text-base text-gray-500 mt-1'>
+            Track your daily prescription doses, set meal timings, and monitor treatment adherence
+          </p>
         </div>
 
-        <div className='flex flex-wrap items-center gap-3'>
+        <div className='flex flex-wrap items-center gap-2.5'>
           <button
             onClick={() => setShowUploadModal(true)}
-            className='px-5 py-2.5 bg-indigo-50 border border-indigo-200 text-primary font-bold text-sm rounded-full hover:bg-indigo-100 transition-all flex items-center gap-2 shadow-sm'
+            className='px-4 py-2.5 bg-indigo-50 border border-indigo-100 text-primary font-semibold text-xs sm:text-sm rounded-full hover:bg-indigo-100 transition-all flex items-center gap-1.5 shadow-2xs'
           >
-            <span>📷</span> {t('uploadRoutine')}
+            <span>📷</span> Upload Prescription
           </button>
           <button
             onClick={() => setShowAddModal(true)}
-            className='px-6 py-2.5 bg-primary text-white font-bold text-sm rounded-full hover:bg-opacity-95 shadow-md transition-all active:scale-95 flex items-center gap-2'
+            className='px-5 py-2.5 bg-primary text-white font-semibold text-xs sm:text-sm rounded-full hover:bg-opacity-95 shadow-xs transition-all active:scale-95 flex items-center gap-1.5'
           >
-            <span>+</span> {t('addMedicine')}
+            <span>+</span> Add Medicine
           </button>
         </div>
       </div>
 
-      {/* Daily Adherence & Progress Summary */}
+      {/* Daily Progress & Summary */}
       <div className='grid grid-cols-1 sm:grid-cols-3 gap-4 my-6'>
-        <div className='bg-gradient-to-br from-indigo-500 to-primary text-white p-5 rounded-3xl shadow-md'>
+        <div className='bg-gradient-to-br from-indigo-600 to-primary text-white p-5 rounded-2xl shadow-xs'>
           <div className='flex justify-between items-start'>
             <div>
-              <p className='text-xs font-bold uppercase tracking-wider opacity-80'>Today's Adherence Rate</p>
+              <p className='text-xs font-bold uppercase tracking-wider text-indigo-100'>Today's Adherence</p>
               <h3 className='text-3xl font-black mt-1'>{adherencePercent}%</h3>
             </div>
-            <span className='text-3xl'>🎯</span>
+            <span className='text-2xl'>🎯</span>
           </div>
-          <p className='text-xs opacity-90 mt-2'>
-            {dosesTakenToday} of {totalDosesToday} scheduled doses completed today
+          <p className='text-xs text-indigo-100 mt-2 font-medium'>
+            {dosesTakenToday} of {totalDosesToday} doses logged for today
           </p>
         </div>
 
-        <div className='bg-white border border-gray-200 p-5 rounded-3xl shadow-sm'>
+        <div className='bg-white border border-gray-100 p-5 rounded-2xl shadow-2xs'>
           <div className='flex justify-between items-start'>
             <div>
-              <p className='text-xs font-bold uppercase tracking-wider text-gray-400'>Active Prescriptions</p>
-              <h3 className='text-3xl font-black text-gray-900 mt-1'>{medicineRoutines.length}</h3>
+              <p className='text-xs font-bold uppercase tracking-wider text-gray-400'>Active Medicines</p>
+              <h3 className='text-3xl font-bold text-gray-900 mt-1'>{medicineRoutines.length}</h3>
             </div>
-            <span className='text-3xl'>📋</span>
+            <span className='text-2xl'>💊</span>
           </div>
-          <p className='text-xs text-emerald-600 font-bold mt-2'>✓ Daily Timers & Push Alarms Active</p>
+          <p className='text-xs text-emerald-600 font-semibold mt-2'>✓ Daily Alarms Active</p>
         </div>
 
-        <div className='bg-white border border-gray-200 p-5 rounded-3xl shadow-sm'>
+        <div className='bg-white border border-gray-100 p-5 rounded-2xl shadow-2xs'>
           <div className='flex justify-between items-start'>
             <div>
-              <p className='text-xs font-bold uppercase tracking-wider text-gray-400'>Reminder System</p>
-              <h3 className='text-xl font-bold text-gray-900 mt-1'>Scheduled Timers</h3>
+              <p className='text-xs font-bold uppercase tracking-wider text-gray-400'>Schedule Mode</p>
+              <h3 className='text-xl font-bold text-gray-900 mt-1.5'>4 Daily Timelines</h3>
             </div>
-            <span className='text-3xl'>⏰</span>
+            <span className='text-2xl'>⏰</span>
           </div>
-          <p className='text-xs text-emerald-600 font-bold mt-2'>✓ Daily Dose Timeline Ready</p>
+          <p className='text-xs text-gray-500 font-medium mt-2'>Morning, Noon, Evening, Night</p>
         </div>
       </div>
 
       {/* Timeline Slots Grid */}
-      <div className='space-y-6'>
+      <div className='space-y-5'>
         {['Morning', 'Afternoon', 'Evening', 'Night'].map((slotKey) => {
           const slotMeta = slotTimes[slotKey]
           const medsForSlot = medicineRoutines.filter((r) => r.scheduleSlots?.includes(slotKey))
 
           return (
-            <div key={slotKey} className='bg-white border border-gray-200/90 rounded-3xl p-5 sm:p-6 shadow-sm'>
+            <div key={slotKey} className='bg-white border border-gray-100 rounded-2xl p-5 sm:p-6 shadow-2xs'>
               <div className='flex items-center justify-between pb-3 border-b border-gray-100'>
                 <div className='flex items-center gap-2.5'>
-                  <span className='text-2xl'>{slotMeta.icon}</span>
+                  <span className='text-xl'>{slotMeta.icon}</span>
                   <div>
-                    <h3 className='font-black text-lg text-gray-900'>
-                      {slotKey} Schedule ({slotMeta.time})
+                    <h3 className='font-bold text-base text-gray-900'>
+                      {slotKey} Doses ({slotMeta.time})
                     </h3>
-                    <p className='text-xs text-gray-500'>{medsForSlot.length} Medications Scheduled</p>
+                    <p className='text-[11px] text-gray-500'>{medsForSlot.length} Medications Scheduled</p>
                   </div>
                 </div>
-                <span className={`text-xs px-3 py-1 rounded-full font-bold border ${slotMeta.color}`}>
+                <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-semibold border ${slotMeta.color}`}>
                   {slotKey}
                 </span>
               </div>
 
               {medsForSlot.length === 0 ? (
-                <p className='text-xs text-gray-400 italic py-4 text-center'>
+                <p className='text-xs text-gray-400 italic py-3 text-center'>
                   No medications scheduled for this time slot.
                 </p>
               ) : (
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mt-4'>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-3.5 mt-4'>
                   {medsForSlot.map((routine) => {
                     const isTaken = routine.adherenceLogs?.some(
                       (l) => l.date === todayStr && l.slot === slotKey && l.taken
@@ -279,33 +280,37 @@ const MedicineSchedule = () => {
                     return (
                       <div
                         key={routine._id + slotKey}
-                        className={`p-4.5 rounded-2xl border transition-all flex items-center justify-between gap-3 ${
+                        className={`p-4 rounded-xl border transition-all flex items-center justify-between gap-3 ${
                           isTaken
                             ? 'bg-emerald-50/70 border-emerald-200 text-emerald-950'
-                            : 'bg-gray-50 hover:bg-white border-gray-200'
+                            : 'bg-gray-50/70 hover:bg-white border-gray-200/80'
                         }`}
                       >
-                        <div className='space-y-1'>
+                        <div className='space-y-0.5 min-w-0'>
                           <div className='flex items-center gap-2'>
-                            <h4 className='font-black text-base text-gray-900'>{routine.medicineName}</h4>
-                            <span className='text-xs px-2 py-0.5 bg-white border rounded-md font-bold text-gray-600'>
+                            <h4 className='font-bold text-sm text-gray-900 truncate'>{routine.medicineName}</h4>
+                            <span className='text-[11px] px-1.5 py-0.5 bg-white border border-gray-200 rounded font-semibold text-gray-600 flex-shrink-0'>
                               {routine.dosage}
                             </span>
                           </div>
                           <div className='flex items-center gap-2 text-xs text-gray-600'>
-                            <span className='font-bold text-primary'>● {routine.mealTime}</span>
+                            <span className='font-semibold text-primary'>{routine.mealTime}</span>
                             <span>•</span>
-                            <span>{routine.durationDays} Days Course</span>
-                            <span>•</span>
-                            <span className='text-gray-400'>{routine.prescribedByDoctor}</span>
+                            <span>{routine.durationDays} Days</span>
+                            {routine.prescribedByDoctor && (
+                              <>
+                                <span>•</span>
+                                <span className='text-gray-400 truncate'>{routine.prescribedByDoctor}</span>
+                              </>
+                            )}
                           </div>
-                          {routine.notes && <p className='text-xs text-gray-500 italic mt-1'>"{routine.notes}"</p>}
+                          {routine.notes && <p className='text-[11px] text-gray-500 italic mt-0.5'>"{routine.notes}"</p>}
                         </div>
 
-                        <div className='flex items-center gap-2'>
+                        <div className='flex items-center gap-1.5 flex-shrink-0'>
                           <button
                             onClick={() => handleToggleDose(routine._id, slotKey)}
-                            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm active:scale-95 ${
+                            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all shadow-2xs active:scale-95 ${
                               isTaken
                                 ? 'bg-emerald-600 text-white hover:bg-emerald-700'
                                 : 'bg-primary text-white hover:bg-opacity-95'
@@ -315,7 +320,7 @@ const MedicineSchedule = () => {
                           </button>
                           <button
                             onClick={() => handleDeleteRoutine(routine._id)}
-                            className='p-2 text-gray-400 hover:text-rose-600 rounded-lg transition-colors'
+                            className='p-1.5 text-gray-400 hover:text-rose-600 rounded transition-colors text-xs'
                             title='Delete Routine'
                           >
                             ✕
@@ -333,58 +338,58 @@ const MedicineSchedule = () => {
 
       {/* Manual Add Medicine Modal */}
       {showAddModal && (
-        <div className='fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in'>
-          <div className='bg-white rounded-3xl w-full max-w-lg p-6 sm:p-8 shadow-2xl border max-h-[90vh] overflow-y-auto custom-scrollbar'>
-            <div className='flex justify-between items-center pb-4 border-b'>
-              <h3 className='font-black text-xl text-gray-900'>Add Medication Routine</h3>
+        <div className='fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in'>
+          <div className='bg-white rounded-2xl w-full max-w-lg p-6 sm:p-7 shadow-xl border border-gray-100 max-h-[90vh] overflow-y-auto custom-scrollbar'>
+            <div className='flex justify-between items-center pb-3 border-b border-gray-100'>
+              <h3 className='font-bold text-base text-gray-900'>Add Medication Routine</h3>
               <button onClick={() => setShowAddModal(false)} className='text-gray-400 hover:text-gray-600 font-bold'>
                 ✕
               </button>
             </div>
 
-            <form onSubmit={handleCreateRoutine} className='space-y-4 mt-4 text-sm'>
+            <form onSubmit={handleCreateRoutine} className='space-y-3.5 mt-4 text-xs sm:text-sm'>
               <div>
-                <label className='block font-bold text-gray-700 mb-1'>Medicine Name</label>
+                <label className='block font-semibold text-gray-700 mb-1'>Medicine Name</label>
                 <input
                   type='text'
                   required
                   value={medicineName}
                   onChange={(e) => setMedicineName(e.target.value)}
-                  placeholder='E.g., Paracetamol, Amoxicillin, Metformin...'
-                  className='w-full border border-gray-300 rounded-xl p-3 outline-none focus:border-primary'
+                  placeholder='e.g., Paracetamol, Amoxicillin, Metformin...'
+                  className='w-full border border-gray-200 rounded-xl p-2.5 outline-none focus:border-primary'
                 />
               </div>
 
               <div className='grid grid-cols-2 gap-3'>
                 <div>
-                  <label className='block font-bold text-gray-700 mb-1'>Dosage / Strength</label>
+                  <label className='block font-semibold text-gray-700 mb-1'>Dosage / Strength</label>
                   <input
                     type='text'
                     value={dosage}
                     onChange={(e) => setDosage(e.target.value)}
-                    placeholder='E.g., 500mg, 1 Tablet, 5ml'
-                    className='w-full border border-gray-300 rounded-xl p-3 outline-none focus:border-primary'
+                    placeholder='e.g., 500mg, 1 Tablet'
+                    className='w-full border border-gray-200 rounded-xl p-2.5 outline-none focus:border-primary'
                   />
                 </div>
                 <div>
-                  <label className='block font-bold text-gray-700 mb-1'>Course Duration</label>
+                  <label className='block font-semibold text-gray-700 mb-1'>Course (Days)</label>
                   <input
                     type='number'
                     min='1'
                     max='365'
                     value={durationDays}
                     onChange={(e) => setDurationDays(e.target.value)}
-                    className='w-full border border-gray-300 rounded-xl p-3 outline-none focus:border-primary'
+                    className='w-full border border-gray-200 rounded-xl p-2.5 outline-none focus:border-primary'
                   />
                 </div>
               </div>
 
               <div>
-                <label className='block font-bold text-gray-700 mb-1'>Food Timing</label>
+                <label className='block font-semibold text-gray-700 mb-1'>Food Timing</label>
                 <select
                   value={mealTime}
                   onChange={(e) => setMealTime(e.target.value)}
-                  className='w-full border border-gray-300 rounded-xl p-3 outline-none focus:border-primary'
+                  className='w-full border border-gray-200 rounded-xl p-2.5 outline-none focus:border-primary bg-white'
                 >
                   <option value='After Food'>After Food (Post-meal)</option>
                   <option value='Before Food'>Before Food (Empty Stomach)</option>
@@ -394,8 +399,8 @@ const MedicineSchedule = () => {
               </div>
 
               <div>
-                <label className='block font-bold text-gray-700 mb-2'>Select Daily Time Slots:</label>
-                <div className='grid grid-cols-2 gap-2.5'>
+                <label className='block font-semibold text-gray-700 mb-1.5'>Select Daily Time Slots:</label>
+                <div className='grid grid-cols-2 gap-2'>
                   {['Morning', 'Afternoon', 'Evening', 'Night'].map((slot) => {
                     const isSelected = selectedSlots.includes(slot)
                     return (
@@ -403,9 +408,9 @@ const MedicineSchedule = () => {
                         key={slot}
                         type='button'
                         onClick={() => toggleSlotSelection(slot)}
-                        className={`p-3 rounded-xl border text-left font-bold text-xs sm:text-sm flex items-center justify-between transition-all ${
+                        className={`p-2.5 rounded-xl border text-left font-semibold text-xs flex items-center justify-between transition-all ${
                           isSelected
-                            ? 'bg-primary text-white border-primary shadow-sm'
+                            ? 'bg-primary text-white border-primary shadow-2xs'
                             : 'bg-gray-50 text-gray-700 border-gray-200'
                         }`}
                       >
@@ -418,30 +423,30 @@ const MedicineSchedule = () => {
               </div>
 
               <div>
-                <label className='block font-bold text-gray-700 mb-1'>Doctor Notes / Instructions (Optional)</label>
+                <label className='block font-semibold text-gray-700 mb-1'>Special Instructions (Optional)</label>
                 <textarea
                   rows='2'
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder='E.g., Take with a full glass of water. Avoid milk.'
-                  className='w-full border border-gray-300 rounded-xl p-3 outline-none focus:border-primary'
+                  placeholder='e.g., Take with a full glass of water. Avoid milk.'
+                  className='w-full border border-gray-200 rounded-xl p-2.5 outline-none focus:border-primary text-xs'
                 />
               </div>
 
-              <div className='pt-3 border-t flex justify-end gap-3'>
+              <div className='pt-3 border-t border-gray-100 flex justify-end gap-2'>
                 <button
                   type='button'
                   onClick={() => setShowAddModal(false)}
-                  className='px-5 py-2.5 border rounded-xl font-bold text-gray-600'
+                  className='px-4 py-2 border border-gray-200 rounded-xl font-semibold text-gray-600 text-xs'
                 >
                   Cancel
                 </button>
                 <button
                   type='submit'
                   disabled={isProcessing}
-                  className='px-7 py-2.5 bg-primary text-white font-bold rounded-xl shadow-md hover:bg-opacity-95'
+                  className='px-6 py-2 bg-primary text-white font-bold rounded-xl shadow-xs hover:bg-opacity-95 text-xs'
                 >
-                  {isProcessing ? 'Saving...' : 'Save Schedule'}
+                  {isProcessing ? 'Saving...' : 'Save Routine'}
                 </button>
               </div>
             </form>
@@ -451,56 +456,56 @@ const MedicineSchedule = () => {
 
       {/* Prescription Image / Text Converter Modal */}
       {showUploadModal && (
-        <div className='fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in'>
-          <div className='bg-white rounded-3xl w-full max-w-lg p-6 sm:p-8 shadow-2xl border max-h-[90vh] overflow-y-auto custom-scrollbar'>
-            <div className='flex justify-between items-center pb-4 border-b'>
+        <div className='fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in'>
+          <div className='bg-white rounded-2xl w-full max-w-lg p-6 sm:p-7 shadow-xl border border-gray-100 max-h-[90vh] overflow-y-auto custom-scrollbar'>
+            <div className='flex justify-between items-center pb-3 border-b border-gray-100'>
               <div>
-                <h3 className='font-black text-xl text-gray-900'>Prescription → Schedule Converter</h3>
-                <p className='text-xs text-gray-500'>Smart Text & Image OCR Routine Parser</p>
+                <h3 className='font-bold text-base text-gray-900'>Sync Prescription to Routine</h3>
+                <p className='text-xs text-gray-500'>Upload Doctor Slip or Paste Prescription Text</p>
               </div>
               <button onClick={() => setShowUploadModal(false)} className='text-gray-400 hover:text-gray-600 font-bold'>
                 ✕
               </button>
             </div>
 
-            <form onSubmit={handleConvertRxUpload} className='space-y-4 mt-4 text-sm'>
-              <div className='p-5 border-2 border-dashed border-gray-300 rounded-2xl text-center bg-gray-50'>
-                <p className='text-3xl mb-1'>📷</p>
-                <p className='font-bold text-gray-800 text-sm'>Upload Prescription Photo or Doctor Slip</p>
-                <p className='text-xs text-gray-400 mt-1'>Supports JPG, PNG, PDF</p>
+            <form onSubmit={handleConvertRxUpload} className='space-y-3.5 mt-4 text-xs sm:text-sm'>
+              <div className='p-4 border-2 border-dashed border-gray-200 rounded-xl text-center bg-gray-50/60'>
+                <p className='text-2xl mb-1'>📷</p>
+                <p className='font-bold text-gray-800 text-xs'>Upload Prescription Photo or Slip</p>
+                <p className='text-[11px] text-gray-400 mt-0.5'>Supports JPG, PNG, PDF</p>
                 <input
                   type='file'
                   accept='image/*'
                   onChange={(e) => setRxImage(e.target.files[0])}
-                  className='mt-3 text-xs text-gray-500 block w-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20'
+                  className='mt-2.5 text-xs text-gray-500 block w-full file:mr-3 file:py-1.5 file:px-3.5 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20'
                 />
               </div>
 
               <div>
-                <label className='block font-bold text-gray-700 mb-1'>Or Paste Prescription Text directly:</label>
+                <label className='block font-semibold text-gray-700 mb-1'>Or Type Prescription Text directly:</label>
                 <textarea
                   rows='4'
                   value={rxText}
                   onChange={(e) => setRxText(e.target.value)}
-                  placeholder={`E.g.:\n1. Tab Amoxicillin 500mg 1-0-1 for 5 days after food\n2. Tab Paracetamol 650mg 1-0-1 3 days\n3. Vitamin C daily 14 days`}
-                  className='w-full border border-gray-300 rounded-xl p-3.5 outline-none focus:border-primary font-mono text-xs'
+                  placeholder={`1. Tab Amoxicillin 500mg 1-0-1 for 5 days after food\n2. Tab Paracetamol 650mg 1-0-1 3 days`}
+                  className='w-full border border-gray-200 rounded-xl p-3 outline-none focus:border-primary font-mono text-xs'
                 />
               </div>
 
-              <div className='pt-3 border-t flex justify-end gap-3'>
+              <div className='pt-3 border-t border-gray-100 flex justify-end gap-2'>
                 <button
                   type='button'
                   onClick={() => setShowUploadModal(false)}
-                  className='px-5 py-2.5 border rounded-xl font-bold text-gray-600'
+                  className='px-4 py-2 border border-gray-200 rounded-xl font-semibold text-gray-600 text-xs'
                 >
                   Cancel
                 </button>
                 <button
                   type='submit'
                   disabled={isProcessing}
-                  className='px-7 py-2.5 bg-primary text-white font-bold rounded-xl shadow-md hover:bg-opacity-95'
+                  className='px-6 py-2 bg-primary text-white font-bold rounded-xl shadow-xs hover:bg-opacity-95 text-xs'
                 >
-                  {isProcessing ? 'Converting...' : 'Parse & Add to Routine'}
+                  {isProcessing ? 'Converting...' : 'Parse & Save Routine'}
                 </button>
               </div>
             </form>
