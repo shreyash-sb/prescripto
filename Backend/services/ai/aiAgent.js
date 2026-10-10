@@ -599,13 +599,17 @@ export const processAIChat = async (userMessage, conversationHistory = [], userI
     parts: [{ text: query }],
   });
 
+  const configuredModel = process.env.GEMINI_MODEL?.trim();
   const supportedModels = [
-    "gemini-flash-lite-latest",
-    "gemini-3.5-flash-lite",
-    "gemini-3.1-flash-lite",
-    "gemini-flash-latest",
+    configuredModel,
     "gemini-3.8-flash",
-  ];
+    "gemini-flash-latest",
+    "gemini-3.5-flash-lite",
+    "gemini-flash-lite-latest",
+    "gemini-3.1-flash-lite",
+  ]
+    .filter(Boolean)
+    .filter((model, idx, arr) => arr.indexOf(model) === idx);
 
   if (geminiApiKey && geminiApiKey !== "your_gemini_api_key_here") {
     const ai = new GoogleGenAI({ apiKey: geminiApiKey });
@@ -677,6 +681,7 @@ export const processAIChat = async (userMessage, conversationHistory = [], userI
             success: true,
             response: replyText.trim(),
             source: iterations > 0 ? "gemini-tools-live" : "gemini-hybrid",
+            model: modelName,
           };
         }
       } catch (err) {

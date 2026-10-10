@@ -48,6 +48,7 @@ export const chatWithAI = async (req, res, next) => {
       success: true,
       response: result.response,
       source: result.source || "gemini-hybrid",
+      model: result.model || process.env.GEMINI_MODEL || "gemini-3.8-flash",
     });
   } catch (error) {
     console.error("AI Controller Error:", error);
